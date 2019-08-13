@@ -1,21 +1,46 @@
-# Introduction {#intro}
+# Einführug {#intro}
 
-You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods).
+- Anwendungsfall: Count data
+- Regulärer Ansatz: Poisson-Regression
+   - Major pitfall: Notwendigkeit für $\lambda_i = \mathbb{E}(y_i) = \mathrm{Var}(y_i)$
+   - -> In der Regel overdispersion $\mathrm{Var}(y_i) > \lambda_i$
+   - Auch möglich: *under*dispersion $\mathrm{Var}(y_i) < \lambda_i$
+- "Lösung" für overdispersion: Negative Binomialverteilung
+   - Modelliert die Varianz mit (als Gamma-verteilte Zufallsvariable, "Poisson-Gamma mixture")
+   - Problem: Dispersionsparameter ist streng positiv, i.e. underdispersion kann nicht damit abgebildet werden
+- "Lösung" für underdispersion:
+   - Im Allgemeinen [generalized Poisson](https://stats.stackexchange.com/a/237177/80056) (R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html))
 
-Figures and tables with captions will be placed in `figure` and `table` environments, respectively.
 
-```{r nice-fig, fig.cap='Here is a nice figure!', out.width='80%', fig.asp=.75, fig.align='center'}
-par(mar = c(4, 4, .1, .1))
-plot(pressure, type = 'b', pch = 19)
-```
+# Modelle 
 
-Reference a figure by its code chunk label with the `fig:` prefix, e.g., see Figure \@ref(fig:nice-fig). Similarly, you can reference tables generated from `knitr::kable()`, e.g., see Table \@ref(tab:nice-tab).
+## Poisson {#mod_pois}
 
-```{r nice-tab, tidy=FALSE}
-knitr::kable(
-  head(iris, 20), caption = 'Here is a nice table!',
-  booktabs = TRUE
-)
-```
+Die Rate $\lambda_i = \mathbb{E}(y_i | x_i)$ der Poissonverteilung wird in der Regel log-linear modelliert als
 
-You can write citations, too. For example, we are using the **bookdown** package [@R-bookdown] in this sample book, which was built on top of R Markdown and **knitr** [@xie2015].
+\begin{equation}
+\log(\lambda_i) = \eta_i = \mathbf{x}_i' \boldsymbol{\beta} = \beta_0 + \beta_1 x_1 + \ldots + \beta_k x_{ik}
+\end{equation}
+
+mit der regulären Form:
+
+\begin{equation}
+\lambda_i = \exp(\eta_i) = \exp(\beta_0) \cdot \exp(\beta_1 x_1) \cdot \ldots \cdot \exp(\beta_k x_k)
+\end{equation}
+
+Die lineare Verknüpfung
+
+\begin{equation}
+\lambda_i = \eta_i = \mathbf{x}_i' \boldsymbol{\beta}
+\end{equation}
+
+existiert auch für den Fall einer additiven Verknüpfung der Kovariablen, führt allerdings zu Restriktionen für $\boldsymbol{\beta}$, da $\mathbf{x}_i' \boldsymbol{\beta} \geq 0$ gelten muss 
+
+
+Annahme
+
+\begin{equation}
+\lambda_i = \mathbb{E}(y_i) = \mathrm{Var}(y_i)
+\end{equation}
+
+Vgl. @fahrmeirRegressionModelleMethoden2009
