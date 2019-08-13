@@ -6,10 +6,10 @@ lang: de-DE
 site: bookdown::bookdown_site
 url: 'https\://git.tadaa-data.de/lukas/poisson-regression'
 documentclass: scrbook
-bibliography: [Statistics.bib, packages.bib]
+bibliography: [Poisson.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
-description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+description: "Because count data is hard"
 papersize: a4
 mainfont: "TeX Gyre Pagella"
 sansfont: "TeX Gyre Heros"
@@ -19,8 +19,6 @@ monofontoptions:
   - Scale=0.75
 mathfont: "Asana Math"
 ---
-
-# Einführung
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(

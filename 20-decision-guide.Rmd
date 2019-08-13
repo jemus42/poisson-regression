@@ -1,0 +1,51 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Entscheidungshilfe
+
+```{r decision_tree, echo=FALSE}
+library(DiagrammeR)
+
+grViz("
+digraph decisiontree {
+
+graph [layout = dot]
+
+node [shape = rectangle,
+      style = filled,
+      color = grey,
+      fontname = 'Roboto']
+
+node [fillcolor = white]
+start [label = 'You have found yourself some count data',
+   shape = plaintext]
+
+node [fillcolor = firebrick]
+od [label = 'Overdispersion (OD)']
+ud [label = 'Underdispersion (UD)']
+zi [label = 'Zero-Inflation (ZI)']
+odzi [label = 'OD + ZI']
+udzi [label = 'UD + ZI']
+
+node [fillcolor = orange]
+
+edge [color = grey]
+start -> {od ud zi odzi udzi}
+
+node [fillcolor = green]
+nbin [label = 'Negative Binomial (NB)']
+znbin [label = 'Zero-Inflated Negative Binomial (ZINB)']
+gpois [label = 'Generalized Poisson']
+cmp [label = 'Conway-Maxwell Poisson']
+
+edge [color = green]
+od -> nbin [label = 'Ovderdispersion only']
+ud -> gpois [label = 'Underdispersion']
+odzi -> znbin [label = 'Zero-inflated overdispersion']
+udzi -> cmp [label = 'Zero-inflated underdispersion']
+}")
+```
+

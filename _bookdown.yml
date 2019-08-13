@@ -1,6 +1,6 @@
 book_filename: "poisson-regression"
 output_dir: _book
-clean: [packages.bib, blogdown.bbl]
+clean: [packages.bib, _book]
 language:
   label:
     fig: "Abbildung "
