@@ -22,7 +22,7 @@ mathfont: "Asana Math"
 
 # Einführung
 
-```{r setup include=FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   fig.width = 6,
   fig.asp = 1/1.618,
