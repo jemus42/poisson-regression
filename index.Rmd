@@ -6,7 +6,7 @@ lang: de-DE
 site: bookdown::bookdown_site
 url: 'https\://git.tadaa-data.de/lukas/poisson-regression'
 documentclass: scrbook
-bibliography: [book.bib, packages.bib]
+bibliography: [Statistics.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
 description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
