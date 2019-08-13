@@ -8,6 +8,9 @@ bookdown::gitbook:
       after: |
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Built with bookdown</a></li>
     download: ["pdf", "epub", "tex"]
+    sharing:
+      facebook: no
+      twitter: no
 bookdown::pdf_book:
   includes:
     in_header: latex/preamble.tex
