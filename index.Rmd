@@ -5,7 +5,7 @@ date: "Stand: `r format(Sys.time(), '%d. %B %Y, %H:%M Uhr')`"
 lang: de-DE
 site: bookdown::bookdown_site
 url: ''
-documentclass: scrbook
+documentclass: scrartcl
 bibliography: [Poisson.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
@@ -21,6 +21,10 @@ mathfont: "Asana Math"
 ---
 
 ```{r setup, include=FALSE}
+options(
+  knitr.table.format = ifelse(knitr::is_html_output(), "html", "latex")
+)
+
 knitr::opts_chunk$set(
   fig.width = 6,
   fig.asp = 1/1.618,

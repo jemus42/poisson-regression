@@ -68,9 +68,9 @@ Wenn die Beobachtungen keine Nullen enthalten bzw. im Modell nicht möglich sind
 
 # Modelle 
 
-Folgende Tabelle (nach @hilbeModelingCountData2014, p. 12) gibt eine Übersicht über Modelle, die zur Modellierung von Daten unter unterschiedlichen Dispersionsannahmen geeignet sind
+Folgende Tabellegibt eine Übersicht über Modelle, die zur Modellierung von Daten unter unterschiedlichen Dispersionsannahmen geeignet sind
 
-```{r models_table_1}
+```{r models_table_1, echo=FALSE}
 tibble::tribble(
   ~Model,                         ~Mean,  ~Variance,
   "Poisson",                     "$\\mu$", "$\\mu$",
@@ -80,9 +80,10 @@ tibble::tribble(
   "Negative binomial-P",         "$\\mu$", "$\\mu (1 + \\alpha\\mu^p) = \\mu + \\alpha\\mu^p$",
   "Generalized Poisson",         "$\\mu$", "$\\mu (1 + \\alpha\\mu)^2 = \\mu + 2\\alpha\\mu^3 + \\alpha^2\\mu^3$"
  ) %>%
- kable(booktabs = TRUE)
+  kable(booktabs = TRUE, escape = FALSE, 
+        caption = "Überblick einiger Modelle mit Parametrisierter Varianz (nach @hilbeModelingCountData2014, p. 12)") %>%
+  kable_styling(position = "center")
 ```
-
 
 
 ## Poisson {#mod_pois}
