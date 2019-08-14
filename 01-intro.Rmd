@@ -19,15 +19,18 @@ editor_options:
 
 # Annahmen und Abwandlungen
 
-## Truncation und Censoring
+Es gelten Standardannahmen des GLM:
 
-- Truncation: Bestimmte counts *nicht möglich*
+- $Y$ kommt aus der Exponentialfamilie (Normal-, Poisson-, Gamma-, Binomialverteilung)
+- $\eta_i$ als linearer Operator
+- Response- und Linkfunktionen $h(x)$ und $g(x) = h^{-1}(x)$
+
+## Truncation und Censoring {#trunc_cens}
+
+- **Truncation**: Bestimmte counts *nicht möglich*
   - z.B. keine Counts < 5 möglich -> *left truncation* (*right truncation* analog)
   - Interval truncation: Nur counts in Intervall $[a, b]$
-  
-  
-- Censoring: Bestimmte counts *nicht beobachtet*, aber möglich
-  - Countr prinzipiell 
+- **Censoring**: Bestimmte counts *nicht beobachtet*, aber möglich
 
 ## Dispersion
 
@@ -68,7 +71,7 @@ Wenn die Beobachtungen keine Nullen enthalten bzw. im Modell nicht möglich sind
 
 # Modelle 
 
-Folgende Tabellegibt eine Übersicht über Modelle, die zur Modellierung von Daten unter unterschiedlichen Dispersionsannahmen geeignet sind
+Ein Überblick einiger Modelle mit parametrisierter Varianz (nach @hilbeModelingCountData2014, p. 12).
 
 ```{r models_table_1, echo=FALSE}
 tibble::tribble(
@@ -80,9 +83,8 @@ tibble::tribble(
   "Negative binomial-P",         "$\\mu$", "$\\mu (1 + \\alpha\\mu^p) = \\mu + \\alpha\\mu^p$",
   "Generalized Poisson",         "$\\mu$", "$\\mu (1 + \\alpha\\mu)^2 = \\mu + 2\\alpha\\mu^3 + \\alpha^2\\mu^3$"
  ) %>%
-  kable(booktabs = TRUE, escape = FALSE, 
-        caption = "Überblick einiger Modelle mit Parametrisierter Varianz (nach @hilbeModelingCountData2014, p. 12)") %>%
-  kable_styling(position = "center")
+  kable(booktabs = TRUE, escape = FALSE) %>%
+  kable_styling(position = "center", protect_latex = TRUE)
 ```
 
 
@@ -113,15 +115,26 @@ Die lineare Verknüpfung
 \end{equation}
 
 existiert auch für den Fall einer additiven Verknüpfung der Kovariablen, führt allerdings zu Restriktionen für $\boldsymbol{\beta}$, da $\mathbf{x}_i' \boldsymbol{\beta} \geq 0$ gelten muss 
+Vgl. @fahrmeirRegressionModelleMethoden2009
 
 
-Annahme
+### Annahmen
 
+Primäre Annahme für Poisson-Modelle: *Equidispersion*, i.e. für den Parameter der Poissonverteilung gilt 
+
+```{definition, name = "Equidispersion"}
 \begin{equation}
 \lambda_i = \mathbb{E}(y_i) = \mathrm{Var}(y_i)
 \end{equation}
+```
 
-Vgl. @fahrmeirRegressionModelleMethoden2009
+1. Die Abhängige / Zielvariable $Y$ muss eine Zählung sein.
+2. $y \in \mathbb{N}_0$, insbesondere: $Y$ muss 0 enthalten können (siehe auch [Truncation und Censoring](#trunc_cens))
+3. Beobachtungen sind unabhängig.
+4. 
+5. Erwartungswert und Varianz sind identisch (*equidispersion*), i.e. ein größerer Erwartungswert impliziert auch eine größere Varianz.
+6. Die $\chi^2$-Statistik hat einen Wert nahe 1, i.e. beobachtete und erwartete Varianzen der response sind gleich
+
 
 ## Negative Binomial (NBIN) {#mod_nbin}
 
