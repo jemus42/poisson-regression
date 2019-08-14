@@ -8,3 +8,5 @@ language:
   ui:
     chapter_name: "Kapitel "
 delete_merged_file: true
+repo: https://git.tadaa-data.de/lukas/poisson-regression
+

@@ -4,7 +4,7 @@ author: "Lukas Burk"
 date: "Stand: `r format(Sys.time(), '%d. %B %Y, %H:%M Uhr')`"
 lang: de-DE
 site: bookdown::bookdown_site
-url: 'https\://git.tadaa-data.de/lukas/poisson-regression'
+url: ''
 documentclass: scrbook
 bibliography: [Poisson.bib, packages.bib]
 biblio-style: apalike
@@ -27,6 +27,8 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
+library(kableExtra)
+library(tibble)
 
 # automatically create a bib database for R packages
 knitr::write_bib(c(
