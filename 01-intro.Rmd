@@ -9,8 +9,8 @@ editor_options:
 - Anwendungsfall: Count data
 - Regulärer Ansatz: Poisson-Regression
    - Major pitfall: Notwendigkeit für $\lambda_i = \mathbb{E}(y_i) = \mathrm{Var}(y_i)$
-   - -> In der Regel overdispersion $\mathrm{Var}(y_i) > \lambda_i$
-   - Auch möglich: *under*dispersion $\mathrm{Var}(y_i) < \lambda_i$
+   - -> In der Regel overdispersion $\mathrm{Var}(y_i) > \mathbb{E}(y_i)$
+   - Auch möglich: *under*dispersion $\mathrm{Var}(y_i) < \mathbb{E}(y_i)$
 - "Lösung" für overdispersion: Negative Binomialverteilung
    - Modelliert die Varianz mit (als Gamma-verteilte Zufallsvariable, "Poisson-Gamma mixture")
    - Problem: Dispersionsparameter ist streng positiv, i.e. underdispersion kann nicht damit abgebildet werden
