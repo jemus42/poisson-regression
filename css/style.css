@@ -12,3 +12,10 @@ pre {
 pre code {
   white-space: inherit;
 }
+
+.header-section-number {
+    border-bottom: black;
+    border-bottom-style: solid;
+    border-bottom-width: thick;
+    padding-right: 0;
+}
