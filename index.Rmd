@@ -9,6 +9,7 @@ documentclass: scrartcl
 bibliography: [Poisson.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
+colorlinks: true
 description: "Because count data is hard"
 papersize: a4
 mainfont: "TeX Gyre Pagella"
@@ -33,9 +34,18 @@ knitr::opts_chunk$set(
 
 library(kableExtra)
 library(tibble)
-
-# automatically create a bib database for R packages
-knitr::write_bib(c(
-  .packages(), 'bookdown', 'knitr', 'rmarkdown'
-), 'packages.bib')
 ```
+
+
+# Einführung {#intro}
+
+- Anwendungsfall: Count data
+- Regulärer Ansatz: Poisson-Regression
+   - Major pitfall: Notwendigkeit für $\lambda_i = \mathbb{E}(y_i) = \mathrm{Var}(y_i)$
+   - -> In der Regel overdispersion $\mathrm{Var}(y_i) > \mathbb{E}(y_i)$
+   - Auch möglich: *under*dispersion $\mathrm{Var}(y_i) < \mathbb{E}(y_i)$
+- "Lösung" für overdispersion: Negative Binomialverteilung
+   - Modelliert die Varianz mit (als Gamma-verteilte Zufallsvariable, "Poisson-Gamma mixture")
+   - Problem: Dispersionsparameter ist streng positiv, i.e. underdispersion kann nicht damit abgebildet werden
+- "Lösung" für underdispersion:
+   - Im Allgemeinen [generalized Poisson](https://stats.stackexchange.com/a/237177/80056) (R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html))

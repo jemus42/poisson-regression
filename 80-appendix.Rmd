@@ -2,6 +2,8 @@
 
 # Reproduzierbarkeit
 
+Included for posterity and/or debugging purposes.
+
 ```{r sessioninfo}
 sessioninfo::session_info()[c("platform", "packages")]
 ```

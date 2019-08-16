@@ -1,0 +1,132 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Annahmen und Einschränkungen
+
+Es gelten Standardannahmen des GLM:
+
+- $Y$ kommt aus der Exponentialfamilie (Normal-, Poisson-, Gamma-, Binomialverteilung)
+- $\eta_i = \boldsymbol{x}_i' \boldsymbol{\beta}$ als linearer Operator
+- Response- und Linkfunktionen $h(x)$ und $g(x) = h^{-1}(x)$
+
+## Dispersion
+
+```{definition, name = "Dispersions"}
+\begin{align*}
+\text{Equdispersion: }  \quad & \lambda_i = \mathbb{E}(y_i) = \mathrm{Var}(y_i) 
+                        \quad  \mathrm{Var}(y_i) = \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \\
+\text{Extradispersion: }\quad & \mathrm{Var}(y_i) \neq \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \\
+\text{Overdispersion: } \quad & \mathrm{Var}(y_i) > \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \\
+\text{Underdispersion: }\quad & \mathrm{Var}(y_i) < \mathrm{Var}(y_i\ |\ \mathbf{x}_i)
+\end{align*}
+
+Insbesondere "Poisson-Ovderdispersion":
+  
+$$\mathrm{Var}(y_i) > \mathbb{E}(y_i)$$
+
+In einem Modell mit Extradispersion gilt die Annahme:
+
+\begin{equation}
+\mathrm{Var}(y_i\ |\ \mathbf{x}_i) = \theta \cdot \lambda_i
+\end{equation}
+
+Mit *Dispersionsparameter* $\theta$ [vgl. @fahrmeirRegressionModelleMethoden2009, p. 210]
+
+```
+
+Zur Evaluation des Despersionparameters kann ein NBH Modell (\@ref(mod-nbh)) genutzt werden, wobei der  Dispersionsparameter modelliert wird (-> welche Variablen tragen zur extradispersion bei).
+
+### Overdispersion
+
+Der vermutlich häufigste Fall für Count-Daten. 
+
+Kriterien für Overdispersion nach @hilbeModelingCountData2014, p. 41
+
+1. Fehlende explanatorische Prädiktoren
+2. Die Daten enthalten Ausreißer
+3. Im Modell fehlen Interaktionsterme
+4. Ein Prädiktor muss transformiert werden
+5. Die Daten sind zu dünn besetzt (*sparse*) (?)
+6. Fehlende Werte, die nicht zufällig sind (missing not at random, *MNAR*)
+
+"Test" auf Dispersion: Pearson dispersion, in `R`:
+
+```r
+# Model fit
+mod <- glm(y ~ x1 + x2 + x3, data = sim, family = poisson(link = "log"))
+
+# Pearson dispersion
+sum(resid(mod, type = "pearson")^2) / mod$df.residual
+```
+
+Für "echte" Poisson-Modelle ist der Wert 1, und Werte größer bzw. kleiner 1 indizieren over- bzw. underdispersion.
+
+Als Dispersionsstatistik kann die Deviance (*deviance dispersion*) oder oder *pearson dispersion* berechnet werden. Laut @hilbeModelingCountData2014 ist die *Pearson dispersion* zu bevorzugen, da sie für echte Poisson-Modelle gleich 1 ist, wohingegen die *deviance dispersion* nach oben verzerrt ist.
+
+Gründe für overdispersion *kann* zero-inflation sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechendes Modell (ZIP, ZINB...) verwendet werden muss – ggf. lässt sich die overdispersion bereits durch ein NB Modell "auffangen". 
+
+#### Umgang mit Overdispersion
+
+##### Quasipoisson: Skalierung der Standardfehler
+
+$$se(\beta_k) \cdot \sqrt{\chi^2}$$
+Wobei $\chi^2$ der Pearson-Dispersionsindex ist (vgl. @hilbeModelingCountData2014, p. 92ff)
+
+In `R` passiert genau das, wenn in `family = quasipoisson()`.
+
+Nachteil: Es wird zuerst ein reguläres Poisson-Modell gefittet, Standardfehler und Dispersionsindex bestimmt, und dann dasselbe Modell mit skalierten Standardfehlern erneut gefittet – dementsprechend ist diese Methode vermutlich für größere Datensätze eher ineffizient.
+
+##### Robuste Varianzschätzer / Sandwich Estimators
+
+Können auch "per default" verwendet werden, da die resultierenden Schätzer im Falle tatsächlich unkorrellierter Daten äquivalent zu den Standardfehlern des Modells sind (i.e. "schadet nicht").
+
+Bootstrapped SEs wiederum erfordern mehr Aufwand, ähneln aber den robusten SEs sowieso sehr stark.
+
+Die resultierenden 
+
+### Underdispersion
+
+
+## Zeros
+
+
+### Zero Inflation
+
+Problem: "Excess zeros", i.e. die gewählte Dichtefunktion sagt für $P(y_i\ |\ x_i = 0)$ eine deutlich kleinere Wahrscheinlichkeit vor, als in gegebenen Daten tatsächlich vorliegen.
+
+Modellierung via "two part hurdle or a mixture model" [@hilbeModelingCountData2014, p. 19]
+
+- Zero-inflated poisson (ZIP)
+- Zero-inflated negative binomial (ZINB)
+- Zero-inflated Poisson Inverse Gaussian (ZPIG)
+
+
+"Hurdle models" in zwei Komponenten:
+
+1. Binary 0,1 response, logit oder probit
+   - Modellierung der Wahrscheinlichkeit für die non-zero counts
+2. Zero-truncated count model
+
+Zero-inflated models (mixture models):
+- Auch: Logit/Probit Komponente für zeros
+   - Unterschied: Modelliert Nullen im Gegensatz zu Einsen
+- Binary zeros und count zeros werden durch beide Komponenten modelliert 
+   - -> Nicht getrennt interpretierbar
+
+Beispiel: Poisson-logit hurdle Modell, bestehend aus logit-Modell für zeros und zero-truncated Poisson für die non-zero counts
+
+### Zero Truncation
+
+Wenn die Beobachtungen keine Nullen enthalten bzw. im Modell nicht möglich sind, können *zero-truncated* (ZT) Modelle verwendet werden.
+
+- Zero-truncated Poisson (ZTP)
+
+## Truncation und Censoring {#trunc-cens}
+
+- **Truncation**: Bestimmte counts *nicht möglich*
+  - z.B. keine Counts < 5 möglich -> *left truncation* (*right truncation* analog)
+  - Interval truncation: Nur counts in Intervall $[a, b]$
+- **Censoring**: Bestimmte counts *nicht beobachtet*, aber möglich

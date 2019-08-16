@@ -7,13 +7,14 @@ editor_options:
 # Entscheidungshilfe
 
 ```{r decision_tree, echo=FALSE}
-library(DiagrammeR)
-
-grViz("
+DiagrammeR::grViz("
 digraph decisiontree {
 
 graph [layout = dot]
 
+################################
+#### Global node attributes ####
+################################
 node [shape = rectangle,
       style = filled,
       color = grey,
@@ -23,6 +24,9 @@ node [fillcolor = white]
 start [label = 'You have found yourself some count data',
    shape = plaintext]
 
+################################
+#### First step             ####
+################################
 node [fillcolor = firebrick]
 od [label = 'Overdispersion (OD)']
 ud [label = 'Underdispersion (UD)']

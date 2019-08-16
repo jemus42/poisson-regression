@@ -1,6 +1,6 @@
 bookdown::gitbook:
   css: css/style.css
-  split_by: chapter+number
+  split_by: rmd
   config:
     toc:
       before: |
@@ -11,6 +11,9 @@ bookdown::gitbook:
     sharing:
       facebook: no
       twitter: no
+  mathjax: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML
+  includes:
+    in_header: mathjax.js
 bookdown::pdf_book:
   includes:
     in_header: latex/preamble.tex
