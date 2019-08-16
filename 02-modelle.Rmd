@@ -73,7 +73,7 @@ Primäre Annahme für Poisson-Modelle: *Equidispersion*, i.e. für den Parameter
 6. Die $\chi^2$-Statistik hat einen Wert nahe 1, i.e. beobachtete und erwartete Varianzen der response sind gleich (Dispersionsindex)
    - Check auf overdispersion: Boundary likelihood ratio test
 
-(Tabelle nach [@hilbeModelingCountData2014], braucht noch Deduplizierung)
+(Nach Tabelle in [@hilbeModelingCountData2014], braucht noch Deduplizierung)
 
 ### Offset
 

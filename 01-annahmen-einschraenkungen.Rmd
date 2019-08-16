@@ -85,7 +85,7 @@ Können auch "per default" verwendet werden, da die resultierenden Schätzer im 
 
 Bootstrapped SEs wiederum erfordern mehr Aufwand, ähneln aber den robusten SEs sowieso sehr stark.
 
-Die resultierenden 
+
 
 ### Underdispersion
 
@@ -95,7 +95,7 @@ Die resultierenden
 
 ### Zero Inflation
 
-Problem: "Excess zeros", i.e. die gewählte Dichtefunktion sagt für $P(y_i\ |\ x_i = 0)$ eine deutlich kleinere Wahrscheinlichkeit vor, als in gegebenen Daten tatsächlich vorliegen.
+Problem: "Excess zeros", i.e. die gewählte Dichtefunktion sagt für $P(y_i = 0\ |\ x_i)$ eine deutlich kleinere Wahrscheinlichkeit vor, als in gegebenen Daten tatsächlich vorliegen.
 
 Modellierung via "two part hurdle or a mixture model" [@hilbeModelingCountData2014, p. 19]
 
