@@ -7,49 +7,26 @@ editor_options:
 # Entscheidungshilfe
 
 ```{r decision_tree, echo=FALSE}
-DiagrammeR::grViz("
-digraph decisiontree {
+library(DiagrammeR)
 
-graph [layout = dot]
+grViz(readLines("graph.dot"))
 
-################################
-#### Global node attributes ####
-################################
-node [shape = rectangle,
-      style = filled,
-      color = grey,
-      fontname = 'Roboto']
+```
 
-node [fillcolor = white]
-start [label = 'You have found yourself some count data',
-   shape = plaintext]
 
-################################
-#### First step             ####
-################################
-node [fillcolor = firebrick]
-od [label = 'Overdispersion (OD)']
-ud [label = 'Underdispersion (UD)']
-zi [label = 'Zero-Inflation (ZI)']
-odzi [label = 'OD + ZI']
-udzi [label = 'UD + ZI']
+```{r better_graph_testing, eval=FALSE, include=FALSE}
+node_df <-
+  create_node_df(
+    n = 4,
+    type = "a",
+    label = c(2384, 3942, 8362, 2194),
+    style = "filled",
+    color = "aqua",
+    shape = c("circle", "circle",
+              "rectangle", "rectangle"),
+    value = c(3.5, 2.6, 9.4, 2.7))
 
-node [fillcolor = orange]
-
-edge [color = grey]
-start -> {od ud zi odzi udzi}
-
-node [fillcolor = green]
-nbin [label = 'Negative Binomial (NB)']
-znbin [label = 'Zero-Inflated Negative Binomial (ZINB)']
-gpois [label = 'Generalized Poisson']
-cmp [label = 'Conway-Maxwell Poisson']
-
-edge [color = green]
-od -> nbin [label = 'Ovderdispersion only']
-ud -> gpois [label = 'Underdispersion']
-odzi -> znbin [label = 'Zero-inflated overdispersion']
-udzi -> cmp [label = 'Zero-inflated underdispersion']
-}")
+create_graph(node_df) %>%
+   render_graph()
 ```
 
