@@ -11,18 +11,27 @@ timestamp()
 
 cat("1.2 Removing previously build output\n")
 if (fs::dir_exists("poisson-regression"))  fs::dir_delete("poisson-regression")
+if (fs::file_exists("poisson-regression.Rmd")) fs::file_delete("poisson-regression.Rmd")
 
 # Gitbook
-cat("2.1 Rendering gitbook (HTML site)\n")
+cat("2.1 Rendering HTML site\n")
 bookdown::render_book(
   "index.Rmd", output_format = "bookdown::gitbook", envir = new.env(), quiet = TRUE
 )
 
 # PDF
-cat("2.2 Rendering PDF)\n")
+cat("2.2 Rendering PDF\n")
 bookdown::render_book(
-  "index.Rmd", output_format = "bookdown::pdf_book", envir = new.env(), quiet = TRUE
+  "index.Rmd", output_format = "bookdown::pdf_book", envir = new.env(), quiet = F
 )
 
 cat("Done rendering!\n")
+
+if (all(Sys.info()[c("sysname", "login")] == c("Windows", "burk"))) {
+  cat("Copying to G:\\EVERYONE\\Burk...\n")
+  fs::dir_copy("poisson-regression", "G:/EVERYONE/Burk/poisson-regression", overwrite = TRUE)
+
+}
+
+cat("Done!\n")
 timestamp()
