@@ -68,9 +68,9 @@ Als Dispersionsstatistik kann die Deviance (*deviance dispersion*) oder oder *pe
 
 Gründe für overdispersion *kann* zero-inflation sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechendes Modell (ZIP, ZINB...) verwendet werden muss – ggf. lässt sich die overdispersion bereits durch ein NB Modell "auffangen". 
 
-#### Umgang mit Overdispersion
+#### Umgang mit Overdispersion {-}
 
-##### Quasipoisson: Skalierung der Standardfehler
+##### Quasipoisson: Skalierung der Standardfehler {-}
 
 $$se(\beta_k) \cdot \sqrt{\chi^2}$$
 Wobei $\chi^2$ der Pearson-Dispersionsindex ist (vgl. @hilbeModelingCountData2014, p. 92ff)
@@ -79,7 +79,7 @@ In `R` passiert genau das, wenn in `family = quasipoisson()`.
 
 Nachteil: Es wird zuerst ein reguläres Poisson-Modell gefittet, Standardfehler und Dispersionsindex bestimmt, und dann dasselbe Modell mit skalierten Standardfehlern erneut gefittet – dementsprechend ist diese Methode vermutlich für größere Datensätze eher ineffizient.
 
-##### Robuste Varianzschätzer / Sandwich Estimators
+##### Robuste Varianzschätzer / Sandwich Estimators {-}
 
 Können auch "per default" verwendet werden, da die resultierenden Schätzer im Falle tatsächlich unkorrellierter Daten äquivalent zu den Standardfehlern des Modells sind (i.e. "schadet nicht").
 
