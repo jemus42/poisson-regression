@@ -43,7 +43,7 @@ Zur Evaluation des Despersionparameters kann ein NBH Modell (\@ref(mod-nbh)) gen
 @perumean-chaneyZeroinflatedOverdispersedWhat2013 schlagen folgendes Vorgehen vor um Overdispersion und Zero-Inflation zu erkennen:
 
 ```{r perumean_chaney_decision_tree}
-grViz(readLines("graph.dot"))
+grViz(readLines("PerumeanChaney.dot"))
 ```
 
 
