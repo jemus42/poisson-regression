@@ -7,10 +7,7 @@ editor_options:
 # Entscheidungshilfe
 
 ```{r decision_tree, echo=FALSE}
-library(DiagrammeR)
-
 grViz(readLines("graph.dot"))
-
 ```
 
 

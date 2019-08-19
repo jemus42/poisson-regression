@@ -75,6 +75,12 @@ Primäre Annahme für Poisson-Modelle: *Equidispersion*, i.e. für den Parameter
 
 (Nach Tabelle in [@hilbeModelingCountData2014], braucht noch Deduplizierung)
 
+Alternative Formulierung nach @winkelmannEconometricAnalysisCount2010 (p. 64):
+
+1. $f(y\ |\ \lambda) = \frac{e^{-\lambda} \lambda^y}{y!} \quad \lambda > 0, y = 0, 1, 2, \ldots$.
+2. $\lambda = \exp(\mathbf{x}' \boldsymbol{\beta})$.
+3. Beobachtungspaare $(y_i, x_i)$ sind unabhängig verteilt.
+
 ### Offset
 
 Ein Offset wird benötigt, um auf ungleiche Expositionsdauern oder -gebiete zu adjustieren. Dazu dient der Koeffizient $t$, der die Länge der Zeit unter Exposition angibt:
@@ -115,7 +121,7 @@ family = poisson(), offset = log(cases))
   - Dispersionsparameter in R's `glm` bzw. `MASS::glm.nb` invertiert: $\theta = \frac 1 \alpha$
   - -> Äquivalenz zu Poisson bei $\theta \to \infty$
   
-> "The negative binimial model adjusts for Poisson overdispersion; it cannot be used to model underdispersed Poisson data" 
+> "The negative binimial model adjusts for Poisson overdispersion; it **cannot be used to model underdispersed** Poisson data" 
 > [@hilbeModelingCountData2014, p. 11]
   
   
@@ -155,3 +161,10 @@ Vgl @hilbeModelingCountData2014
 
 - Selling feature: Erlaubt Parametrisierung von $\alpha$
 - -> Ursache für under-/overdispersion modellierbar
+
+## Conway-Maxwell Poisson
+
+- Software:
+   - `CompGLM::glm.comp`
+   - `COMPoissonReg` (GitHub: `lotze/COMPoissonReg`)
+   - `compoisson` (Not sure if modelling)

@@ -6,7 +6,7 @@ lang: de-DE
 site: bookdown::bookdown_site
 url: ''
 documentclass: scrartcl
-bibliography: [Poisson.bib, packages.bib]
+bibliography: ["Poisson.bib"]
 biblio-style: apalike
 link-citations: yes
 colorlinks: true
@@ -19,14 +19,12 @@ monofontoptions:
   - Mapping=tex-ansi
   - Scale=0.75
 mathfont: "Asana Math"
-always_allow_html: yes
 ---
 
 ```{r setup, include=FALSE}
 options(
   knitr.table.format = ifelse(knitr::is_html_output(), "html", "latex")
 )
-
 
 knitr::opts_chunk$set(
   fig.width = 6,
@@ -36,7 +34,20 @@ knitr::opts_chunk$set(
 
 library(kableExtra)
 library(tibble)
+library(DiagrammeR)
+
 ```
 
 
 # Einführung {#intro}
+
+- Anwendungsfall: Count data
+- Regulärer Ansatz: Poisson-Regression
+   - Major pitfall: Notwendigkeit für $\lambda_i = \mathbb{E}(y_i) = \mathrm{Var}(y_i)$
+   - -> In der Regel overdispersion $\mathrm{Var}(y_i) > \mathbb{E}(y_i)$
+   - Auch möglich: *under*dispersion $\mathrm{Var}(y_i) < \mathbb{E}(y_i)$
+- "Lösung" für overdispersion: Negative Binomialverteilung
+   - Modelliert die Varianz mit (als Gamma-verteilte Zufallsvariable, "Poisson-Gamma mixture")
+   - Problem: Dispersionsparameter ist streng positiv, i.e. underdispersion kann nicht damit abgebildet werden
+- "Lösung" für underdispersion:
+   - Im Allgemeinen [generalized Poisson](https://stats.stackexchange.com/a/237177/80056) (R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html))

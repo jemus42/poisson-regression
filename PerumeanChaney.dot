@@ -1,0 +1,29 @@
+digraph PerumeanChaney {
+
+graph [layout = dot]
+
+################################
+#### Global node attributes ####
+################################
+node [shape = plaintext,
+      color = black,
+      fontname = "Roboto"]
+edge [fontname = "Roboto"]
+
+node [fillcolor = white]
+start [label = "Test for Overdispersion\n(Poisson vs. NB)"]
+test_zi_poi [label = "Test for Zero-Inflation\n(Poisson vs. ZIP)"]
+test_zi_nb [label = "Test for Zero-Inflation\n(NB vs. ZINB)"]
+Poisson
+ZIP
+NB
+ZINB
+
+edge []
+start -> test_zi_poi [label = "N.S."]
+start -> test_zi_nb  [label = "S"]
+test_zi_poi -> Poisson [label = "N.S."]
+test_zi_poi -> ZIP [label = "S"]
+test_zi_nb -> NB [label = "N.S."]
+test_zi_nb -> ZINB [label = "S"]
+}

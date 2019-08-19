@@ -37,7 +37,15 @@ Mit *Dispersionsparameter* $\theta$ [vgl. @fahrmeirRegressionModelleMethoden2009
 
 ```
 
-Zur Evaluation des Despersionparameters kann ein NBH Modell (\@ref(mod-nbh)) genutzt werden, wobei der  Dispersionsparameter modelliert wird (-> welche Variablen tragen zur extradispersion bei).
+Zur Evaluation des Despersionparameters kann ein NBH Modell (\@ref(mod-nbh)) genutzt werden, wobei der  Dispersionsparameter modelliert wird.
+
+
+@perumean-chaneyZeroinflatedOverdispersedWhat2013 schlagen folgendes Vorgehen vor um Overdispersion und Zero-Inflation zu erkennen:
+
+```{r perumean_chaney_decision_tree}
+grViz(readLines("graph.dot"))
+```
+
 
 ### Overdispersion
 
@@ -96,6 +104,20 @@ Bootstrapped SEs wiederum erfordern mehr Aufwand, ähneln aber den robusten SEs 
 ### Zero Inflation
 
 Problem: "Excess zeros", i.e. die gewählte Dichtefunktion sagt für $P(y_i = 0\ |\ x_i)$ eine deutlich kleinere Wahrscheinlichkeit vor, als in gegebenen Daten tatsächlich vorliegen.
+
+
+#### Tests auf Zero-Inflation {-}
+
+- Vuong Test
+   - Für non-nested models
+   - E.g Poisson vs. ZIP
+- Hausman Test
+
+
+Für sowohl overdispersion als auch zero-inflation: Score-Tests [@perumean-chaneyZeroinflatedOverdispersedWhat2013, p. 1674, siehe auch entsprechende citations]
+
+
+#### Modellierung {-}
 
 Modellierung via "two part hurdle or a mixture model" [@hilbeModelingCountData2014, p. 19]
 
