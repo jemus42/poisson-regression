@@ -274,8 +274,9 @@ Mit $\mathbb{E}_2$ als Erwartunsgwert von $f_2$.
 
 Mit $f_2 = \mathrm{Poisson}$:
   
-- $0 < \Theta < 1$: Overdispersion
+- $0 < \Theta < 1$: Overdispersion  
 - $1 < \Theta < \frac{\lambda_2 + 1}{\lambda_2}$: Underdispersion
+
 ```
 
 

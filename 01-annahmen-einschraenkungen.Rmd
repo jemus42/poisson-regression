@@ -135,7 +135,7 @@ Für sowohl overdispersion als auch zero-inflation: Score-Tests (?) [@perumean-c
 
 Modellierung via 
 
-- two part hurdle (Siehe Abschnitt \ref(mod-zi))
+- two part hurdle (Siehe Abschnitt \@ref(mod-zi))
 - mixture models (Siehe Abschnitt \@ref(mod-hurdle))
 
 [@hilbeModelingCountData2014, p. 19]
