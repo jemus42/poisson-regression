@@ -134,6 +134,36 @@ family = poisson(), offset = log(cases))
 
 ### Conway-Maxwell Poisson {#mod-comp}
 
+```{definition, name = "Conway-Maxwell-Poisson Modell (CMP)"}
+Nach @shmueliUsefulDistributionFitting2005 (p. 129):
+  
+\begin{align}
+P(X = x) &= \frac{\lambda^x}{(x!)^\nu} \frac{1}{Z(\lambda, \nu)}, \quad x = 0, 1, 2, \ldots \\
+Z(\lambda, \nu) &= \sum_{j = 0}^\infty \frac{\lambda^j}{(j!)^\nu} \\
+\\
+\lambda > 0&, \nu \ge 0
+\end{align}
+
+Mit nichtlinearer Zerfallsrate $\nu$ *rate of decay*, so dass:
+
+\begin{equation}  
+\frac{P(X = x -1)}{P(X = x)} = \frac{x^\nu}{\lambda}
+\end{equation}
+```
+
+Die Verteilung hat als Spezialfälle:
+
+- Poisson: $\nu = 1 \Longrightarrow Z(\lambda, \nu) = \exp(\lambda)$
+- Bernoulli mit $P(X = 1) = \frac{\lambda}{1+\lambda}$: $\nu \to \infty \Longrightarrow Z(\lambda, \nu) \to 1 + \lambda$
+- Geometrisch mit $P(X = x) = \lambda^x (1 - \lambda)$: $\nu = 0, \lambda < 1$
+
+
+- **Vorteile**:
+- "Low cost", i.e. "nur" ein zusätzlicher Parameter
+- Einfach zu handhaben
+- Over- und underdispersion abbildbar
+- Zero-inflation abbildbar
+
 - Software:
    - `CompGLM::glm.comp`
    - `COMPoissonReg` (GitHub: `lotze/COMPoissonReg`)
@@ -228,17 +258,16 @@ P(Y = 1) &= (1 - \pi) \cdot \frac{\Gamma(\theta+y)}{\Gamma(\theta) \Gamma(y + 1)
 - *Nested* hurdle models: Beide Komponenten nested (e.g. beide Poisson).
 - *Non-nested* hurdle models: Hurdle-Komponente als vollständig anderer Prozess betrachtet und via e.g. logit modelliert.
 
-in zwei Komponenten:
+Zwei Komponenten für unnested hurdle models:
 
 1. Binary 0,1 response, (logit oder probit)
    - Modellierung der Wahrscheinlichkeit für die non-zero counts
 2. Zero-truncated count model
 
-
 - Erlauben sowohl under- als auch overdispersion
-- Erlauben systematischen Unterschied im Prozess, der zu e.g. Outcomes = 0 vs. Outcomes > 0 führt
+- (Unnested models) erlauben systematischen Unterschied im Prozess, der zu e.g. Outcomes = 0 vs. Outcomes > 0 führt, was durch die Wahl unterschiedlicher Modelle für beide Komponenten abgebildet wird
 
-Offene Fragen: Interpretierbarkeit der binary Komponente?
+In diesem Fall entspricht das Resultat eines hurdle models zwei separat gefitteten Modellen (e.g. Pois + Logit), die getrennt interpretierbar sind (im Gegensatz zu zero-inflated models!).
 
 ```{definition, name = "Hurdle Model"}
 Nach @winkelmannEconometricAnalysisCount2010, p. 179f:
