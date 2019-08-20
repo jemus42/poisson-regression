@@ -30,7 +30,11 @@ cat("Done rendering!\n")
 if (all(Sys.info()[c("sysname", "login")] == c("Windows", "burk"))) {
   cat("Copying to G:\\EVERYONE\\Burk...\n")
   fs::dir_copy("poisson-regression", "G:/EVERYONE/Burk/poisson-regression", overwrite = TRUE)
+}
 
+if (all(Sys.info()[c("sysname", "login")] == c("Darwin", "Lukas"))) {
+  cat("Copying to lukas.tadaa-data.de/poisson/")
+  fs::dir_copy("poisson-regression", "~/Sync/lukas.tadaa-data.de/poisson/", overwrite = TRUE)
 }
 
 cat("Done!\n")
