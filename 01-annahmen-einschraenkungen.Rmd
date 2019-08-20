@@ -12,7 +12,7 @@ Es gelten Standardannahmen des GLM:
 - $\eta_i = \boldsymbol{x}_i' \boldsymbol{\beta}$ als linearer Operator
 - Response- und Linkfunktionen $h(x)$ und $g(x) = h^{-1}(x)$
 
-## Dispersion
+## Dispersion {#dispersion}
 
 ```{definition, name = "Dispersions"}
 \begin{align*}
@@ -108,9 +108,10 @@ Im Kontext von hurdle models taucht folgende Bemerkung auf:
 > The higher the expected value of the Poisson distribution, the lowert the predicted probability of zero outcome and the lower the scope for underdispersion.
 > -- [@winkelmannEconometricAnalysisCount2010, p. 180]
 
+Im Allgemeinen wird [generalized Poisson](https://stats.stackexchange.com/a/237177/80056) (R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html)) empfohlen [@hilbeModelingCountData2014].
 
 
-## Zeros
+## Zeros {#zeros}
 
 
 ### Zero Inflation
