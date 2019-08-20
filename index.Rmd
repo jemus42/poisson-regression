@@ -42,13 +42,10 @@ library(DiagrammeR)
 
 # Einführung {#intro}
 
-- Anwendungsfall: Count data
-- Regulärer Ansatz: Poisson-Regression
-   - Major pitfall: Notwendigkeit für $\lambda_i = \mathbb{E}(y_i) = \mathrm{Var}(y_i)$
-   - -> In der Regel overdispersion $\mathrm{Var}(y_i) > \mathbb{E}(y_i)$
-   - Auch möglich: *under*dispersion $\mathrm{Var}(y_i) < \mathbb{E}(y_i)$
-- "Lösung" für overdispersion: Negative Binomialverteilung
-   - Modelliert die Varianz mit (als Gamma-verteilte Zufallsvariable, "Poisson-Gamma mixture")
-   - Problem: Dispersionsparameter ist streng positiv, i.e. underdispersion kann nicht damit abgebildet werden
-- "Lösung" für underdispersion:
-   - Im Allgemeinen [generalized Poisson](https://stats.stackexchange.com/a/237177/80056) (R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html))
+Dieses Dokument soll einen Überblick zum Umgang mit Zähldaten (*count data*) liefern.  
+Zähldaten können im Allgemeinen mittels Poissonverteilung modelliert werden, wobei in der Praxis einige Komplikationen zu erwarten sind:
+
+- Over-/underdispersion (siehe Abschnitt \@ref(dispersion)): Die Poissonverteilung besitzt nur einen Parameter für sowohl Erwartungswert als auch Varianz und nimmt somit *equidispersion* an – diese Annahme ist meist in Form von overdispersion verletzt
+- Zero-Inflation (siehe Abschnitt \@ref(zeros)): Aus einem Modell lässt sich die erwartete Anzahl an Beobachtungen mit Anzahl $0$ bestimmen – wenn die beobachtete Anzahl (bzw. der Anteil) an Nullen deutlich größer ist, spricht man von *zero-inflation*
+
+Diese Umstände benötigen in der Regel Generalisierungen der einfach Poisson-Regression, entweder durch Erweiterung der Verteilung um zusätzliche Parameter (siehe z.B. *Negative Binomialverteilung* für overdispersion in Abschnitt \@ref(mod-nb), *Generalized Poisson* für underdispersion in Abschnitt \@ref(mod-gp)) oder die Konstruktion von *mixture models* oder *hurdle models* für zero-inflation (Abschnitte \@ref(mod-zi) und  \@ref(mod-hurdle)).
