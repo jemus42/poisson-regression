@@ -46,6 +46,10 @@ Zur Evaluation des Despersionparameters kann ein NBH Modell (\@ref(mod-nbh)) gen
 grViz(readLines("PerumeanChaney.dot"))
 ```
 
+Wobei im ersten Schritt sowohl Poisson als auch NB-Modelle gefittet werden, und dann nach Goodness-of-Fit (via LRT) (NB > Poisson?) entschieden wird.  
+Im zweiten Schritt werden die jeweiligen Modelle (entweder Poisson oder NB) mit ihren ZI-Counterparts verglichen (model fit, Vuong-Test), analog Schritt 1.  
+"LRT-Vuong Method".
+
 
 ### Overdispersion
 
@@ -87,6 +91,7 @@ In `R` passiert genau das, wenn in `family = quasipoisson()`.
 
 Nachteil: Es wird zuerst ein reguläres Poisson-Modell gefittet, Standardfehler und Dispersionsindex bestimmt, und dann dasselbe Modell mit skalierten Standardfehlern erneut gefittet – dementsprechend ist diese Methode vermutlich für größere Datensätze eher ineffizient.
 
+
 ##### Robuste Varianzschätzer / Sandwich Estimators {-}
 
 Können auch "per default" verwendet werden, da die resultierenden Schätzer im Falle tatsächlich unkorrellierter Daten äquivalent zu den Standardfehlern des Modells sind (i.e. "schadet nicht").
@@ -96,6 +101,13 @@ Bootstrapped SEs wiederum erfordern mehr Aufwand, ähneln aber den robusten SEs 
 
 
 ### Underdispersion
+
+Im Kontext von hurdle models taucht folgende Bemerkung auf:
+
+> [...] that underdispersion occurs if zeros are less frequent than the parent distribution would predict.
+> The higher the expected value of the Poisson distribution, the lowert the predicted probability of zero outcome and the lower the scope for underdispersion.
+> -- [@winkelmannEconometricAnalysisCount2010, p. 180]
+
 
 
 ## Zeros
@@ -108,37 +120,31 @@ Problem: "Excess zeros", i.e. die gewählte Dichtefunktion sagt für $P(y_i = 0\
 
 #### Tests auf Zero-Inflation {-}
 
-- Vuong Test
+- Vuong Test (vgl. @perumean-chaneyZeroinflatedOverdispersedWhat2013)
    - Für non-nested models
    - E.g Poisson vs. ZIP
-- Hausman Test
+- (Hausman Test)
 
 
-Für sowohl overdispersion als auch zero-inflation: Score-Tests [@perumean-chaneyZeroinflatedOverdispersedWhat2013, p. 1674, siehe auch entsprechende citations]
+Für sowohl overdispersion als auch zero-inflation: Score-Tests (?) [@perumean-chaneyZeroinflatedOverdispersedWhat2013, p. 1674, siehe auch entsprechende citations]
 
+> As noted by Yang et al., the univariate situation is recommended for asssessing zero inflation als covariates reduce the power to detect zero inflation
+> --- @perumean-chaneyZeroinflatedOverdispersedWhat2013, p. 1674
 
 #### Modellierung {-}
 
-Modellierung via "two part hurdle or a mixture model" [@hilbeModelingCountData2014, p. 19]
+Modellierung via 
 
+- two part hurdle (Siehe Abschnitt \ref(mod-zi))
+- mixture models (Siehe Abschnitt \@ref(mod-hurdle))
+
+[@hilbeModelingCountData2014, p. 19]
+
+Mixtures Models: 
 - Zero-inflated poisson (ZIP)
 - Zero-inflated negative binomial (ZINB)
 - Zero-inflated Poisson Inverse Gaussian (ZPIG)
 
-
-"Hurdle models" in zwei Komponenten:
-
-1. Binary 0,1 response, logit oder probit
-   - Modellierung der Wahrscheinlichkeit für die non-zero counts
-2. Zero-truncated count model
-
-Zero-inflated models (mixture models):
-- Auch: Logit/Probit Komponente für zeros
-   - Unterschied: Modelliert Nullen im Gegensatz zu Einsen
-- Binary zeros und count zeros werden durch beide Komponenten modelliert 
-   - -> Nicht getrennt interpretierbar
-
-Beispiel: Poisson-logit hurdle Modell, bestehend aus logit-Modell für zeros und zero-truncated Poisson für die non-zero counts
 
 ### Zero Truncation
 

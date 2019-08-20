@@ -22,7 +22,6 @@ tibble::tribble(
   kable_styling(position = "center", protect_latex = TRUE)
 ```
 
-
 ## Poisson {#mod-pois}
 
 Das Poisson-Modell stellt die Grundlage für die meisten der folgenden Modelle dar, und verdient daher eine genauere Betrachtung.
@@ -109,7 +108,51 @@ family = poisson(), offset = log(cases))
 ```
 
 
+### Poisson Inverse Gaussian (PIG) {#mod-pig}
+
+- Annahme: Overdispersion besser über *inverse Gaussian* Verteilung als Gamma-Verteilung (siehe NBIN) beschreibbar
+
+- Dispersionsparameter $\alpha$, Interpretation analog NBIN
+- Interpretation der exponentierten Koeffizienten: IRRs
+
+- Software:
+- R: `gamlss` (CRAN)
+- Stata: `pigreg` ()
+
+### Generalized Poisson {#mod-gp}
+
+- Auch mit dispersion/scale Parameter $\alpha$
+- Analog NB: $\alpha = 0 \Rightarrow y \sim \mathrm{Pois}(\lambda)$
+- Selling feature: $\alpha < 0$ ist möglich, im Gegensatz zu NB
+- -> Underdispersion modellierbar
+
+- Software: 
+- [Vgl. Stackexchange Kommentar von Joseph Hilbe](https://stats.stackexchange.com/a/237177/80056)
+- R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html)
+
+
+
+### Conway-Maxwell Poisson {#mod-comp}
+
+- Software:
+   - `CompGLM::glm.comp`
+   - `COMPoissonReg` (GitHub: `lotze/COMPoissonReg`)
+   - `compoisson` (Not sure if modelling)
+
 ## Negative Binomial (NB) {#mod-nb}
+
+```{definition, name = "Negative Binomialverteilung"}
+Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675):
+
+Für $Y \sim NB(\mu, \theta)$ gilt
+  
+\begin{equation}
+P(Y = y) = \frac{\Gamma(\theta + y)}{\Gamma(\theta) \Gamma(y+1)} \frac{\theta^\theta \mu^y}{(\theta + \mu)^{(\theta + y)}}, \quad y = 0, 1, 2, \ldots
+\end{equation}
+
+Mit $\mathbb{E}(Y) = \mu$ und $\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}$
+```
+
 
 - Derivation: Poisson-Gamma Mischmodell
 - Erweiterung der Poissonverteilung um einen Dispersionsparameter $\alpha$
@@ -127,18 +170,12 @@ family = poisson(), offset = log(cases))
   
 Vgl @hilbeModelingCountData2014
 
-## Poisson Inverse Gaussian (PIG) {#mod-pig}
+### Heterogenous Negative Binomial (NBH) {#mod-nbh}
 
-- Annahme: Overdispersion besser über *inverse Gaussian* Verteilung als Gamma-Verteilung (siehe NBIN) beschreibbar
+- Selling feature: Erlaubt Parametrisierung von $\alpha$
+- -> Ursache für under-/overdispersion modellierbar
 
-- Dispersionsparameter $\alpha$, Interpretation analog NBIN
-- Interpretation der exponentierten Koeffizienten: IRRs
-
-- Software:
-- R: `gamlss` (CRAN)
-- Stata: `pigreg` ()
-
-## Negative binomial-P (NB-P) {#mod-nbp}
+### Negative binomial-P (NB-P) {#mod-nbp}
 
 - NB: Varianz statisch für alle Beobachtungen
 - -> NB-P: Varianz kann für Beobachtungen variieren (Parameter $\rho$)
@@ -146,25 +183,103 @@ Vgl @hilbeModelingCountData2014
 - Primärer Anwendungsfall: Bestimmen, ob NB1 oder NB2 besser passt
   - Wenn $\rho \approx 2$ -> NB2, sonst NB1 (@hilbeModelingCountData2014, p. 21)
 
-## Generalized Poisson {#mod-gp}
 
-- Auch mit dispersion/scale Parameter $\alpha$
-- Analog NB: $\alpha = 0 \Rightarrow y \sim \mathrm{Pois}(\lambda)$
-- Selling feature: $\alpha < 0$ ist möglich, im Gegensatz zu NB
-- -> Underdispersion modellierbar
 
-- Software: 
-- [Vgl. Stackexchange Kommentar von Joseph Hilbe](https://stats.stackexchange.com/a/237177/80056)
-- R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html)
+## Zero-Inflated Models (*mixture models*) {#mod-zi}
 
-## Heterogenous Negative Binomial (NBH) {#mod-nbh}
+- Logit/Probit Komponente für zeros
+   - Unterschied: Modelliert Nullen im Gegensatz zu Einsen
+- Binary zeros und count zeros werden durch beide Komponenten modelliert 
+   - -> Nicht getrennt interpretierbar
+- -> Erzeugen eigene PDF, e.g. ZIP, die mixture aus beiden Komponenten darstellt
 
-- Selling feature: Erlaubt Parametrisierung von $\alpha$
-- -> Ursache für under-/overdispersion modellierbar
+Beispiel: Poisson-logit hurdle Modell, bestehend aus logit-Modell für zeros und zero-truncated Poisson für die non-zero counts
 
-## Conway-Maxwell Poisson
+ZIP und ZINB wurde hergeleitet als zweiteilige mixture distributions. Die allgemeine Form für mixture distributions ist
 
-- Software:
-   - `CompGLM::glm.comp`
-   - `COMPoissonReg` (GitHub: `lotze/COMPoissonReg`)
-   - `compoisson` (Not sure if modelling)
+\begin{equation}
+P(Y = y) = p \cdot g_1(y) + (1-p) \cdot g_2(y)
+\end{equation}
+
+mit $p$ als *mixture proportion* und $g_1, g_2$ als Dichte-/Massefunktionen der beiden Komponenten.
+
+In dieser Darstellung entspricht $p$ der *rate of zero-inflation* $\pi$, $g_1$ einer degenerierten 0-verteilung und $g_2$ einer Poisson-PMF.
+
+```{definition, name = "Zero-Inflated Poisson Verteilung"}
+Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675)
+
+\begin{align}
+P(Y = 0) &= \pi + (1-\pi) \cdot e^{-\mu} \\
+P(Y = 1) &= (1 - \pi) \cdot \frac{\mu^y e^{-\mu}}{y!}
+\end{align}
+```
+
+```{definition, name = "Zero-Inflated Negative Binomialverteilung"}
+Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675)
+
+\begin{align}
+P(Y = 0) &= \pi + (1 - \pi) \cdot \frac{\theta^\theta}{(\theta + \mu)^\theta}  \\
+P(Y = 1) &= (1 - \pi) \cdot \frac{\Gamma(\theta+y)}{\Gamma(\theta) \Gamma(y + 1)} \frac{\theta^\theta \mu^y}{(\theta + \mu)^{(\theta + y)}}
+\end{align}
+```
+
+## Hurdle models {#mod-hurdle}
+
+- *Nested* hurdle models: Beide Komponenten nested (e.g. beide Poisson).
+- *Non-nested* hurdle models: Hurdle-Komponente als vollständig anderer Prozess betrachtet und via e.g. logit modelliert.
+
+in zwei Komponenten:
+
+1. Binary 0,1 response, (logit oder probit)
+   - Modellierung der Wahrscheinlichkeit für die non-zero counts
+2. Zero-truncated count model
+
+
+- Erlauben sowohl under- als auch overdispersion
+- Erlauben systematischen Unterschied im Prozess, der zu e.g. Outcomes = 0 vs. Outcomes > 0 führt
+
+Offene Fragen: Interpretierbarkeit der binary Komponente?
+
+```{definition, name = "Hurdle Model"}
+Nach @winkelmannEconometricAnalysisCount2010, p. 179f:
+  
+Sei $g_1(0)$ die Wahrscheinlichkeit des Outcomes $0$ und $g_1(k), k = 1, 2, 3, \ldots$ die Wahrscheinlichkeitsfunktion für natürliche Zahlen, dann ist die Wahrscheinlichkeitsfunktion eines *hurdle-at-zero* Modells:
+  
+\begin{align*}
+f(y = 0) &= g_1(0) \\
+f(y = k) &= (1 - g_1(0)) g_2(k), \quad k = 1, 2, 3, \ldots
+\end{align*}
+
+Bzw. nach Mullahey (1986) mit $f_1$ und $f_2$ als PMFs für natürliche Zahlen
+
+\begin{align*}
+f(y = 0) &= f_1(0) \\
+f(y = 1) &= \frac{1 - f_1(0)}{1 - f_2(0)} f_2(k) \\
+         &= \Theta f_2(k), \quad k = 1, 2, 3, \ldots 
+\end{align*}
+
+Wobei 
+
+- $f_2$ als *parent process* bezeichnet wird
+- $1 - f_1(0)$ die Wahrscheinlichkeit angibt, die Hürde ($y = 0$) zu "überqueren" (*"crossing the hurdle"*).
+- $1 - f_2(0)$ zur Normalisierung von $f_2$ dient, um deren truncation zu berücksichtigen.
+
+Der Erwartungswert des hurdle models ist
+
+$$
+  \mathbb{E}_h(y) = \Theta \sum_{k=1}^\infty k f_2(k) = \Theta \mathbb{E}_2(y)
+$$
+  
+Mit $\mathbb{E}_2$ als Erwartunsgwert von $f_2$.
+
+Mit $f_2 = \mathrm{Poisson}$:
+  
+- $0 < \Theta < 1$: Overdispersion
+- $1 < \Theta < \frac{\lambda_2 + 1}{\lambda_2}$: Underdispersion
+```
+
+
+> "By far the most popular hurdle model in practice is the hurdle-at-zero negative bonomial model"
+[@winkelmannEconometricAnalysisCount2010, p. 183]
+
+mit $f_1 \sim NB(\beta_1, \alpha_1)$ und $f_2 \sim NB(\beta_2, \alpha_2)$
