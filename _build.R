@@ -9,7 +9,7 @@
 
 timestamp()
 
-cat("1.2 Removing previously build output\n")
+cat("1.2 Removing previously built output\n")
 if (fs::dir_exists("poisson-regression"))  fs::dir_delete("poisson-regression")
 if (fs::file_exists("poisson-regression.Rmd")) fs::file_delete("poisson-regression.Rmd")
 
