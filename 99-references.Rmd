@@ -3,7 +3,7 @@
 '`
 
 
-```{r make_pkg_bib, include=FALSE}
+```{r make_pkg_bib, include=FALSE, eval=FALSE}
 # automatically create a bib database for R packages
 knitr::write_bib(c(
   .packages(), 'bookdown', 'knitr', 'rmarkdown'
