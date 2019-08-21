@@ -5,7 +5,7 @@ bookdown::gitbook:
   config:
     toc:
       before: |
-        <li><a href="./">Poisson Regression und ihre Schmerzen</a></li>
+        <li><a href="./">Poisson Regression</a></li>
       after: |
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Built with bookdown</a></li>
     download: ["pdf", "tex"]

@@ -22,7 +22,7 @@ bookdown::render_book(
 # PDF
 cat("2.2 Rendering PDF\n")
 bookdown::render_book(
-  "index.Rmd", output_format = "bookdown::pdf_book", envir = new.env(), quiet = F
+  "index.Rmd", output_format = "bookdown::pdf_book", envir = new.env(), quiet = TRUE
 )
 
 cat("Done rendering!\n")
@@ -33,7 +33,7 @@ if (all(Sys.info()[c("sysname", "login")] == c("Windows", "burk"))) {
 }
 
 if (all(Sys.info()[c("sysname", "login")] == c("Darwin", "Lukas"))) {
-  cat("Copying to lukas.tadaa-data.de/poisson/")
+  cat("Copying to lukas.tadaa-data.de/poisson/\n")
   fs::dir_copy("poisson-regression", "~/Sync/lukas.tadaa-data.de/poisson/", overwrite = TRUE)
 }
 

@@ -40,7 +40,7 @@ library(DiagrammeR)
 ```
 
 
-# Einführung {#intro}
+# Einführung {-}
 
 Dieses Dokument soll einen Überblick zum Umgang mit Zähldaten (*count data*) liefern.  
 Zähldaten können im Allgemeinen mittels Poissonverteilung modelliert werden, wobei in der Praxis einige Komplikationen zu erwarten sind:
