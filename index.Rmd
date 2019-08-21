@@ -33,14 +33,32 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-library(kableExtra)
+# Data transformation & modelling
 library(tibble)
-library(DiagrammeR)
+library(broom)
 
+# Tables
+library(kableExtra)
+library(pander)
+library(skimr)
+
+# Plotting
+library(ggplot2)
+if (!requireNamespace("firasans")) {
+   remotes::install_github("hrbrmstr/firasans")
+}
+library(firasans)
+
+theme_set(
+   theme_ipsum_fsc()
+)
+
+# Graphs
+library(DiagrammeR)
 ```
 
 
-# Einführung {-}
+# Einführung 
 
 Dieses Dokument soll einen Überblick zum Umgang mit Zähldaten (*count data*) liefern.  
 Zähldaten können im Allgemeinen mittels Poissonverteilung modelliert werden, wobei in der Praxis einige Komplikationen zu erwarten sind:
@@ -49,3 +67,14 @@ Zähldaten können im Allgemeinen mittels Poissonverteilung modelliert werden, w
 - Zero-Inflation (siehe Abschnitt \@ref(zeros)): Aus einem Modell lässt sich die erwartete Anzahl an Beobachtungen mit Anzahl $0$ bestimmen – wenn die beobachtete Anzahl (bzw. der Anteil) an Nullen deutlich größer ist, spricht man von *zero-inflation*
 
 Diese Umstände benötigen in der Regel Generalisierungen der einfach Poisson-Regression, entweder durch Erweiterung der Verteilung um zusätzliche Parameter (siehe z.B. *Negative Binomialverteilung* für overdispersion in Abschnitt \@ref(mod-nb), *Generalized Poisson* für underdispersion in Abschnitt \@ref(mod-gp)) oder die Konstruktion von *mixture models* oder *hurdle models* für zero-inflation (Abschnitte \@ref(mod-zi) und  \@ref(mod-hurdle)).
+
+## Datenbeispiele {#data}
+
+    
+Daten aus @hilbeModelingCountData2014 sind verfügbar als CSV (`HILBE-MCD-CVS-data`) auf [der Website des Autors](https://works.bepress.com/joseph_hilbe/58/).
+
+Davon verwendet wurden:
+
+- `azprocedure`:
+    - `R` package `COUNT`, access via `data(azprocedure, package = "COUNT")`
+    - Dokumentation: `?COUNT::azprocedure`

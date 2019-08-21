@@ -1,4 +1,5 @@
 bookdown::gitbook:
+  df_print: kable
   css: css/style.css
   toc_depth: 3
   split_by: rmd

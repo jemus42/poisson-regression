@@ -4,26 +4,21 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Entscheidungshilfe
+# Entscheidungshilfen
+
+@perumean-chaneyZeroinflatedOverdispersedWhat2013 schlagen folgendes Vorgehen vor um Overdispersion und Zero-Inflation zu erkennen:
+
+```{r perumean_chaney_decision_tree, echo=FALSE}
+grViz(readLines("PerumeanChaney.dot"))
+```
+
+Wobei im ersten Schritt sowohl Poisson als auch NB-Modelle gefittet werden, und dann nach Goodness-of-Fit (via LRT) (NB > Poisson?) entschieden wird.  
+Im zweiten Schritt werden die jeweiligen Modelle (entweder Poisson oder NB) mit ihren ZI-Counterparts verglichen (model fit, Vuong-Test), analog Schritt 1.  
+"LRT-Vuong Method".
+
+Eine allgemeinere Darstellung zur Veranschaulichung der sich ergebenden Möglichkeiten:
 
 ```{r decision_tree, echo=FALSE}
 grViz(readLines("graph.dot"))
-```
-
-
-```{r better_graph_testing, eval=FALSE, include=FALSE}
-node_df <-
-  create_node_df(
-    n = 4,
-    type = "a",
-    label = c(2384, 3942, 8362, 2194),
-    style = "filled",
-    color = "aqua",
-    shape = c("circle", "circle",
-              "rectangle", "rectangle"),
-    value = c(3.5, 2.6, 9.4, 2.7))
-
-create_graph(node_df) %>%
-   render_graph()
 ```
 

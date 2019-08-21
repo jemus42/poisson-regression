@@ -37,18 +37,43 @@ Mit *Dispersionsparameter* $\theta$ [vgl. @fahrmeirRegressionModelleMethoden2009
 
 ```
 
-Zur Evaluation des Despersionparameters kann ein NBH Modell (\@ref(mod-nbh)) genutzt werden, wobei der  Dispersionsparameter modelliert wird.
+Zur expliziten Modellierung des Despersionparameters kann ein NBH Modell (\@ref(mod-nbh)) genutzt werden.
+
+Als Dispersionsstatistik kann die Deviance (*deviance dispersion*) oder oder *pearson dispersion* berechnet werden. Laut @hilbeModelingCountData2014 ist die *Pearson dispersion* zu bevorzugen, da sie für echte Poisson-Modelle gleich 1 ist, wohingegen die *deviance dispersion* nach oben verzerrt ist.
 
 
-@perumean-chaneyZeroinflatedOverdispersedWhat2013 schlagen folgendes Vorgehen vor um Overdispersion und Zero-Inflation zu erkennen:
+```{definition, name = "Pearson Dispersion"}
+Sei $\chi_{\text{Pearson}}^2$ die Pearson-Dispersionsstatistik eines GLMs und $df$ die dazugehörigen residualen Freiheitsgrade, dann ist die **Pearson-Dispersionsstatistik**:
 
-```{r perumean_chaney_decision_tree}
-grViz(readLines("PerumeanChaney.dot"))
+\begin{align}
+\frac{\chi_{\text{Pearson}}^2}{df}
+\end{align}
+
+Mit der Interpretation
+
+\begin{equation*}
+\frac{\chi_{\text{Pearson}}^2}{df} =
+\begin{cases}
+< 1 & \Longrightarrow \text{Underdispersion} \\
+1 & \Longrightarrow \text{Equidispersion (Poisson korrekt)} \\
+> 1 &\Longrightarrow \text{Overdispersion}
+\end{cases}
+\end{equation*}
 ```
 
-Wobei im ersten Schritt sowohl Poisson als auch NB-Modelle gefittet werden, und dann nach Goodness-of-Fit (via LRT) (NB > Poisson?) entschieden wird.  
-Im zweiten Schritt werden die jeweiligen Modelle (entweder Poisson oder NB) mit ihren ZI-Counterparts verglichen (model fit, Vuong-Test), analog Schritt 1.  
-"LRT-Vuong Method".
+
+
+In `R`:
+
+```r
+# Model fit
+mod <- glm(y ~ x1 + x2 + x3, data = sim, family = poisson(link = "log"))
+
+# Pearson dispersion
+sum(resid(mod, type = "pearson")^2) / mod$df.residual
+```
+
+Für "echte" Poisson-Modelle ist der Wert 1, und Werte größer bzw. kleiner 1 indizieren over- bzw. underdispersion.
 
 
 ### Overdispersion
@@ -63,20 +88,6 @@ Kriterien für Overdispersion nach @hilbeModelingCountData2014, p. 41
 4. Ein Prädiktor muss transformiert werden
 5. Die Daten sind zu dünn besetzt (*sparse*) (?)
 6. Fehlende Werte, die nicht zufällig sind (missing not at random, *MNAR*)
-
-"Test" auf Dispersion: Pearson dispersion, in `R`:
-
-```r
-# Model fit
-mod <- glm(y ~ x1 + x2 + x3, data = sim, family = poisson(link = "log"))
-
-# Pearson dispersion
-sum(resid(mod, type = "pearson")^2) / mod$df.residual
-```
-
-Für "echte" Poisson-Modelle ist der Wert 1, und Werte größer bzw. kleiner 1 indizieren over- bzw. underdispersion.
-
-Als Dispersionsstatistik kann die Deviance (*deviance dispersion*) oder oder *pearson dispersion* berechnet werden. Laut @hilbeModelingCountData2014 ist die *Pearson dispersion* zu bevorzugen, da sie für echte Poisson-Modelle gleich 1 ist, wohingegen die *deviance dispersion* nach oben verzerrt ist.
 
 Gründe für overdispersion *kann* zero-inflation sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechendes Modell (ZIP, ZINB...) verwendet werden muss – ggf. lässt sich die overdispersion bereits durch ein NB Modell "auffangen". 
 
@@ -102,6 +113,9 @@ Bootstrapped SEs wiederum erfordern mehr Aufwand, ähneln aber den robusten SEs 
 
 ### Underdispersion
 
+Underdispersion entsteht, wenn die Daten eine geringere Varianz aufweisen, als auf Basis eines Poisson- oder NB-Modells erwartet würde.
+Bei nichtberücksichtigter underdispersion werden die Standardfehler des Modells überschätzt [@hilbeModelingCountData2014, p. 210].
+
 Im Kontext von hurdle models taucht folgende Bemerkung auf:
 
 > [...] that underdispersion occurs if zeros are less frequent than the parent distribution would predict.
@@ -111,7 +125,77 @@ Im Kontext von hurdle models taucht folgende Bemerkung auf:
 Im Allgemeinen wird [generalized Poisson](https://stats.stackexchange.com/a/237177/80056) (R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html)) empfohlen [@hilbeModelingCountData2014].
 
 
+#### Beispiel nach @hilbeModelingCountData2014, p. 211ff
+
+Grundlage ist der Datensatz `azprocedure` (siehe Abschnitt \@ref(data)) zur Dauer des Krankenhausaufenthalts nach einer von zwei kardiovaskulären Operationen mit folgenden hier relevanten Variablen:
+
+- `los`: Length of hospital stay
+- `sex`: Male (1), female(0)
+- `admit`: Type of admission. Urgent/emergency (1), elective (0)
+
+Zuerst werfen wir einen Blick auf die Daten und fitten ein reguläres Poissonmodell.
+
+```{r underdisp_azprocedure_over}
+data(azprocedure, package = "COUNT")
+
+# Mittelwert & Varianz von 'los'
+tibble(
+  n = nrow(azprocedure),
+  mean = mean(azprocedure$los),
+  var = var(azprocedure$los)
+)
+
+# Barchart: So grob poissonverteilt?
+ggplot(data = azprocedure, aes(x = los)) +
+  geom_bar(alpha = .75) +
+  labs(
+    title = "Hospital length of stay (LOS)",
+    subtitle = "azprocedure data (Hilbe 2014)",
+    x = "LOS", y = "Count" 
+  )
+
+# Model fit
+model_azproc <- glm(los ~ procedure + sex + admit, 
+                    data = azprocedure, family = poisson())
+
+# Model output (ohne exponentierte Koeffizienten)
+pander(model_azproc)
+
+# Pearson Dispersion:
+dispersion(model_azproc)
+```
+
+Der Dispersionsindex lässt auf overdispersion schließen.  
+Betrachten wir ein Subset der Daten, indem wir nur Beobachtungen mit $\mathtt{LOS} \le 8$ betrachten, erhalten wir ein anderes Bild:
+
+```{r underdisp_azprocedure_under}
+azprocedure_subset <- subset(azprocedure, los <= 8)
+
+# Mittelwert & Varianz von 'los'
+tibble(
+  n = nrow(azprocedure),
+  mean = mean(azprocedure$los),
+  var = var(azprocedure$los)
+)
+
+# Barchart
+ggplot(data = azprocedure_subset, aes(x = los)) +
+  geom_bar(alpha = .75) +
+  labs(
+    title = "Hospital length of stay (LOS)",
+    subtitle = "Subset (LOS <= 8) der azprocedure data (Hilbe 2014)",
+    x = "LOS", y = "Count" 
+  )
+
+model_azproc_u <- glm(los ~ procedure + sex + admit, data = azprocedure_subset, family = poisson())
+
+pander(model_azproc_u)
+dispersion(model_azproc)
+```
+
+
 ## Zeros {#zeros}
+
 
 
 ### Zero Inflation
@@ -141,10 +225,13 @@ Modellierung via
 
 [@hilbeModelingCountData2014, p. 19]
 
-Mixtures Models: 
-- Zero-inflated poisson (ZIP)
-- Zero-inflated negative binomial (ZINB)
-- Zero-inflated Poisson Inverse Gaussian (ZPIG)
+
+Ob hurdle model oder zero-inflated model die bessere Wahl ist hängt mitunter davon ab, welche Annahmen über die _Ursache der Nullen_ getroffen werden können.  
+Wenn es eine echte Trennung der Mechanismen (*"separation of mechanisms"*) gibt, die die Nullen und die positiven counts verursachen, dann wäre ein hurdle model eher angemessen.  
+Wenn sich die Nullen überlappen, es also keine getrennten Prozesse zu geben scheint, dann wären zero-inflated models angemessen [@hilbeModelingCountData2014, p. 209].
+
+Im Falle von binären Outcomes stellt sich die Frage, inwiefern es sinnvoll ist hurdle oder zeri-inflated models überhaupt anzuwenden, da abseits der expliziten Modellierung der Nullen vermutlich zu wenig Information für ein geeignetes count model verbleibt.
+
 
 
 ### Zero Truncation
