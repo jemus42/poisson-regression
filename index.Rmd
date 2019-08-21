@@ -44,14 +44,15 @@ library(skimr)
 
 # Plotting
 library(ggplot2)
-if (!requireNamespace("firasans")) {
-   remotes::install_github("hrbrmstr/firasans")
-}
-library(firasans)
 
 theme_set(
-   theme_ipsum_fsc()
+   theme_minimal()
 )
+
+# library(firasans) # Install via  remotes::install_github("hrbrmstr/firasans")
+# theme_set(
+#    theme_ipsum_fsc()
+# )
 
 # Graphs
 library(DiagrammeR)
