@@ -4,7 +4,19 @@
 
 Included for posterity and/or debugging purposes.
 
-```{r sessioninfo}
-sessioninfo::session_info()[c("platform", "packages")]
+```{r sessioninfo, echo=FALSE}
+sinfo <- sessioninfo::session_info()[c("platform", "packages")]
+
+sinfo$platform %>% 
+  unclass() %>% 
+  as_tibble() %>% 
+  t() %>% 
+  as_tibble(rownames = "m", .name_repair = make.names) %>%
+  kable(col.names = c("", ""))
+
+sinfo$packages %>%
+  filter(attached) %>%
+  select(package, loadedversion, source) %>%
+  kable(col.names = c("Package", "Version", "Quelle"))
 ```
 

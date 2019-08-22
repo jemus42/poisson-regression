@@ -30,17 +30,19 @@ options(
 knitr::opts_chunk$set(
   fig.width = 6,
   fig.asp = 1/1.618,
-  comment = "#>"
+  comment = "#>",
+  tidy = "formatR",
+  tidy.opts = list(blank = FALSE, width.cutoff = 80)
 )
 
 # Data transformation & modelling
-library(tibble)
+library(dplyr)
 library(broom)
+
 
 # Tables
 library(kableExtra)
 library(pander)
-library(skimr)
 
 # Plotting
 library(ggplot2)
@@ -54,7 +56,7 @@ theme_set(
 #    theme_ipsum_fsc()
 # )
 
-# Graphs
+# Graphs (GraphViz)
 library(DiagrammeR)
 ```
 
@@ -79,3 +81,23 @@ Davon verwendet wurden:
 - `azprocedure`:
     - `R` package `COUNT`, access via `data(azprocedure, package = "COUNT")`
     - Dokumentation: `?COUNT::azprocedure`
+
+## Verwendete Software
+
+Zur Reproduktion der Beispiele sind insbesondere die folgenden `R` packages notwendig, die durch den angegebenen Code bei installiert werden, sofern sie nicht bereits verfügbar sind:
+
+```r
+if (!("dplyr" %in% installed.packages())) install.packages("dplyr")
+
+# Plots
+if (!("ggplot2" %in% installed.packages())) install.packages("ggplot2")
+
+# Data
+if (!("COUNT" %in% installed.packages())) install.packages("COUNT")
+
+# Output formatting
+if (!("pander" %in% installed.packages())) install.packages("pander")
+```
+
+
+Siehe auch Anhang \@ref(reproduzierbarkeit).
