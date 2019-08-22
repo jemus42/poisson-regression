@@ -14,7 +14,7 @@ tibble::tribble(
   "Poisson",                     "$\\mu$", "$\\mu$",
   "Negative Binomial (NB1)",     "$\\mu$", "$\\mu (1 + \\alpha) = \\mu + \\alpha\\mu$",
   "Negative Binomial (NB2)",     "$\\mu$", "$\\mu (1 + \\alpha\\mu) = \\mu + \\alpha\\mu^2$",
-  "Poisson Inverse Gamma (PIG)", "$\\mu$", "$\\mu (1 + \\alpha\\mu^2) = \\mu + \\alpha\\mu^3$",
+  "Poisson Inverse Gaussian (PIG)", "$\\mu$", "$\\mu (1 + \\alpha\\mu^2) = \\mu + \\alpha\\mu^3$",
   "Negative binomial-P (NBP)",   "$\\mu$", "$\\mu (1 + \\alpha\\mu^p) = \\mu + \\alpha\\mu^p$",
   "Generalized Poisson (GP)",    "$\\mu$", "$\\mu (1 + \\alpha\\mu)^2 = \\mu + 2\\alpha\\mu^3 + \\alpha^2\\mu^3$"
  ) %>%
@@ -26,24 +26,28 @@ tibble::tribble(
 
 Das Poisson-Modell stellt die Grundlage für die meisten der folgenden Modelle dar, und verdient daher eine genauere Betrachtung.
 
-```{definition, name = "Poisson-Modell"}
+```{definition, name = "Poisson-Verteilung"}
 Eine Poisson-verteilte Zufallsvariable $Y \sim \mathrm{Poi}(\lambda)$ [^poiparam] hat die Dichte
 
 \begin{equation}
 f(y\ |\ \lambda) = \mathrm{P}(Y = y) = \frac{\lambda^y \exp(-\lambda)}{y!} \quad, y \in \mathbb{N}_0
 \end{equation}
+```
 
-Die Rate $\lambda_i = \mathbb{E}(y_i | x_i)$ der Poissonverteilung wird in der Regel log-linear modelliert als
 
-\begin{equation}
-\log(\lambda_i) = \eta_i = \mathbf{x}_i^\prime \boldsymbol{\beta} = \beta_0 + \beta_1 x_1 + \ldots + \beta_k x_{ik}
-\end{equation}
+```{definition, name = "Poisson-Modell"}
+Die Zielvariablen $y_i \in \mathbb{N}_0$ sind (bedingt) unabhängig gegeben der Kovariablen $x_i1, x_i2, \ldots, x_ik$.
 
-mit der regulären Form:
+Die Rate $\lambda_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)$ der Poissonverteilung wird in der Regel log-linear modelliert als
 
-\begin{equation}
-\lambda_i = \exp(\eta_i) = \exp(\beta_0) \cdot \exp(\beta_1 x_1) \cdot \ldots \cdot \exp(\beta_k x_k)
-\end{equation}
+\begin{align*}
+  \log(\lambda_i) &= \eta_i 
+    = \mathbf{x}_i^\prime \boldsymbol{\beta} 
+    = \beta_0 + \beta_1 x_1 + \ldots + \beta_k x_{ik} \\
+  \lambda_i &= \exp(\eta_i) 
+    = \exp(\beta_0) \cdot \exp(\beta_1 x_1) \cdot \ldots \cdot \exp(\beta_k x_k)
+\end{align*}
+
 ```
 
 
@@ -85,10 +89,10 @@ Alternative Formulierung nach @winkelmannEconometricAnalysisCount2010 (p. 64):
 Ein Offset wird benötigt, um auf ungleiche Expositionsdauern oder -gebiete zu adjustieren. Dazu dient der Koeffizient $t$, der die Länge der Zeit unter Exposition angibt:
 
 \begin{equation}
-f(y, \mu) = \frac{\exp(mu) (t\mu)^y}{y!}
+f(y, \mu) = \frac{\exp(\mu) (t \mu)^y}{y!}
 \end{equation}
 
-Damit entspricht $t\mu$ der Inzidenzrate des Outcomes adjustiert auf e.g. die geographische Lage oder Expositionsdauer. Ohne Offset entspräche $t = 1$.
+Damit entspricht $t \mu$ der Inzidenzrate des Outcomes adjustiert auf e.g. die geographische Lage oder Expositionsdauer. Ohne Offset entspräche $t = 1$.
 Für als Offset wird in der Regel $\log(t)$ verwendet, womit gelten:
 
 \begin{align*}
@@ -313,3 +317,7 @@ Mit $f_2 = \mathrm{Poisson}$:
 [@winkelmannEconometricAnalysisCount2010, p. 183]
 
 mit $f_1 \sim NB(\beta_1, \alpha_1)$ und $f_2 \sim NB(\beta_2, \alpha_2)$
+
+
+Im Falle von **binären Outcomes** ist es fraglich plausibel hurdle models anzuwenden, da in diesem Fall die Nullen und die Einsen durch separate Modelle modelliert würden.
+
