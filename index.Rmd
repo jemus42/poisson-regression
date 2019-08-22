@@ -76,13 +76,13 @@ Diese Umstände benötigen in der Regel Generalisierungen der einfach Poisson-Re
 
 ## Datenbeispiele {#data}
 
-```{r datasets}
+```{r datasets, echo=FALSE}
 tribble(
-   ~dataset, ~rpkg, ~access, ~source,
-   "`azprocedure`", "`COUNT`", "`data(\"azprocedure\", package = \"COUNT\")`", "[@hilbeModelingCountData2014]",
-   "`fish`", "–", "https://stats.idre.ucla.edu/stat/sas/code/fish.sas7bdat", "stats.idre.ucla.edu"
+   ~dataset, ~rpkg, ~source,
+   "azprocedure", "COUNT", "Hilbe (2014)",
+   "fish", "–", "https://stats.idre.ucla.edu/stat/sas/code/fish.sas7bdat"
 ) %>%
-  setNames(c("Dataset", "`R` Package", "Access", "Quelle")) %>%
+  setNames(c("Dataset", "R Package", "Quelle")) %>%
   kable(booktabs = TRUE, escape = FALSE, linesep = "") %>%
   kable_styling(position = "center", protect_latex = TRUE)
 ```
@@ -98,7 +98,7 @@ fish <- haven::read_sas("https://stats.idre.ucla.edu/stat/sas/code/fish.sas7bdat
 saveRDS(fish, "data/fish.rds")
 ```
 
-Um Daten aus `R` direkt in SAS-Format zu speichern, kann folgender Code unter Verwendung des packages [`haven`](https://haven.tidyverse.org/) verwendet werden:
+Um Daten aus `R` direkt in SAS-Format (`sas7bdat`) zu speichern, kann folgender Code unter Verwendung des packages [`haven`](https://haven.tidyverse.org/) verwendet werden:
 
 ```r
 if (!("haven" %in% installed.packages())) {
@@ -111,7 +111,7 @@ haven::write_sas(azprocedure, "path/to/saved/file.sas7bdat")
 
 ## Verwendete Software
 
-Zur Reproduktion der Beispiele sind insbesondere die folgenden `R` packages notwendig, die durch den angegebenen Code bei installiert werden, sofern sie nicht bereits verfügbar sind:
+Zur Reproduktion der Beispiele sind insbesondere die folgenden `R` packages notwendig, die durch den angegebenen Code installiert werden, sofern sie nicht bereits verfügbar sind:
 
 ```r
 if (!("dplyr" %in% installed.packages())) install.packages("dplyr")

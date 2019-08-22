@@ -16,7 +16,7 @@ Es gelten Standardannahmen des GLM:
 
 
 ```{definition, name = "Equi-, Extra-, Over-, Underdispersion"}
-Für eine Zählvariablen $y_i \in \mathbb{N}_0$ und erklärenden Variablen $\mathbf{x}_i$ gilt innerhalb eines Modells:
+Für Zählvariablen $y_i \in \mathbb{N}_0$ und erklärenden Variablen $\mathbf{x}_i$ gilt innerhalb eines Modells:
 
 \begin{align*}
 \text{Equdispersion:}  \quad & \mathrm{Var}(y_i) = \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \\
@@ -33,20 +33,20 @@ Für eine Zählvariablen $y_i \in \mathbb{N}_0$ und erklärenden Variablen $\mat
 Innerhalb eines Poisson-Modells (vgl. Abschnitt \@ref(mod-pois)) mit der Annahme
 
 \begin{align*}
-y_i | \mathbf{x}_i &~ \mathrm{Poi}(\lambda_i) \\
-\lambda_i &= \mathbb{E}(y_i) = \mathrm{Var}(y_i)
+y_i\ |\ \mathbf{x}_i &\sim \mathrm{Poi}(\lambda_i) \\[1.5em]
+\lambda_i &= \mathbb{E}(y_i\ |\ \mathbf{x}_i) = \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \quad \text{(Equidispersion)}
 \end{align*}
 
-spricht man von **Poisson-Overdispersion** wenn die Varianz der Beobachtungen die erwartete Varianz eines konkreten Modells übersteigt:
+spricht man von **Poisson-Overdispersion** wenn die Varianz der Beobachtungen die erwartete Varianz des Poisson-Modells übersteigt:
 
 \begin{equation*}
-  \mathrm{Var}(y) > \mathbb{E}(y\ |\ \mathbf{x})
+  \mathrm{Var}(y_i\ |\ \mathbf{x}_i) > \mathbb{E}(y_i\ |\ \mathbf{x}_i)
 \end{equation*}
 
 in einem Modell mit overdispersion gilt die Annahme:
 
 \begin{equation*}
-  \mathrm{Var}(y\ |\ \mathbf{x}) = \theta \cdot \lambda_i
+  \mathrm{Var}(y_i\ |\ \mathbf{x}_i) = \theta \cdot \lambda_i
 \end{equation*}
 
 Mit *Dispersionsparameter* $\theta$ [vgl. @fahrmeirRegressionModelleMethoden2009, p. 210]
@@ -186,7 +186,7 @@ ggplot(data = azprocedure, aes(x = los)) +
 # Model fit
 model_azproc <- glm(los ~ procedure + sex + admit, 
                     data = azprocedure, family = poisson())
-
+ 
 # Model output (ohne exponentierte Koeffizienten)
 pander(model_azproc)
 
@@ -223,6 +223,7 @@ pander(model_azproc_u)
 dispersion(model_azproc_u)
 ```
 
+In diesem Fall haben wir es mit underdispersion zu tun.
 
 ## Zero-Inflation {#zeros}
 
@@ -244,13 +245,10 @@ Für sowohl overdispersion als auch zero-inflation: Score-Tests (?) [@perumean-c
 
 ### Modellierung {-}
 
-Modellierung via 
+Für die Modellierung von zero-inflated Daten stehen primär zwei Möglichkeiten zur Verfügung (vgl. auch @hilbeModelingCountData2014, p. 19):
 
-- two part hurdle (Siehe Abschnitt \@ref(mod-zi))
-- mixture models (Siehe Abschnitt \@ref(mod-hurdle))
-
-[@hilbeModelingCountData2014, p. 19]
-
+1. *Hurdle models*: Getrennte Modellierung von Nullen und positiven counts in zwei separaten Modellen (siehe Abschnitt \@ref(mod-hurdle)).
+2. *Zero-inflated models*: Mixture models, die aus zwei Wahrscheinlichkeitsfunktionen eine neue Wahrscheinlichkeitsfunktion generieren, die nun sowohl Nullen als auch positive counts beschreibt (siehe Abschnitt \@ref(mod-zi)).
 
 Ob hurdle model oder zero-inflated model die bessere Wahl ist hängt mitunter davon ab, welche Annahmen über die _Ursache der Nullen_ getroffen werden können.  
 Wenn es eine echte Trennung der Mechanismen (*"separation of mechanisms"*) gibt, die die Nullen und die positiven counts verursachen, dann wäre ein hurdle model eher angemessen.  
@@ -278,7 +276,7 @@ fish %>%
 Die Anzahl der Nullen scheint hier auffallend groß zu sein, allerdings beobachten wir hier auch zwei unterschiedliche Mechanismen: Eine Gruppe kann das ganze Wochenende geangelt haben, während eine andere Gruppe gar nicht geangelt hat – beide Gruppen werden jedoch am Ende nach der Anzahl ihrer gefangenen Fische befragt.  
 
 
-## Zero Truncation und Censoring {#trunc-cens}
+## Truncation und Censoring {#trunc-cens}
 
 Wenn die Beobachtungen keine Nullen enthalten bzw. im Modell aus inhaltlichen Gründen nicht möglich sind, können *zero-truncated* (ZT) Modelle verwendet werden. Diese Modelle sind insbesondere im Kontext von *hurdle models* (siehe Abschnitt \@ref(mod-hurdle)), in denen die positiven counts getrennt von den Null-counts modelliert werden. Eine *truncated* distribution ist die Zero-truncated Poisson (ZTP).
 

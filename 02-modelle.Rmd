@@ -29,9 +29,9 @@ Das Poisson-Modell stellt die Grundlage für die meisten der folgenden Modelle d
 ```{definition, name = "Poisson-Verteilung"}
 Eine Poisson-verteilte Zufallsvariable $Y \sim \mathrm{Poi}(\lambda)$ [^poiparam] hat die Dichte
 
-\begin{equation}
-f(y\ |\ \lambda) = \mathrm{P}(Y = y) = \frac{\lambda^y \exp(-\lambda)}{y!} \quad, y \in \mathbb{N}_0
-\end{equation}
+\begin{equation*}
+\mathrm{P}(Y = y) = \frac{\lambda^y \exp(-\lambda)}{y!} \quad, y \in \mathbb{N}_0
+\end{equation*}
 ```
 
 
@@ -198,9 +198,8 @@ Mit $\mathbb{E}(Y) = \mu$ und $\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}$
   - Dispersionsparameter in R's `glm` bzw. `MASS::glm.nb` invertiert: $\theta = \frac 1 \alpha$
   - -> Äquivalenz zu Poisson bei $\theta \to \infty$
   
-> "The negative binimial model adjusts for Poisson overdispersion; it **cannot be used to model underdispersed** Poisson data" 
+> "The negative binomial model adjusts for Poisson overdispersion; it **cannot be used to model underdispersed** Poisson data" 
 > [@hilbeModelingCountData2014, p. 11]
-  
   
 Vgl @hilbeModelingCountData2014
 
@@ -218,7 +217,6 @@ Vgl @hilbeModelingCountData2014
   - Wenn $\rho \approx 2$ -> NB2, sonst NB1 (@hilbeModelingCountData2014, p. 21)
 
 
-
 ## Zero-Inflated Models (*mixture models*) {#mod-zi}
 
 - Logit/Probit Komponente für zeros
@@ -232,14 +230,14 @@ Beispiel: Poisson-logit hurdle Modell, bestehend aus logit-Modell für zeros und
 ZIP und ZINB wurde hergeleitet als zweiteilige mixture distributions. Die allgemeine Form für mixture distributions ist
 
 \begin{equation}
-P(Y = y) = p \cdot g_1(y) + (1-p) \cdot g_2(y)
+  P(Y = y) = p \cdot g_1(y) + (1-p) \cdot g_2(y)
 \end{equation}
 
 mit $p$ als *mixture proportion* und $g_1, g_2$ als Dichte-/Massefunktionen der beiden Komponenten.
 
 In dieser Darstellung entspricht $p$ der *rate of zero-inflation* $\pi$, $g_1$ einer degenerierten 0-verteilung und $g_2$ einer Poisson-PMF.
 
-```{definition, name = "Zero-Inflated Poisson Verteilung"}
+```{definition, name = "Zero-Inflated Poisson Verteilung (ZIP)"}
 Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675)
 
 \begin{align}
@@ -248,7 +246,7 @@ P(Y = 1) &= (1 - \pi) \cdot \frac{\mu^y e^{-\mu}}{y!}
 \end{align}
 ```
 
-```{definition, name = "Zero-Inflated Negative Binomialverteilung"}
+```{definition, name = "Zero-Inflated Negative Binomialverteilung (ZINB)"}
 Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675)
 
 \begin{align}
@@ -283,7 +281,7 @@ f(y = 0) &= g_1(0) \\
 f(y = k) &= (1 - g_1(0)) g_2(k), \quad k = 1, 2, 3, \ldots
 \end{align*}
 
-Bzw. nach Mullahey (1986) mit $f_1$ und $f_2$ als PMFs für natürliche Zahlen
+Bzw. nach @mullahy1986SpecificationTesting mit $f_1$ und $f_2$ als PMFs für natürliche Zahlen
 
 \begin{align*}
 f(y = 0) &= f_1(0) \\
