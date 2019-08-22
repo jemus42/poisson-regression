@@ -31,14 +31,14 @@ knitr::opts_chunk$set(
   fig.width = 6,
   fig.asp = 1/1.618,
   comment = "#>",
-  tidy = "formatR",
-  tidy.opts = list(blank = FALSE, width.cutoff = 80)
+  tidy = FALSE # "formatR",
+  # tidy.opts = list(blank = FALSE, width.cutoff = 80)
 )
 
+# Load packages ----
 # Data transformation & modelling
 library(dplyr)
 library(broom)
-
 
 # Tables
 library(kableExtra)
@@ -58,6 +58,9 @@ theme_set(
 
 # Graphs (GraphViz)
 library(DiagrammeR)
+
+# Read data ----
+fish <- readRDS("data/fish.rds")
 ```
 
 
@@ -73,14 +76,38 @@ Diese Umstände benötigen in der Regel Generalisierungen der einfach Poisson-Re
 
 ## Datenbeispiele {#data}
 
-    
-Daten aus @hilbeModelingCountData2014 sind verfügbar als CSV (`HILBE-MCD-CVS-data`) auf [der Website des Autors](https://works.bepress.com/joseph_hilbe/58/).
+```{r datasets}
+tribble(
+   ~dataset, ~rpkg, ~access, ~source,
+   "`azprocedure`", "`COUNT`", "`data(\"azprocedure\", package = \"COUNT\")`", "[@hilbeModelingCountData2014]",
+   "`fish`", "–", "https://stats.idre.ucla.edu/stat/sas/code/fish.sas7bdat", "stats.idre.ucla.edu"
+) %>%
+  setNames(c("Dataset", "`R` Package", "Access", "Quelle")) %>%
+  kable(booktabs = TRUE, escape = FALSE, linesep = "") %>%
+  kable_styling(position = "center", protect_latex = TRUE)
+```
 
-Davon verwendet wurden:
+Daten aus @hilbeModelingCountData2014 sind zusätzlich verfügbar als CSV (`HILBE-MCD-CVS-data`) auf [der Website des Autors](https://works.bepress.com/joseph_hilbe/58/).  
 
-- `azprocedure`:
-    - `R` package `COUNT`, access via `data(azprocedure, package = "COUNT")`
-    - Dokumentation: `?COUNT::azprocedure`
+Die Datensätze des UCLA IDRE können wie folgt eingelesen werden:
+
+```r
+fish <- haven::read_sas("https://stats.idre.ucla.edu/stat/sas/code/fish.sas7bdat")
+
+# Cache locally
+saveRDS(fish, "data/fish.rds")
+```
+
+Um Daten aus `R` direkt in SAS-Format zu speichern, kann folgender Code unter Verwendung des packages [`haven`](https://haven.tidyverse.org/) verwendet werden:
+
+```r
+if (!("haven" %in% installed.packages())) {
+   install.packages("haven")
+}
+
+data("azprocedure", package = "COUNT")
+haven::write_sas(azprocedure, "path/to/saved/file.sas7bdat")
+```
 
 ## Verwendete Software
 
@@ -99,5 +126,21 @@ if (!("COUNT" %in% installed.packages())) install.packages("COUNT")
 if (!("pander" %in% installed.packages())) install.packages("pander")
 ```
 
-
 Siehe auch Anhang \@ref(reproduzierbarkeit).
+
+Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die lediglich der Abkürzung und/oder der Formatierung des Outputs dienen:
+
+```{r helper_functions}
+describe_counts <- function(x) {
+   tibble(
+      n = length(x),
+      mean = mean(x),
+      var = var(x)
+   ) %>%
+   setNames(c("N", "Mittelwert", "Varianz")) %>%
+   kable(booktabs = TRUE, escape = FALSE, linesep = "") %>%
+   kable_styling(position = "center", protect_latex = TRUE)
+}
+
+```
+
