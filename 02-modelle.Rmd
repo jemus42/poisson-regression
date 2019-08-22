@@ -135,7 +135,7 @@ family = poisson(), offset = log(cases))
 ### Conway-Maxwell Poisson {#mod-comp}
 
 ```{definition, name = "Conway-Maxwell-Poisson Modell (CMP)"}
-Nach @shmueliUsefulDistributionFitting2005 (p. 129):
+Nach @shmueli2005UsefulDistribution (p. 129):
   
 \begin{align}
 P(X = x) &= \frac{\lambda^x}{(x!)^\nu} \frac{1}{Z(\lambda, \nu)}, \quad x = 0, 1, 2, \ldots \\

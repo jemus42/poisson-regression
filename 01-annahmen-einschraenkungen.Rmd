@@ -73,7 +73,14 @@ mod <- glm(y ~ x1 + x2 + x3, data = sim, family = poisson(link = "log"))
 sum(resid(mod, type = "pearson")^2) / mod$df.residual
 ```
 
-Für "echte" Poisson-Modelle ist der Wert 1, und Werte größer bzw. kleiner 1 indizieren over- bzw. underdispersion.
+Im Folgenden wird folgende Funktion verwendet:
+
+```{r, pearson_disp_function}
+dispersion <- function(model, type = "pearson") {
+  sum(resid(model, type = type)^2) / model$df.residual
+}
+```
+
 
 
 ### Overdispersion
@@ -125,7 +132,7 @@ Im Kontext von hurdle models taucht folgende Bemerkung auf:
 Im Allgemeinen wird [generalized Poisson](https://stats.stackexchange.com/a/237177/80056) (R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html)) empfohlen [@hilbeModelingCountData2014].
 
 
-#### Beispiel nach @hilbeModelingCountData2014, p. 211ff
+### Beispiel nach @hilbeModelingCountData2014, p. 211ff
 
 Grundlage ist der Datensatz `azprocedure` (siehe Abschnitt \@ref(data)) zur Dauer des Krankenhausaufenthalts nach einer von zwei kardiovaskulären Operationen mit folgenden hier relevanten Variablen:
 
@@ -187,10 +194,11 @@ ggplot(data = azprocedure_subset, aes(x = los)) +
     x = "LOS", y = "Count" 
   )
 
-model_azproc_u <- glm(los ~ procedure + sex + admit, data = azprocedure_subset, family = poisson())
+model_azproc_u <- glm(los ~ procedure + sex + admit, 
+                      data = azprocedure_subset, family = poisson())
 
 pander(model_azproc_u)
-dispersion(model_azproc)
+dispersion(model_azproc_u)
 ```
 
 
