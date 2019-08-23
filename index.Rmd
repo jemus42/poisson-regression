@@ -28,8 +28,9 @@ options(
 )
 
 knitr::opts_chunk$set(
-  fig.width = 6,
+  fig.width = 8,
   fig.asp = 1/1.618,
+  fig.pos = "center",
   comment = "#>",
   tidy = FALSE # "formatR",
   # tidy.opts = list(blank = FALSE, width.cutoff = 80)
@@ -38,6 +39,7 @@ knitr::opts_chunk$set(
 # Load packages ----
 # Data transformation & modelling
 library(dplyr)
+library(tidyr)
 library(broom)
 
 # Tables

@@ -114,9 +114,9 @@ Kriterien für Overdispersion nach @hilbeModelingCountData2014, p. 41
 
 Zu den Begriffen im Kontext von missingness wird folgende Unterscheidung bezüglich der Verteilung der missing values für eine Variable $Y$ gemacht (vgl. auch @littleStatisticalAnalysisMissing2002, p. 12):
 
-- **MCAR**: Das Fehlen eines Wertes in $Y$ ist völlig unabhängig von sowohl beobachtete als auch unbeobachtet Daten. Dieser Fall wäre der idealzustand, ist allerdings in der Regel weder realistisch noch verifizierbar.
-- **MAR**: Es gibt einen Zusammenhang zwischen Ausfallwahrscheinlichkeit und *beobachteten* Daten. Das heißt auch, dass missingness durch beobachtete Daten erklärt werden kann, weshalb dieser Fall noch akzeptabel wäre.
-- **MNAR** / **NMAR**: Weder *MCAR* noch *MAR* – die Ausfallwahrscheinlichkeit hängt von *unbeobachten* Daten ab. Das heißt, es gibt ein Ausfallmuster in $Y$, das nicht durch vorliegende Daten erklärt werden kann, wodurch in der Regel verzerrte Effektschätzungen entstehen.
+- **MCAR** (missing completely at random): Das Fehlen eines Wertes in $Y$ ist völlig unabhängig von sowohl beobachteten als auch unbeobachtet Daten. Dieser Fall wäre der idealzustand, ist allerdings in der Regel weder realistisch noch verifizierbar.
+- **MAR** (missing at random): Es gibt einen Zusammenhang zwischen Ausfallwahrscheinlichkeit und *beobachteten* Daten. Das heißt auch, dass missingness durch beobachtete Daten erklärt werden kann, weshalb dieser Fall noch akzeptabel wäre.
+- **MNAR** / **NMAR** (missing not at random): Weder *MCAR* noch *MAR* – die Ausfallwahrscheinlichkeit hängt von *unbeobachten* Daten ab. Das heißt, es gibt ein Ausfallmuster in $Y$, das nicht durch vorliegende Daten erklärt werden kann, wodurch in der Regel verzerrte Effektschätzungen entstehen.
 
 Gründe für overdispersion *kann* zero-inflation sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechendes Modell (ZIP, ZINB...) verwendet werden muss – ggf. lässt sich die overdispersion bereits durch ein NB Modell "auffangen". 
 
@@ -233,20 +233,56 @@ In diesem Fall haben wir es mit underdispersion zu tun.
 
 ## Zero-Inflation {#zeros}
 
-Problem: "Excess zeros", i.e. die gewählte Dichtefunktion sagt für $P(y_i = 0\ |\ x_i)$ eine deutlich kleinere Wahrscheinlichkeit vor, als in gegebenen Daten tatsächlich vorliegen.
+Problem: "Excess zeros", i.e. das Modell sagt für $P(y_i = 0\ |\ x_i)$ eine deutlich kleinere Wahrscheinlichkeit vor, als in gegebenen Daten tatsächlich vorliegen.
+
+
+```{r excess_zeros_viz, echo=FALSE}
+tibble(
+  x = 0:15,
+  pois = dpois(x, 5) * 100,
+  y0 = round(ifelse(x == 0, 5, pois)),
+  ymod = dpois(x, mean(y0)) * 100
+) %>%
+  gather(dist, prob, y0, ymod) %>%
+  ggplot(aes(x = x, y = prob, fill = dist)) +
+  geom_col(position = "dodge", alpha = .75) +
+  scale_x_continuous() +
+  scale_fill_brewer(palette = "Set1", labels = c("y0" = "Beobachtet", "ymod" = "Fitted")) +
+  labs(
+    title = "Zero-Inflation: Simuliertes Beispiel",
+    subtitle = "Beobachtete und gefittete Werte bei excess zeros",
+    x = "Y", y = "Count", fill = ""
+  ) +
+  annotate("text", label = "Nullen beobachtet", x = -.3, y = 9, 
+           angle = 270, hjust = 1) +
+  annotate("text", label = "Nullen erwartet", x = .3, y = 9, 
+           angle = 270, hjust = 1) +
+  annotate("segment", x = -0.25, xend = -0.25, y = 8.5, yend = 5.5, 
+           arrow = arrow(angle = 40, length = unit(.2, "cm")),
+           lineend = "round", linejoin = "mitre") +
+  annotate("segment", x = 0.25, xend = 0.25, y = 8.5, yend = 1, 
+           arrow = arrow(angle = 40, length = unit(.2, "cm")),
+           lineend = "round", linejoin = "mitre") +
+  theme(legend.position = "top")
+```
+
 
 
 ### Tests auf Zero-Inflation {-}
 
-- Vuong Test (vgl. @perumean-chaneyZeroinflatedOverdispersedWhat2013)
-   - Für non-nested models
-   - E.g Poisson vs. ZIP
-- (Hausman Test)
 
+Zwar schlagen @perumean-chaneyZeroinflatedOverdispersedWhat2013 den Vuong Test (siehe @vuongLikelihoodRatioTests1989 und insbesondere @desmarais2013TestingZero zur Anwendung) vor, um reguläre Modelle mit ihren zero-inflated Gegenstücken zu vergleichen (e.g Poisson vs. ZIP oder NB vs. ZINB), allerdings spricht sich @wilson2015MisuseVuong explizit *gegen* den Vuong-Test aus:
+
+> The misuse of the test stems from misunderstanding of what is meant by the terms "non-nested model" and "nested model". As is the case with many frequently used terms their meanings are approximately understood by many, but precisely understood by few.
+>
+> --- @wilson2015MisuseVuong, p. 52
+
+(Hausman Test ?)
 
 Für sowohl overdispersion als auch zero-inflation: Score-Tests (?) [@perumean-chaneyZeroinflatedOverdispersedWhat2013, p. 1674, siehe auch entsprechende citations]
 
-> As noted by Yang et al., the univariate situation is recommended for asssessing zero inflation als covariates reduce the power to detect zero inflation
+> As noted by Yang et al., the univariate situation is recommended for asssessing zero inflation as covariates reduce the power to detect zero inflation
+>
 > --- @perumean-chaneyZeroinflatedOverdispersedWhat2013, p. 1674
 
 ### Modellierung {-}
@@ -280,7 +316,6 @@ fish %>%
 ```
 
 Die Anzahl der Nullen scheint hier auffallend groß zu sein, allerdings beobachten wir hier auch zwei unterschiedliche Mechanismen: Eine Gruppe kann das ganze Wochenende geangelt haben, während eine andere Gruppe gar nicht geangelt hat – beide Gruppen werden jedoch am Ende nach der Anzahl ihrer gefangenen Fische befragt.  
-
 
 ## Truncation und Censoring {#trunc-cens}
 
