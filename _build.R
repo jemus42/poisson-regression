@@ -12,6 +12,7 @@ timestamp()
 cat("1.2 Removing previously built output\n")
 if (fs::dir_exists("poisson-regression"))  fs::dir_delete("poisson-regression")
 if (fs::file_exists("poisson-regression.Rmd")) fs::file_delete("poisson-regression.Rmd")
+if (fs::dir_exists("poisson-regression_files"))  fs::dir_delete("poisson-regression_files")
 
 # Gitbook
 cat("2.1 Rendering HTML site\n")
