@@ -19,3 +19,14 @@ pre code {
     border-bottom-width: thick;
     padding-right: 0;
 }
+
+/* Quotes */
+p.flushright {
+  text-align: right;
+}
+blockquote > p:last-child {
+  text-align: right;
+}
+blockquote > p:first-child {
+  text-align: inherit;
+}
