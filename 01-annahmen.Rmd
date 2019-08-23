@@ -278,7 +278,7 @@ Die Anzahl der Nullen scheint hier auffallend groß zu sein, allerdings beobacht
 
 ## Truncation und Censoring {#trunc-cens}
 
-Wenn die Beobachtungen keine Nullen enthalten bzw. im Modell aus inhaltlichen Gründen nicht möglich sind, können *zero-truncated* (ZT) Modelle verwendet werden. Diese Modelle sind insbesondere im Kontext von *hurdle models* (siehe Abschnitt \@ref(mod-hurdle)), in denen die positiven counts getrennt von den Null-counts modelliert werden. Eine *truncated* distribution ist die Zero-truncated Poisson (ZTP).
+Wenn die Beobachtungen keine Nullen enthalten bzw. im Modell aus inhaltlichen Gründen nicht möglich sind, können *zero-truncated* (ZT) Modelle verwendet werden. Diese Modelle sind insbesondere im Kontext von *hurdle models* interessant (siehe Abschnitt \@ref(mod-hurdle)), in denen die positiven counts getrennt von den Null-counts modelliert werden. Eine *truncated* distribution wäre die zero-truncated Poisson (ZTP).
 
 Bemerke, dass *truncation* hier etwas anderes meint als *censoring*:
 

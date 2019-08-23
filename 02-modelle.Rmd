@@ -157,9 +157,9 @@ Mit nichtlinearer Zerfallsrate $\nu$ *rate of decay*, so dass:
 
 Die Verteilung hat als Spezialfälle:
 
-- Poisson: $\nu = 1 \Longrightarrow Z(\lambda, \nu) = \exp(\lambda)$
-- Bernoulli mit $P(X = 1) = \frac{\lambda}{1+\lambda}$: $\nu \to \infty \Longrightarrow Z(\lambda, \nu) \to 1 + \lambda$
-- Geometrisch mit $P(X = x) = \lambda^x (1 - \lambda)$: $\nu = 0, \lambda < 1$
+- $\nu = 1 \Longrightarrow Z(\lambda, \nu) = exp(\lambda)$: Poisson
+- $\nu \to \infty \Longrightarrow Z(\lambda, \nu) \to 1 + \lambda$: Bernoulli mit $P(X = 1) = \frac{\lambda}{1+\lambda}$
+- $\nu = 0,\ \lambda < 1$: Geometrisch mit $P(X = x) = \lambda^x (1 - \lambda)$
 
 
 - **Vorteile**:
