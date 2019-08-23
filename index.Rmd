@@ -6,7 +6,7 @@ lang: de-DE
 site: bookdown::bookdown_site
 url: ''
 documentclass: scrartcl
-bibliography: ["Poisson.bib"]
+bibliography: ["Poisson.bib", "references.bib"]
 biblio-style: apalike
 link-citations: yes
 colorlinks: true
@@ -78,9 +78,10 @@ Diese Umstände benötigen in der Regel Generalisierungen der einfach Poisson-Re
 
 ```{r datasets, echo=FALSE}
 tribble(
-   ~dataset, ~rpkg, ~source,
+   ~dataset,      ~rpkg, ~source,
    "azprocedure", "COUNT", "Hilbe (2014)",
-   "fish", "–", "https://stats.idre.ucla.edu/stat/sas/code/fish.sas7bdat"
+   "fasttrakg",   "COUNT", "Hilbe (2014)",
+   "fish", "–",   "https://stats.idre.ucla.edu/stat/sas/code/fish.sas7bdat"
 ) %>%
   setNames(c("Dataset", "R Package", "Quelle")) %>%
   kable(booktabs = TRUE, escape = FALSE, linesep = "") %>%
@@ -130,17 +131,30 @@ Siehe auch Anhang \@ref(reproduzierbarkeit).
 
 Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die lediglich der Abkürzung und/oder der Formatierung des Outputs dienen:
 
-```{r helper_functions}
-describe_counts <- function(x) {
+```{r helperfun_describe_counts}
+#' Simple descriptive stats for count variables
+#' @param x A count variable, presumed to be a non-negative integer.
+#' @param digits Number of digits to round statistics to.
+describe_counts <- function(x, digits = 2) {
    tibble(
       n = length(x),
-      mean = mean(x),
-      var = var(x)
+      missing = sum(is.na(x)),
+      mean = round(mean(x, na.rm = TRUE), digits),
+      var = round(var(x, na.rm = TRUE), digits),
+      range = paste0("[", paste0(range(x, na.rm = TRUE), collapse = ", "), "]")
    ) %>%
-   setNames(c("N", "Mittelwert", "Varianz")) %>%
+   setNames(c("N", "Missing", "Mittelwert", "Varianz", "Range")) %>%
    kable(booktabs = TRUE, escape = FALSE, linesep = "") %>%
    kable_styling(position = "center", protect_latex = TRUE)
 }
+# Example usage
+# Define random count variable...
+x <- rpois(100, 5)
 
+# ...with some missings
+x[sample(100, 10)] <- NA
+
+# A basic summary
+describe_counts(x)
 ```
 

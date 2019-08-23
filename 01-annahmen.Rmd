@@ -112,6 +112,12 @@ Kriterien für Overdispersion nach @hilbeModelingCountData2014, p. 41
 5. Die Daten sind zu dünn besetzt (*sparse*) (?)
 6. Fehlende Werte, die nicht zufällig sind (missing not at random, *MNAR*)
 
+Zu den Begriffen im Kontext von missingness wird folgende Unterscheidung bezüglich der Verteilung der missing values für eine Variable $Y$ gemacht (vgl. auch @littleStatisticalAnalysisMissing2002, p. 12):
+
+- **MCAR**: Das Fehlen eines Wertes in $Y$ ist völlig unabhängig von sowohl beobachtete als auch unbeobachtet Daten. Dieser Fall wäre der idealzustand, ist allerdings in der Regel weder realistisch noch verifizierbar.
+- **MAR**: Es gibt einen Zusammenhang zwischen Ausfallwahrscheinlichkeit und *beobachteten* Daten. Das heißt auch, dass missingness durch beobachtete Daten erklärt werden kann, weshalb dieser Fall noch akzeptabel wäre.
+- **MNAR** / **NMAR**: Weder *MCAR* noch *MAR* – die Ausfallwahrscheinlichkeit hängt von *unbeobachten* Daten ab. Das heißt, es gibt ein Ausfallmuster in $Y$, das nicht durch vorliegende Daten erklärt werden kann, wodurch in der Regel verzerrte Effektschätzungen entstehen.
+
 Gründe für overdispersion *kann* zero-inflation sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechendes Modell (ZIP, ZINB...) verwendet werden muss – ggf. lässt sich die overdispersion bereits durch ein NB Modell "auffangen". 
 
 #### Umgang mit Overdispersion {-}
