@@ -20,6 +20,7 @@ monofontoptions:
   - Scale=0.75
 mathfont: "Asana Math"
 always_allow_html: yes
+links-as-notes: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -138,6 +139,9 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die le
 #' @param x A count variable, presumed to be a non-negative integer.
 #' @param digits Number of digits to round statistics to.
 describe_counts <- function(x, digits = 2) {
+   require(tibble)     # tibble() & %>%
+   require(kableExtra) # Formatted output
+   
    tibble(
       n = length(x),
       missing = sum(is.na(x)),

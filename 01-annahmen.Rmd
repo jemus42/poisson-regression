@@ -173,12 +173,7 @@ Zuerst werfen wir einen Blick auf die Daten und fitten ein reguläres Poissonmod
 ```{r underdisp_azprocedure_over}
 data(azprocedure, package = "COUNT")
 
-# Mittelwert & Varianz von 'los'
-tibble(
-  n = nrow(azprocedure),
-  mean = mean(azprocedure$los),
-  var = var(azprocedure$los)
-)
+describe_counts(azprocedure$los)
 
 # Barchart: So grob poissonverteilt?
 ggplot(data = azprocedure, aes(x = los)) +
@@ -206,12 +201,7 @@ Betrachten wir ein Subset der Daten, indem wir nur Beobachtungen mit $\mathtt{LO
 ```{r underdisp_azprocedure_under}
 azprocedure_subset <- subset(azprocedure, los <= 8)
 
-# Mittelwert & Varianz von 'los'
-tibble(
-  n = nrow(azprocedure),
-  mean = mean(azprocedure$los),
-  var = var(azprocedure$los)
-)
+describe_counts(azprocedure_subset$los)
 
 # Barchart
 ggplot(data = azprocedure_subset, aes(x = los)) +
@@ -267,9 +257,7 @@ tibble(
 ```
 
 
-
 ### Tests auf Zero-Inflation {-}
-
 
 Zwar schlagen @perumean-chaneyZeroinflatedOverdispersedWhat2013 den Vuong Test (siehe @vuongLikelihoodRatioTests1989 und insbesondere @desmarais2013TestingZero zur Anwendung) vor, um reguläre Modelle mit ihren zero-inflated Gegenstücken zu vergleichen (e.g Poisson vs. ZIP oder NB vs. ZINB), allerdings spricht sich @wilson2015MisuseVuong explizit *gegen* den Vuong-Test aus:
 

@@ -34,6 +34,26 @@ Eine Poisson-verteilte Zufallsvariable $Y \sim \mathrm{Poi}(\lambda)$ [^poiparam
 \end{equation*}
 ```
 
+```{r poisson_dists, echo=FALSE}
+purrr::map_df(c(0.5, seq(1, 10, 3)), ~{
+  tibble(
+    lambda = .x,
+    x = 0:20,
+    poi = dpois(x, lambda)
+  )
+}) %>%
+  ggplot(aes(x = x, y = poi, color = lambda, fill = lambda)) +
+  geom_path(aes(group = lambda), linetype = "dotted") +
+  geom_point(shape = 21, color = "white", size = 2) +
+  #geom_segment(aes(x = x, xend = x, y = 0 , yend = poi)) +
+  scale_color_viridis_c(direction = -1, guide = FALSE) +
+  scale_fill_viridis_c(direction = -1, breaks = seq(0, 10, 2)) +
+  labs(
+    title = expression(Poi(lambda)),
+    x = "y", y = expression(Poi(y, lambda)), fill = expression(lambda)
+  ) +
+  theme(legend.position = "top")
+```
 
 ```{definition, name = "Poisson-Modell"}
 Die Zielvariablen $y_i \in \mathbb{N}_0$ sind (bedingt) unabhängig gegeben der Kovariablen $x_i1, x_i2, \ldots, x_ik$.
