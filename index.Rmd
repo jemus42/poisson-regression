@@ -237,7 +237,7 @@ dispersion <- function(model, type = "pearson") {
   disp  <- chisq / model$df.residual
   
   invisible(list(chi2 = chisq, df = model$df.residual, dispersion = disp))
-  cat(sprintf("\U0001d712\u00b2(%i) = %.2f\n%s Dispersion = %.3f", model$df.residual,  
+  cat(sprintf("X-squared(%i) = %.2f\n%s Dispersion = %.3f", model$df.residual,  
               chisq, chartr("pd", "PD", type), disp))
 }
 ```
