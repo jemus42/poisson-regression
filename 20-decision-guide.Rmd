@@ -19,6 +19,6 @@ Im zweiten Schritt werden die jeweiligen Modelle (entweder Poisson oder NB) mit 
 Eine allgemeinere Darstellung zur Veranschaulichung der sich ergebenden Möglichkeiten:
 
 ```{r decision_tree, echo=FALSE}
-grViz(readLines("graphs/raph.dot"))
+grViz(readLines("graphs/graph.dot"))
 ```
 

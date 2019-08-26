@@ -28,7 +28,6 @@ Für Zählvariablen $y_i \in \mathbb{N}_0$ und erklärenden Variablen $\mathbf{x
 ```
 
 
-
 ```{definition, name = "Poisson-Overdispersion"}
 Innerhalb eines Poisson-Modells (vgl. Abschnitt \@ref(mod-pois)) mit der Annahme
 
@@ -57,23 +56,33 @@ Mit *Dispersionsparameter* $\theta$ [vgl. @fahrmeirRegressionModelleMethoden2009
 Als Dispersionsstatistik können *deviance dispersion* oder *Pearson dispersion* berechnet werden. Laut @hilbeModelingCountData2014 ist die *Pearson dispersion* zu bevorzugen, da sie für echte Poisson-Modelle gleich 1 ist, wohingegen die *deviance dispersion* nach oben verzerrt ist.
 
 
-```{definition, name = "Pearson Dispersion"}
-Sei $\chi_{\text{Pearson}}^2$ die Pearson-Deviance eines GLMs und $df$ die dazugehörigen residualen Freiheitsgrade, dann ist die **Pearson-Dispersionsstatistik**:
+```{definition, name = "Pearson-Dispersion"}
+Nach @hilbeModelingCountData2014 (p. 77ff):
 
-\begin{align}
-\frac{\chi_{\text{Pearson}}^2}{df}
-\end{align}
+Die Pearson $\chi^2$-Statistik definiert als die Summe der quadriertern (Pearson-)Residuen gewichtet mit der Modellvarianz:
+
+\begin{equation*}
+\chi_{\text{Pearson}}^2 = \sum_{i=1}^n \frac{(y_i - \hat{\mu}_i)^2}{\mathrm{Var}(\hat{\mu}_i)}
+\end{equation*}
+
+und die **Pearson-Dispersionsstatistik**:
+  
+\begin{equation*}
+\mathrm{Dispersion} = \frac{\chi_{\text{Pearson}}^2}{\mathrm{df}}
+\end{equation*}
 
 Mit der Interpretation
 
 \begin{equation*}
-\frac{\chi_{\text{Pearson}}^2}{df} =
-\begin{cases}
-< 1 & \Longrightarrow \text{Underdispersion} \\
-1 & \Longrightarrow \text{Equidispersion (Poisson)} \\
-> 1 &\Longrightarrow \text{Overdispersion}
-\end{cases}
+\mathrm{Dispersion} =
+  \begin{cases}
+    < 1 & \Longrightarrow \text{Underdispersion} \\
+      1 & \Longrightarrow \text{Equidispersion (Poisson)} \\
+    > 1 & \Longrightarrow \text{Overdispersion}
+  \end{cases}
 \end{equation*}
+
+Für Modelle moderater Größe kann man ab Werten über 1.25 von ovderdispersion reden, wobei für große Stichproben auch schon ab 1.05 overdispersion vorliegen kann – zumindest nach @hilbeModelingCountData2014 (p. 82), der aber leider keine konkreten Zahlen für seine Definition von "moderaten" oder "großen" Stichproben.
 ```
 
 
@@ -88,45 +97,149 @@ mod <- glm(y ~ x1 + x2 + x3, data = sim, family = poisson(link = "log"))
 sum(resid(mod, type = "pearson")^2) / mod$df.residual
 ```
 
-...wofür wir diese Funktion definieren:
-
-```{r, pearson_disp_function}
-#' @param model Ein `glm`-Objekt.
-#' @param type Entweder 'pearson' (default) oder 'deviance'.
-dispersion <- function(model, type = "pearson") {
-  sum(resid(model, type = type)^2) / model$df.residual
-}
-```
-
+...wofür wir in Abschnitt \@ref(helperfuns) eine Hilfsfunktion `dispersion()` definiert haben.
 
 ### Overdispersion
 
-Der vermutlich häufigste Fall für Count-Daten. 
+Der vermutlich häufigste Fall für Count-Daten: Die Varianz der abhängigen Variable ist größer als ihr Erwartungswert, bzw. größer als ihre erwartete Varianz innerhalb eines Modells. 
+@hilbeModelingCountData2014 unterscheidet zwischen echter und scheinbarer (*apparent*) Overdispersion, wobei letztere oft durch geeignete Korrekturen kompensiert werden kann, wobei *echte* Overdisperion sowohl Parameterschätzung und Modellanpassung im Allgemeinen beeinträchtigt.
 
-Kriterien für Overdispersion nach @hilbeModelingCountData2014, p. 41
+Nach @hilbeModelingCountData2014 (p. 82) entsteht *echte* Overdispersion durch:
+
+- Positive Korrelation zwischen responses
+- Große Variation zwischen response-probabilities und counts
+- Verletzungen der Verteilungsannahme (i.e. Poissonverteilung)
+- "Proneness": Frühere Ereignisse beeinflussen das Auftreten späterer Ereignisse [^poiind]
+
+[^poiind]: Diese Annahme (Unabhängigkeit der Ereignisse) der Poissonverteilung ist auch der Grund, warum sich die Poissonverteilung prinzipiell **nicht** eignet um Epidemien wie Ebola zu modellieren. Freundliche Grüße an Frau Pigeot, "Statistische Modellierung I", WiSe 18/19.
+
+
+Ursachen für *scheinbare* (*apparent*), und damit (bedingt) korrigierbare Overdispersion nach @hilbeModelingCountData2014, p. 41, 82
 
 1. Fehlende explanatorische Prädiktoren
-2. Die Daten enthalten Ausreißer
-3. Im Modell fehlen Interaktionsterme
+2. Ausreißer
+3. Fehlende Interaktionsterme
 4. Ein Prädiktor muss transformiert werden
-5. Die Daten sind zu dünn besetzt (*sparse*) (?)
-6. Fehlende Werte, die nicht zufällig sind (missing not at random, *MNAR*)
+5. Die Daten sind zu dünn besetzt (*sparse*)
+6. Fehlende Werte, die nicht zufällig sind (missing not at random, *MNAR*) (siehe dazu auch Anhang \@ref(appendix-missingness))
 
-Zu den Begriffen im Kontext von missingness wird folgende Unterscheidung bezüglich der Verteilung der missing values für eine Variable $Y$ gemacht (vgl. auch @littleStatisticalAnalysisMissing2002, p. 12):
+Ein einfaches simuliertes Beispiel zur Auswirkung von fehlenden Prädiktoren:
 
-- **MCAR** (missing completely at random): Das Fehlen eines Wertes in $Y$ ist völlig unabhängig von sowohl beobachteten als auch unbeobachtet Daten. Dieser Fall wäre der idealzustand, ist allerdings in der Regel weder realistisch noch verifizierbar.
-- **MAR** (missing at random): Es gibt einen Zusammenhang zwischen Ausfallwahrscheinlichkeit und *beobachteten* Daten. Das heißt auch, dass missingness durch beobachtete Daten erklärt werden kann, weshalb dieser Fall noch akzeptabel wäre.
-- **MNAR** / **NMAR** (missing not at random): Weder *MCAR* noch *MAR* – die Ausfallwahrscheinlichkeit hängt von *unbeobachten* Daten ab. Das heißt, es gibt ein Ausfallmuster in $Y$, das nicht durch vorliegende Daten erklärt werden kann, wodurch in der Regel verzerrte Effektschätzungen entstehen.
+```{r overdisp_misspecified_model_sim}
+# Generate binary variable in [0, 1] with a given proportion of 1
+rbinary <- function(n, prob = 0.5) {
+  sample(0:1, size = n, replace = TRUE, prob = c(1 - prob, prob))
+}
 
-Gründe für overdispersion *kann* zero-inflation sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechendes Modell (ZIP, ZINB...) verwendet werden muss – ggf. lässt sich die overdispersion bereits durch ein NB Modell "auffangen". 
+set.seed(436)
+n <- 1000
+
+sim <- tibble(
+  x1 = rbinary(n, .1),
+  x2 = rbinary(n, .2),
+  x3 = rbinary(n, .3),
+  eta = 0.5 + 1 * x1 + 2 * x2 + 0.5 * x3,
+  lambda = exp(eta),
+  py = rpois(n, lambda)
+)
+
+# Korrektes modell:
+mod <- glm(py ~ x1 + x2 + x3, data = sim, family = poisson(link = "log"))
+dispersion(mod)
+
+# Modell mit fehlendem Prädiktor:
+mod2 <- glm(py ~ x1 + x3, data = sim, family = poisson(link = "log"))
+dispersion(mod2)
+```
+
+
+
+Zero-inflation *kann* Ursache für overdispersion sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechendes Modell (ZIP, ZINB...) verwendet werden *muss* – ggf. lässt sich die overdispersion bereits durch ein NB Modell "auffangen". 
+
+#### Tests auf Overdispersion {-}
+
+Der *Score-Test* wird nicht unbedingt empfohlen, findet sich aber in der Literatur:
+
+```{definition, name = "Score-Test auf Overdispersion"}
+Nach @hilbeModelingCountData2014 (p. 85):
+  
+Sei $Y$ die abhängige Variable und $y_i$ die $i-te$ Beobachtung, mit $\hat{\mu}_i$ als gefitteter Wert eines Poisson-Modells, dann wird der z-Score wie folgt berechnet:
+
+\begin{equation}
+  z_i = \frac{(y_i - \hat{\mu})^2 -y}{\hat{\mu} \sqrt{2}}
+\end{equation}
+  
+Zur Evaluation von $z$ wird z.B. ein Intercept-only Regressionsmodell mit $z$ als abhängiger Variable gefitted, mit der Nullhypothese "Es liegt keine Overdispersion vor".
+
+Dabei gelten folgende Annahmen:
+  
+1. Die Stichprobe ist *groß*
+2. $z$ ist t-verteilt
+
+```
+
+
+
+```{definition, name = "Lagrange Multiplier Test"}
+Eine $\chi^2$-Teststatistik mit einem Freiheitsgrad:
+  
+\begin{equation}
+  \chi^2 = \frac{\left( \sum_{i=1}^n \hat{\mu}_i^2 - n \bar{y} \right)^2}
+                {2 \sum_{i=1}^n \hat{\mu}_i^2}
+\end{equation}
+
+```
+
+Eine rudimentäre R-Implementation findet sich in Abschnitt \@ref(helperfuns).
+
+```{r lagrange-test-example}
+data(rwm5yr, package = "COUNT")
+rwm1984 <- subset(rwm5yr, year == 1984)
+mod <- glm(docvis ~ outwork + age, family = poisson(), data = rwm1984)
+
+lagrange_test(mod)
+```
+
+Letztlich bietet es sich an beobachtete und auf Basis des Modells erwartete Häufigkeiten zu vergleichen:
+
+```{r overdisp_compare_expected}
+# Beobachtete und erwartete counts
+rwm1984 %>%
+  count(docvis, name = "observed") %>%
+  mutate(
+    expected = purrr::map_dbl(docvis, ~{
+                  dpois(.x, fitted(mod)) %>%
+                    sum() %>%
+                    round(2)
+                }),
+    difference = observed - expected
+  ) %>%
+  head(5) %>%
+  pander()
+
+# Mittelwert und Varianz der jeweiligen counts
+augment(mod, type.predict = "response") %>%
+  select(observed = docvis, expected = .fitted) %>%
+  gather(Counts, value) %>%
+  group_by(Counts) %>%
+  summarize(
+    Mean = mean(value),
+    Variance = var(value)
+  ) %>%
+  pander()
+```
+
+
+Anhand der ersten Tabelle können wir zum Beispiel recht schnell erkennen, dass wir hier *deutlich* mehr Nullen beobachten als das Modell vorhersagt – mehr dazu in Abschnitt \@ref(zeros)
+
 
 #### Umgang mit Overdispersion {-}
 
 Zur expliziten Modellierung des Despersionparameters kann ein NBH Modell (\@ref(mod-nbh)) genutzt werden, falls die Quelle der overdispersion von besonderem Interesse ist.  
 Abseits davon bleiben zwei grobe Strategien: 
 
-1. Wechsel auf ein Modell, das overdispersion (oder allgemeine extradispersion) erlaubt
-2. Adjustierung der durch die overdispersion verzerrten Standardfehler
+1. Adjustierung der durch die overdispersion verzerrten Standardfehler (Quasipoisson)
+2. Wechsel auf ein Modell, das overdispersion (oder allgemeine extradispersion) erlaubt (e.g. NB)
 
 ##### Quasipoisson: Skalierung der Standardfehler {-}
 
