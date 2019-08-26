@@ -21,6 +21,8 @@ monofontoptions:
 mathfont: "Asana Math"
 always_allow_html: yes
 links-as-notes: yes
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
