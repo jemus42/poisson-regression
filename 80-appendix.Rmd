@@ -14,7 +14,57 @@ Zu den Begriffen im Kontext von missingness wird folgende Unterscheidung bezügl
 
 # Reproduzierbarkeit {#repro}
 
-Included for posterity and/or debugging purposes.
+Hier verwendeter Code profitiert stark vom [`tidyverse`](https://www.tidyverse.org/).  
+Insbesondere wird anstelle der Funktion `data.frame` in der Regel `tibble` (package `tibble`, automatisch re-exportiert von `dplyr`) verwendet. Diese Alternative bietet einige quality of life improvements für schnelle Simulationen, zum Beispiel die Verwendung von Variablen während diese noch definiert werden:
+
+```{r df_tibble, eval=FALSE}
+# Nicht möglich:
+data.frame(
+   x1 = rnorm(10),
+   x2 = rnorm(10, mean = 5),
+   y = 50 + 3 * x1 + 5 * x2
+)
+
+# Funktioniert!
+tibble(
+   x1 = rnorm(10),
+   x2 = rnorm(10, mean = 5),
+   y = 50 + 3 * x1 + 5 * x2
+)
+```
+
+Zusätzlich kann die Pipe (`%>%`) Verwendung finden, ein function composition operator:
+
+```{r pipe, eval=FALSE}
+# Es gilt:
+f(g(h(x), b = 4), a = 1) = h(x) %>% g(b = 4) %>% f(a = 1)
+
+# Klassisch
+x <- rnorm(100, mean = 15)
+x_mean <- mean(x)
+sqrt(x_mean)
+
+# oder
+sqrt(mean(rnorm(100, mean = 15)))
+
+# piped
+rnorm(100, mean = 15) %>%
+   mean() %>%
+   sqrt()
+
+# Klassisch
+iris_subset <- subset(iris, Species == "setosa")
+head(iris_subset[order(iris_subset$Sepal.Length, decreasing = TRUE), ], n = 5)
+
+# tidyverse-style (incl. filter() als subset()-Analog und top_n())
+iris %>%
+   filter(Species == "setosa") %>%
+   top_n(Sepal.Length, n = 5)
+```
+
+Letztlich stellt das Package [`broom`](https://broom.tidyverse.org/) eine wichtige Ergänzung dar. Mitunter ist [`augment()`](https://broom.tidyverse.org/reference/augment.lm.html#examples) eine komfortable Möglichkeit um schnell in tabellarischer Form an gefittete Werte mit ihren dazugehörigen x-Werten gelangen.
+
+Session info:
 
 ```{r sessioninfo, echo=FALSE}
 sinfo <- sessioninfo::session_info()[c("platform", "packages")]

@@ -83,10 +83,11 @@ Diese Umstände benötigen in der Regel Generalisierungen der einfach Poisson-Re
 
 ```{r datasets, echo=FALSE}
 tribble(
-   ~dataset,      ~rpkg, ~source,
+   ~dataset,      ~rpkg,   ~source,
    "azprocedure", "COUNT", "Hilbe (2014)",
    "fasttrakg",   "COUNT", "Hilbe (2014)",
-   "fish", "–",   "https://stats.idre.ucla.edu/stat/sas/code/fish.sas7bdat"
+   "rwm5yr",      "COUNT", "Hilbe (2014)",
+   "fish",        "–",  "UCLA IDRE (https://stats.idre.ucla.edu)"
 ) %>%
   setNames(c("Dataset", "R Package", "Quelle")) %>%
   kable(booktabs = TRUE, escape = FALSE, linesep = "") %>%
@@ -102,20 +103,28 @@ fish <- haven::read_sas("https://stats.idre.ucla.edu/stat/sas/code/fish.sas7bdat
 
 # Cache locally
 saveRDS(fish, "data/fish.rds")
+
+# Read from cache later:
+# fish <- readRDS("data/fish.rds")
 ```
 
-Um Daten aus `R` direkt in SAS-Format (`sas7bdat`) zu speichern, kann folgender Code unter Verwendung des packages [`haven`](https://haven.tidyverse.org/) verwendet werden:
+Um Daten aus `R` direkt in SAS-freundlichem `sas7bdat` zu speichern, kann folgender Code unter Verwendung des packages [`haven`](https://haven.tidyverse.org/) verwendet werden:
 
 ```r
+# Install package 'haven' if required
 if (!("haven" %in% installed.packages())) {
    install.packages("haven")
 }
-
+# Load some example data
 data("azprocedure", package = "COUNT")
+# Write in SAS-format
 haven::write_sas(azprocedure, "path/to/saved/file.sas7bdat")
 ```
 
 ## Verwendete Software {#software-funs}
+
+Um Code-Beispiele (und Output) übersichtlich zu halten werden einige R-Packages und Hilfsfunktionen verwendet, die hier kurz beschrieben werden um Code in späteren Abschnitten nachvollziehbar zu halten.  
+Siehe dazu auch Anhang \@ref(repro).
 
 ### R-Packages
 
@@ -136,57 +145,6 @@ if (!("COUNT" %in% installed.packages())) install.packages("COUNT")
 # Output formatting (für RMarkdown/pandoc markdown documents)
 if (!("pander" %in% installed.packages())) install.packages("pander")
 ```
-
-Hier verwendeter Code profitiert stark vom [`tidyverse`](https://www.tidyverse.org/).  
-Insbesondere wird anstelle der Funktion `data.frame` in der Regel `tibble` (package `tibble`, automatisch re-exportiert von `dplyr`) verwendet. Diese Alternative bietet einige quality of life improvements für schnelle Simulationen, zum Beispiel die Verwendung von Variablen während diese noch definiert werden:
-
-```{r df_tibble, eval=FALSE}
-# Nicht möglich:
-data.frame(
-   x1 = rnorm(10),
-   x2 = rnorm(10, mean = 5),
-   y = 50 + 3 * x1 + 5 * x2
-)
-
-# Funktioniert!
-tibble(
-   x1 = rnorm(10),
-   x2 = rnorm(10, mean = 5),
-   y = 50 + 3 * x1 + 5 * x2
-)
-```
-
-Zusätzlich kann die Pipe (`%>%`) Verwendung finden, ein function composition operator:
-
-```{r pipe, eval=FALSE}
-# Es gilt:
-f(g(h(x), b = 4), a = 1) = h(x) %>% g(b = 4) %>% f(a = 1)
-
-# Klassisch
-x <- rnorm(100, mean = 15)
-x_mean <- mean(x)
-sqrt(x_mean)
-
-# oder
-sqrt(mean(rnorm(100, mean = 15)))
-
-# piped
-rnorm(100, mean = 15) %>%
-   mean() %>%
-   sqrt()
-
-# Klassisch
-iris_subset <- subset(iris, Species == "setosa")
-head(iris_subset[order(iris_subset$Sepal.Length, decreasing = TRUE), ], n = 5)
-
-# tidyverse-style (incl. filter() als subset()-Analog und top_n())
-iris %>%
-   filter(Species == "setosa") %>%
-   top_n(Sepal.Length, n = 5)
-```
-
-Letztlich stellt das Package [`broom`](https://broom.tidyverse.org/) eine wichtige Ergänzung dar. Mitunter ist [`augment()`](https://broom.tidyverse.org/reference/augment.lm.html#examples) eine komfortable Möglichkeit um schnell in tabellarischer Form an gefittete Werte mit ihren dazugehörigen x-Werten gelangen.
-
 
 Siehe auch Anhang \@ref(repro) zu verwendeten Packages.
 

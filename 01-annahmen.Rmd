@@ -56,7 +56,7 @@ Mit *Dispersionsparameter* $\theta$ [vgl. @fahrmeirRegressionModelleMethoden2009
 Als Dispersionsstatistik können *deviance dispersion* oder *Pearson dispersion* berechnet werden. Laut @hilbeModelingCountData2014 ist die *Pearson dispersion* zu bevorzugen, da sie für echte Poisson-Modelle gleich 1 ist, wohingegen die *deviance dispersion* nach oben verzerrt ist.
 
 
-```{definition, name = "Pearson-Dispersion"}
+```{definition pearsondisp, name = "Pearson-Dispersion"}
 Nach @hilbeModelingCountData2014 (p. 77ff):
 
 Die Pearson $\chi^2$-Statistik definiert als die Summe der quadriertern (Pearson-)Residuen gewichtet mit der Modellvarianz:
@@ -68,7 +68,7 @@ Die Pearson $\chi^2$-Statistik definiert als die Summe der quadriertern (Pearson
 und die **Pearson-Dispersionsstatistik**:
   
 \begin{equation*}
-\mathrm{Dispersion} = \frac{\chi_{\text{Pearson}}^2}{\mathrm{df}}
+D = \frac{\chi_{\text{Pearson}}^2}{\mathrm{df}}
 \end{equation*}
 
 Mit der Interpretation
@@ -152,12 +152,12 @@ mod2 <- glm(py ~ x1 + x3, data = sim, family = poisson(link = "log"))
 dispersion(mod2)
 ```
 
-#### Tests auf Overdispersion {-}
+#### Diagnostik {#overdisp-diag}
 
 Der *Score-Test* wird nicht unbedingt empfohlen, findet sich aber in der Literatur:
 
 ```{definition, name = "Score-Test auf Overdispersion"}
-Nach @hilbeModelingCountData2014 (p. 85):
+Nach @hilbeModelingCountData2014 (p. 85f):
   
 Sei $Y$ die abhängige Variable und $y_i$ die $i-te$ Beobachtung, mit $\hat{\mu}_i$ als gefitteter Wert eines Poisson-Modells, dann wird der z-Score wie folgt berechnet:
 
@@ -177,7 +177,9 @@ Dabei gelten folgende Annahmen:
 
 
 ```{definition, name = "Lagrange Multiplier Test"}
-Eine $\chi^2$-Teststatistik mit einem Freiheitsgrad:
+Nach @hilbeModelingCountData2014 (p. 85f):
+
+Eine $\chi^2$-Teststatistik mit einem Freiheitsgrad.
   
 \begin{equation}
   \chi^2 = \frac{\left( \sum_{i=1}^n \hat{\mu}_i^2 - n \bar{y} \right)^2}
@@ -186,21 +188,38 @@ Eine $\chi^2$-Teststatistik mit einem Freiheitsgrad:
 
 ```
 
-Eine rudimentäre R-Implementation findet sich in Abschnitt \@ref(helperfuns).
+Eine rudimentäre R-Implementation findet sich in Abschnitt \@ref(helperfuns).  
 
-```{r lagrange-test-example}
+#### Diagnostik: Beispiel 
+
+Als Beispiel verwenden wir hier ein Subset des Datensatz `rwm5yr` (vgl. Abschnitt \@ref(data), `?COUNT::rwm5yr`), der Angaben zur Anzahl der Arztbesuche pro Person mit zusätzlichen demographischen Merkmalen enthält. Für unser Beispielmodell verwenden wir folgende Variablen:
+
+- `docvis`: Abhängige Variable, Anzahl der Arztbesuche im Jahr (0-121)
+- `outwork`: Arbeitslos (1), arbeitend (0)
+- `age`: Alter (25 - 64)
+
+```{r overdispersion-example}
+# Daten + subsetting
 data(rwm5yr, package = "COUNT")
 rwm1984 <- subset(rwm5yr, year == 1984)
+
+# Model fit
 mod <- glm(docvis ~ outwork + age, family = poisson(), data = rwm1984)
 
+# Pearson dispersion
+dispersion(mod)
+
+# Lagrange-Test
 lagrange_test(mod)
 ```
 
-Letztlich bietet es sich an beobachtete und auf Basis des Modells erwartete Häufigkeiten zu vergleichen:
+Sowohl die Pearson-Dispersion als auch Lagrange sind sich einig, dass wir es hier mit overdispersion zu tun haben.
+
+Zusätzlich können wir die beobachteten und auf Basis des Modells erwarteten Häufigkeiten vergleichen, um ein grobes Gefühl für die Situation zu erhalten (Code frei adaptiert nach @hilbeModelingCountData2014, p. 88f):
 
 ```{r overdisp_compare_expected}
 # Beobachtete und erwartete counts
-rwm1984 %>%
+observed_v_expected <- rwm1984 %>%
   count(docvis, name = "observed") %>%
   mutate(
     expected = purrr::map_dbl(docvis, ~{
@@ -209,43 +228,87 @@ rwm1984 %>%
                     round(2)
                 }),
     difference = observed - expected
-  ) %>%
+  ) 
+
+observed_v_expected %>%
   head(5) %>%
-  pander()
+  pander(caption = "Observed and expected counts")
 
 # Mittelwert und Varianz der jeweiligen counts
-augment(mod, type.predict = "response") %>%
-  select(observed = docvis, expected = .fitted) %>%
-  gather(Counts, value) %>%
-  group_by(Counts) %>%
-  summarize(
-    Mean = mean(value),
-    Variance = var(value)
-  ) %>%
-  pander()
+# (für "expected" gilt Varianz := Mittelwert)
+tribble(
+  ~Counts,   ~Mean,                 ~Variance,
+  "observed", mean(rwm1984$docvis), var(rwm1984$docvis),
+  "expected", mean(fitted(mod)),    mean(fitted(mod))
+) %>%
+  pander(caption = "Mean & variance of observed and expected counts")
+
+# Plot: observed vs. expected counts
+observed_v_expected %>%
+  filter(docvis <= 12) %>%
+  gather(type, count, observed, expected) %>%
+  ggplot(aes(x = docvis, y = count, fill = type, color = type)) +
+  geom_point(shape = 21, color = "black", stroke = .5, size = 2) +
+  geom_path(linetype = "dotted", size = .25) +
+  scale_x_continuous(breaks = seq(0, 12, 2)) +
+  scale_fill_brewer(palette = "Set1", aesthetics = c("color", "fill"), name = "") +
+  labs(
+    title = "rwm1984: Poisson Modell",
+    subtitle = "Observed und expected counts bei overdispersion",
+    caption = "Output begrenzt auf docvs <= 12",
+    x = "Anzahl der Arztbesuche (docvis)", y = "Count"
+  ) +
+  theme(legend.position = "top")
 ```
 
 
-Anhand der ersten Tabelle können wir zum Beispiel recht schnell erkennen, dass wir hier *deutlich* mehr Nullen beobachten als das Modell vorhersagt – mehr dazu in Abschnitt \@ref(zeros)
+Anhand der ersten Tabelle können wir recht schnell erkennen, dass wir hier *deutlich* mehr Nullen beobachten als das Modell vorhersagt – mehr dazu in Abschnitt \@ref(zeros).  
+Der Plot veranschaulicht den eher suboptimalen model fit unter diesen Umständen (overdispersion & zero-inflation).
 
+#### Umgang mit Overdispersion
 
-#### Umgang mit Overdispersion {-}
+Zur expliziten Modellierung des Dispersionparameters kann ein NBH Modell (\@ref(mod-nbh)) genutzt werden, falls die Quelle der overdispersion von besonderem Interesse ist.  
 
-Zur expliziten Modellierung des Despersionparameters kann ein NBH Modell (\@ref(mod-nbh)) genutzt werden, falls die Quelle der overdispersion von besonderem Interesse ist.  
-Abseits davon bleiben zwei grobe Strategien: 
+Abseits davon bleiben 2 grobe Strategien : 
 
-1. Adjustierung der durch die overdispersion verzerrten Standardfehler (Quasipoisson)
+1. Adjustierung der durch die overdispersion verzerrten Standardfehler (Quasipoisson, Quasi-Likelihood, robuste Varianzschätzer)
 2. Wechsel auf ein Modell, das overdispersion (oder allgemeine extradispersion) erlaubt (e.g. NB)
+
+(Bemerke: Standardfehler für IRRs werden i.A. über die *delta method* bestimmt, die ich noch recherchieren und irgendwo einbauen muss)
 
 ##### Quasipoisson: Skalierung der Standardfehler {-}
 
-$$se(\beta_k) \cdot \sqrt{\chi^2}$$
-Wobei $\chi^2$ der Pearson-Dispersionsindex ist (vgl. @hilbeModelingCountData2014, p. 92ff)
+$$se(\beta_k) \cdot \sqrt{D}$$
+Wobei $D$ der Pearson-Dispersionsindex ist (vgl. @hilbeModelingCountData2014, p. 92ff), den wir in \@ref(def:pearsondisp) als $\frac{\chi^2_{\mathrm{Pearson}}}{\mathrm{df}}$ definiert hatten.
 
-In `R` passiert genau das, wenn in `family = quasipoisson()`.
+In `R` passiert genau das, wenn in in `glm` als `family = quasipoisson()` gewählt wird.
 
 Nachteil: Es wird zuerst ein reguläres Poisson-Modell gefittet, Standardfehler und Dispersionsindex bestimmt, und dann dasselbe Modell mit skalierten Standardfehlern erneut gefittet – dementsprechend ist diese Methode vermutlich für größere Datensätze eher ineffizient.
 
+Einmal auf unser voriges Beispiel anhand der `rwm5yr`-Daten angewandt:
+
+```{r quasipois-example}
+# Urprüngliches Model
+mod <- glm(docvis ~ outwork + age, family = poisson(), data = rwm1984)
+
+mod_qp <- glm(docvis ~ outwork + age, family = quasipoisson(), data = rwm1984)
+
+dispersion(mod)
+dispersion(mod_qp)
+```
+
+An der Dispersion hat sich nichts geändert, nur an den Standardfehlern der Koeffizienten (in folgenden Tabellen auf log-Skala):
+
+```{r quasipois-example2}
+pander(mod, caption = "Poisson-Modell")
+pander(mod_qp, caption = "Quasipoisson-Modell")
+```
+
+In diesem Fall "lohnt" sich dieser Ansatz zwar eher nicht, da wir neben overdispersion noch ein Problem mit zero-inflation haben, aber in manchen Fällen kann Quasipoisson-Methode ausreichen.
+
+> Scaling is an easy, quick-and-dirty method of adjusting standard errors for overdispersion. However, when data are highly correlated or clustered, model slopes or coefficients usually need to be adjusted as well. Scaling does not accommodate that need, but simulations demonstrate that it is quite useful for models with little to moderate overdispersion.
+>
+> --- @hilbeModelingCountData2014, p. 96
 
 ##### Robuste Varianzschätzer / Sandwich Estimators {-}
 
