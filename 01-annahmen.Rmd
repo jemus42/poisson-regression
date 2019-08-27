@@ -278,12 +278,12 @@ Abseits davon bleiben 2 grobe Strategien :
 
 ##### Quasipoisson: Skalierung der Standardfehler {-}
 
-$$se(\beta_k) \cdot \sqrt{D}$$
+Hier werden lediglich die Standardfehler der Koeffizienten eines Poisson-Modells adjustiert, die bei overdispersion i.d.R. unterschätzt werden – die eigentliche Parameterschätzung wird nicht beeinflusst:
+
+$$\mathrm{SE}(\beta_k) \cdot \sqrt{D}$$
 Wobei $D$ der Pearson-Dispersionsindex ist (vgl. @hilbeModelingCountData2014, p. 92ff), den wir in \@ref(def:pearsondisp) als $\frac{\chi^2_{\mathrm{Pearson}}}{\mathrm{df}}$ definiert hatten.
 
-In `R` passiert genau das, wenn in in `glm` als `family = quasipoisson()` gewählt wird.
-
-Nachteil: Es wird zuerst ein reguläres Poisson-Modell gefittet, Standardfehler und Dispersionsindex bestimmt, und dann dasselbe Modell mit skalierten Standardfehlern erneut gefittet – dementsprechend ist diese Methode vermutlich für größere Datensätze eher ineffizient.
+Ein möglicher Nachteil jedoch: Es wird zuerst ein reguläres Poisson-Modell gefittet, Standardfehler und Dispersionsindex bestimmt, und dann dasselbe Modell mit skalierten Standardfehlern erneut gefittet – dementsprechend ist diese Methode vermutlich für größere Datensätze eher ineffizient.
 
 Einmal auf unser voriges Beispiel anhand der `rwm5yr`-Daten angewandt:
 
