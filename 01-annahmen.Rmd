@@ -126,7 +126,7 @@ Ursachen für *scheinbare* (*apparent*), und damit (bedingt) korrigierbare Overd
 Ein einfaches simuliertes Beispiel zur Auswirkung von fehlenden Prädiktoren:
 
 ```{r overdisp_misspecified_model_sim}
-# Generate binary variable in [0, 1] with a given proportion of 1
+# Generate binary variable in [0, 1] with a given proportion of 1's
 rbinary <- function(n, prob = 0.5) {
   sample(0:1, size = n, replace = TRUE, prob = c(1 - prob, prob))
 }
@@ -151,10 +151,6 @@ dispersion(mod)
 mod2 <- glm(py ~ x1 + x3, data = sim, family = poisson(link = "log"))
 dispersion(mod2)
 ```
-
-
-
-Zero-inflation *kann* Ursache für overdispersion sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechendes Modell (ZIP, ZINB...) verwendet werden *muss* – ggf. lässt sich die overdispersion bereits durch ein NB Modell "auffangen". 
 
 #### Tests auf Overdispersion {-}
 
@@ -337,6 +333,8 @@ In diesem Fall haben wir es mit underdispersion zu tun.
 ## Zero-Inflation {#zeros}
 
 Problem: "Excess zeros", i.e. das Modell sagt für $P(y_i = 0\ |\ x_i)$ eine deutlich kleinere Wahrscheinlichkeit vor, als in gegebenen Daten tatsächlich vorliegen.
+
+Zero-inflation *kann* Ursache für overdispersion sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechendes Modell (ZIP, ZINB...) verwendet werden *muss* – ggf. lässt sich die overdispersion bereits durch ein anderes geeignetes Modell "auffangen". 
 
 
 ```{r excess_zeros_viz, echo=FALSE}
