@@ -82,7 +82,7 @@ Mit der Interpretation
   \end{cases}
 \end{equation*}
 
-Für Modelle moderater Größe kann man ab Werten über 1.25 von ovderdispersion reden, wobei für große Stichproben auch schon ab 1.05 overdispersion vorliegen kann – zumindest nach @hilbeModelingCountData2014 (p. 82), der aber leider keine konkreten Zahlen für seine Definition von "moderaten" oder "großen" Stichproben.
+Für Modelle moderater Größe kann man ab Werten über 1.25 von ovderdispersion reden, wobei für große Stichproben auch schon ab 1.05 overdispersion vorliegen kann – zumindest nach @hilbeModelingCountData2014 (p. 82), der aber leider keine konkreten Zahlen für seine Definition von "moderaten" oder "großen" Stichproben nennt.
 ```
 
 
@@ -310,13 +310,17 @@ In diesem Fall "lohnt" sich dieser Ansatz zwar eher nicht, da wir neben overdisp
 >
 > --- @hilbeModelingCountData2014, p. 96
 
-##### Robuste Varianzschätzer / Sandwich Estimators {-}
+##### Robuste Varianzschätzer (Sandwich Estimators) {-}
 
-Können auch "per default" verwendet werden, da die resultierenden Schätzer im Falle tatsächlich unkorrellierter Daten äquivalent zu den Standardfehlern des Modells sind (i.e. "schadet nicht").
+(Andere Namen: Huber & White standard errors, empirical standard errors)
 
-Bootstrapped SEs wiederum erfordern mehr Aufwand, ähneln aber den robusten SEs sowieso sehr stark.
+Sandwich estimators sind in erster Linie für nicht unabhängige bzw. korrellierte Daten gedacht, zum Beispiel für Daten, die innerhalb mehrere Haushalte, Krankenhäuser, Städte etc. gesammelt wurden.
 
+Robuste Varianzschätzer können (und je nach Quelle: *sollten*) standardmäßig für Count-response Daten verwendet werden, da die resultierenden Schätzer im Falle tatsächlich unkorrellierter Daten äquivalent zu den Standardfehlern des ursprünglichen Modells sind (i.e. "schadet nicht").
 
+Bootstrapped SEs wiederum erfordern mehr Aufwand, ähneln aber den robusten SEs sowieso sehr stark, weshalb sich der Aufwand ggf. nicht wirklich lohnt.
+
+Siehe @hilbeModelingCountData2014 (p. 99f) für eine ausführlichere Beshreibung.
 
 ### Underdispersion
 
