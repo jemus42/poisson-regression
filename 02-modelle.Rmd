@@ -80,12 +80,9 @@ Für das log-lineare Poisson-Modell entsprechen die resultierenden Koeffizienten
 
 ### Annahmen
 
-Primäre Annahme für Poisson-Modelle: *Equidispersion*, i.e. für den Parameter der Poissonverteilung gilt 
-
-
-1. Die Abhängige / Zielvariable $Y$ muss eine Zählung sein, i.e. die Verteilung ist diskret mit einem einzelnen Parameter $\lambda$.
-2. $y \in \mathbb{N}_0$, insbesondere: $Y$ muss 0 enthalten können (siehe auch \@ref(trunc-cens) [Truncation und Censoring](#trunc-cens))
-3. Beobachtungen sind unabhängig, i.e. weder longitudinal noch gepoolt.
+1. Die Abhängige / Zielvariable $Y$ muss eine Zählung sein, i.e. die Verteilung ist diskret mit einem einzelnen Parameter $\lambda$ der Poisson-Verteilung für Erwartungswert und Varianz.
+2. $y \in \mathbb{N}_0$, insbesondere: $Y$ muss 0 enthalten *können* (siehe auch \@ref(trunc-cens) [Truncation und Censoring](#trunc-cens))
+3. Beobachtungen sind *unabhängig*, i.e. weder longitudinal noch gepoolt.
    - Möglicher Test durch Vergleich der Modell-SE und der SE adjustiert durch:
    - 1. Robuste sandwich-estimators
    - 2. Bootstrapped SEs
