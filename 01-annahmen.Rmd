@@ -8,98 +8,13 @@ editor_options:
 
 Es gelten Standardannahmen des GLM:
 
-- $Y$ kommt aus der Exponentialfamilie (Normal-, Poisson-, Gamma-, Binomialverteilung)
-- $\eta_i = \boldsymbol{x}_i' \boldsymbol{\beta}$ als linearer Operator
-- Response- und Linkfunktionen $h(x)$ und $g(x) = h^{-1}(x)$
-
-## Dispersion {#dispersion}
-
-
-```{definition, name = "Equi-, Extra-, Over-, Underdispersion"}
-Für Zählvariablen $y_i \in \mathbb{N}_0$ und erklärenden Variablen $\mathbf{x}_i$ gilt innerhalb eines Modells:
-
-\begin{align*}
-\text{Equdispersion:}  \quad & \mathrm{Var}(y_i) = \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \\
-\text{Extradispersion:}\quad & \mathrm{Var}(y_i) \neq \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \\
-\text{Overdispersion:} \quad & \mathrm{Var}(y_i) > \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \\
-\text{Underdispersion:}\quad & \mathrm{Var}(y_i) < \mathrm{Var}(y_i\ |\ \mathbf{x}_i)
-\end{align*}
-
-```
-
-
-```{definition, name = "Poisson-Overdispersion"}
-Innerhalb eines Poisson-Modells (vgl. Abschnitt \@ref(mod-pois)) mit der Annahme
-
-\begin{align*}
-y_i\ |\ \mathbf{x}_i &\sim \mathrm{Poi}(\lambda_i) \\[1.5em]
-\lambda_i &= \mathbb{E}(y_i\ |\ \mathbf{x}_i) = \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \quad \text{(Equidispersion)}
-\end{align*}
-
-spricht man von **Poisson-Overdispersion** wenn die Varianz der Beobachtungen die erwartete Varianz des Poisson-Modells übersteigt:
-
-\begin{equation*}
-  \mathrm{Var}(y_i\ |\ \mathbf{x}_i) > \mathbb{E}(y_i\ |\ \mathbf{x}_i)
-\end{equation*}
-
-in einem Modell mit overdispersion gilt die Annahme:
-
-\begin{equation*}
-  \mathrm{Var}(y_i\ |\ \mathbf{x}_i) = \theta \cdot \lambda_i
-\end{equation*}
-
-Mit *Dispersionsparameter* $\theta$ [vgl. @fahrmeirRegressionModelleMethoden2009, p. 210]
-
-```
-
-
-Als Dispersionsstatistik können *deviance dispersion* oder *Pearson dispersion* berechnet werden. Laut @hilbeModelingCountData2014 ist die *Pearson dispersion* zu bevorzugen, da sie für echte Poisson-Modelle gleich 1 ist, wohingegen die *deviance dispersion* nach oben verzerrt ist.
-
-
-```{definition pearsondisp, name = "Pearson-Dispersion"}
-Nach @hilbeModelingCountData2014 (p. 77ff):
-
-Die Pearson $\chi^2$-Statistik definiert als die Summe der quadriertern (Pearson-)Residuen gewichtet mit der Modellvarianz:
-
-\begin{equation*}
-\chi_{\text{Pearson}}^2 = \sum_{i=1}^n \frac{(y_i - \hat{\mu}_i)^2}{\mathrm{Var}(\hat{\mu}_i)}
-\end{equation*}
-
-und die **Pearson-Dispersionsstatistik**:
-  
-\begin{equation*}
-D = \frac{\chi_{\text{Pearson}}^2}{\mathrm{df}}
-\end{equation*}
-
-Mit der Interpretation
-
-\begin{equation*}
-\mathrm{Dispersion} =
-  \begin{cases}
-    < 1 & \Longrightarrow \text{Underdispersion} \\
-      1 & \Longrightarrow \text{Equidispersion (Poisson)} \\
-    > 1 & \Longrightarrow \text{Overdispersion}
-  \end{cases}
-\end{equation*}
-
-Für Modelle moderater Größe kann man ab Werten über 1.25 von ovderdispersion reden, wobei für große Stichproben auch schon ab 1.05 overdispersion vorliegen kann – zumindest nach @hilbeModelingCountData2014 (p. 82), der aber leider keine konkreten Zahlen für seine Definition von "moderaten" oder "großen" Stichproben nennt.
-```
+- Die abhängige Variable $Y$ kommt aus der Exponentialfamilie (Normal-, Poisson-, Gamma-, Binomialverteilung)
+- Modelliert wird der lineare Prädiktor $\eta_i = \boldsymbol{x}_i' \boldsymbol{\beta}$.
+- Response- und Linkfunktionen $h(x)$ und $g(x) = h^{-1}(x)$ 
 
 
 
-In `R` kann die Pearson-Dispersion wie folgt berechnet werden:
-
-```r
-# Model fit
-mod <- glm(y ~ x1 + x2 + x3, data = sim, family = poisson(link = "log"))
-
-# Pearson dispersion
-sum(resid(mod, type = "pearson")^2) / mod$df.residual
-```
-
-...wofür wir in Abschnitt \@ref(helperfuns) eine Hilfsfunktion `dispersion()` definiert haben.
-
-### Overdispersion
+### Overdispersion {#overdispersion}
 
 Der vermutlich häufigste Fall für Count-Daten: Die Varianz der abhängigen Variable ist größer als ihr Erwartungswert, bzw. größer als ihre erwartete Varianz innerhalb eines Modells. 
 @hilbeModelingCountData2014 unterscheidet zwischen echter und scheinbarer (*apparent*) Overdispersion, wobei letztere oft durch geeignete Korrekturen kompensiert werden kann, wobei *echte* Overdisperion sowohl Parameterschätzung und Modellanpassung im Allgemeinen beeinträchtigt.
@@ -265,6 +180,7 @@ observed_v_expected %>%
 Anhand der ersten Tabelle können wir recht schnell erkennen, dass wir hier *deutlich* mehr Nullen beobachten als das Modell vorhersagt – mehr dazu in Abschnitt \@ref(zeros).  
 Der Plot veranschaulicht den eher suboptimalen model fit unter diesen Umständen (overdispersion & zero-inflation).
 
+
 #### Umgang mit Overdispersion
 
 Zur expliziten Modellierung des Dispersionparameters kann ein NBH Modell (\@ref(mod-nbh)) genutzt werden, falls die Quelle der overdispersion von besonderem Interesse ist.  
@@ -336,6 +252,7 @@ Im Kontext von hurdle models taucht folgende Bemerkung auf:
 Im Allgemeinen wird [generalized Poisson](https://stats.stackexchange.com/a/237177/80056) (R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html)) empfohlen [@hilbeModelingCountData2014].
 
 
+
 ### Beispiel nach @hilbeModelingCountData2014, p. 211ff
 
 Grundlage ist der Datensatz `azprocedure` (siehe Abschnitt \@ref(data)) zur Dauer des Krankenhausaufenthalts nach einer von zwei kardiovaskulären Operationen mit folgenden hier relevanten Variablen:
@@ -397,11 +314,11 @@ dispersion(model_azproc_u)
 
 In diesem Fall haben wir es mit underdispersion zu tun.
 
-## Zero-Inflation {#zeros}
+## Zero-Inflation (ZI) {#zeros}
 
 Problem: "Excess zeros", i.e. das Modell sagt für $P(y_i = 0\ |\ x_i)$ eine deutlich kleinere Wahrscheinlichkeit vor, als in gegebenen Daten tatsächlich vorliegen.
 
-Zero-inflation *kann* Ursache für overdispersion sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechendes Modell (ZIP, ZINB...) verwendet werden *muss* – ggf. lässt sich die overdispersion bereits durch ein anderes geeignetes Modell "auffangen". 
+Zero-inflation hängt eng mit overdispersion zusammen. Sie *kann* Ursache für overdispersion sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechend auf *ZI*-fokussiertes Modell (ZIP, ZINB...) verwendet werden *muss* – ggf. lässt sich die overdispersion bereits durch ein anderes geeignetes Modell "auffangen". Zum Beispiel zeigt @winkelmannEconometricAnalysisCount2010, dass die *NB* allgemein eine größere Anzahl an Nullen erwartet als die Poisson.
 
 
 ```{r excess_zeros_viz, echo=FALSE}
@@ -482,15 +399,4 @@ fish %>%
 ```
 
 Die Anzahl der Nullen scheint hier auffallend groß zu sein, allerdings beobachten wir hier auch zwei unterschiedliche Mechanismen: Eine Gruppe kann das ganze Wochenende geangelt haben, während eine andere Gruppe gar nicht geangelt hat – beide Gruppen werden jedoch am Ende nach der Anzahl ihrer gefangenen Fische befragt.  
-
-## Truncation und Censoring {#trunc-cens}
-
-Wenn die Beobachtungen keine Nullen enthalten bzw. im Modell aus inhaltlichen Gründen nicht möglich sind, können *zero-truncated* (ZT) Modelle verwendet werden. Diese Modelle sind insbesondere im Kontext von *hurdle models* interessant (siehe Abschnitt \@ref(mod-hurdle)), in denen die positiven counts getrennt von den Null-counts modelliert werden. Eine *truncated* distribution wäre die zero-truncated Poisson (ZTP).
-
-Bemerke, dass *truncation* hier etwas anderes meint als *censoring*:
-
-**Truncation** bedeutet, dass bestimmte counts (i.e. Merkmalsausprägungen in $Y$) _nicht möglich_ sind. Als Beispiel könnte die Dauer eines Krankenhausaufenthalts dienen, da Aufenthaltstage erst ab einem Tag aufgezeichnet werden. (siehe auch Datensatz `azprocedure`, \@ref(data)).  
-Unterschieden werden kann zwischen *left truncation* (z.B. keine counts kleiner als 5), *right truncation* (analog, keine counts größer als 5), oder *interval truncation* (nur counts im Intervall $[2, 10]$).
-
-**Censoring** wiederum bedeutet, dass eine Merkmalsausprägung (wie etwa $Y = 0$ oder auch $Y = 1029$) zwar im Modell prinzipiell möglich ist, aber lediglich nicht in einer konkreten Stichprobe beobachtet wurde.
 

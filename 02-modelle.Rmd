@@ -24,7 +24,9 @@ tibble::tribble(
 
 ## Zweiparametrische Modelle
 
-## Negative Binomial (NB) {#mod-nb}
+### Negativ Binomial (NB) {#mod-nb}
+
+Die Negative Binomialverteilung (*NB*) kann als zweiparametrische Erweiterung der *Poisson* betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird [^Unter Umständen kann von einem *Poisson-Gamma Mischmodell* die Rede sein – damit ist genau dieser Umstand gemeint]. 
 
 ```{definition, name = "Negative Binomialverteilung"}
 Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675):
@@ -36,34 +38,61 @@ P(Y = y) = \frac{\Gamma(\theta + y)}{\Gamma(\theta) \Gamma(y+1)} \frac{\theta^\t
 \end{equation}
 
 Mit $\mathbb{E}(Y) = \mu$ und $\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}$
+  
 ```
 
 
-- Derivation: Poisson-Gamma Mischmodell
-- Erweiterung der Poissonverteilung um einen Dispersionsparameter $\alpha$
-  - Wenn $\alpha > 0$: overdispersion
-  - Wenn $\alpha = 0$: Äquivalent zu Poisson
+Der gängigste Anwendungsfall der *NB* findet sich bei Daten mit nicht korrigierbarer overdispersion (siehe Abschnitt \@ref(overdispersion)), da der Parameter $\theta$ (oder auch $\alpha = \frac 1 \theta$) als *Dispersionsparameter* dient. Für diesen Parameter gilt:
+
+
+```{definition nbdisppar, name = "NB-Dispersionsparameter"}
+
+Im Allgemeinen wird der Parameter $\theta$ verwendet mit der Interpretation (relativ zum Poisson-Modell):
+
+\begin{align}
+  \theta &> 0 &&\Longrightarrow \text{ Overdispersion} \\
+  \theta &\to \infty &&\Longrightarrow \text{ Äquivalent zur Poissonverteilung}
+\end{align}
+
+Unter anderem in R (z.B. `MASS::glm.nb`) wird die inverse Variante $\alpha = \frac 1 \theta$ verwendet, womit gilt:
+
+$$\mathrm{Var}(Y) = \mu + \alpha \mu^2$$
+  
+  
+\begin{align}
+  \alpha &= 0 &&\Longrightarrow \text{ Äquivalent zur Poissonverteilung} \\
+  \alpha &> 0 &&\Longrightarrow \text{ Overdispersion}
+\end{align}
+
+```
+
+(Vgl. @hilbeModelingCountData2014, @hilbe2011NegativeBinomial)
+
+
+Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob $\alpha$ oder $\theta$ verwendet wird, ist sein Vorzeichen: Er ist _immer_ positiv, das heißt die Varianz der NB ist entweder _größer oder gleich_ der Poisson, oder mit anderen Worten:
+
+> "The negative binomial model adjusts for Poisson overdispersion; it **cannot be used to model underdispersed** Poisson data" 
+>
+> --- [@hilbeModelingCountData2014 (p. 11), eigene Hervorhebung]
+
+
+
 - Interpretation der exponentierten Koeffizienten: IRRs
 - Zwei Varianten: NB1, NB2
-- Software Pitfalls:
-  - Dispersionsparameter in R's `glm` bzw. `MASS::glm.nb` invertiert: $\theta = \frac 1 \alpha$
-  - -> Äquivalenz zu Poisson bei $\theta \to \infty$
+
   
-> "The negative binomial model adjusts for Poisson overdispersion; it **cannot be used to model underdispersed** Poisson data" 
-> [@hilbeModelingCountData2014, p. 11]
-  
-Vgl @hilbeModelingCountData2014
 
 ### Poisson Inverse Gaussian (PIG) {#mod-pig}
 
-- Annahme: Overdispersion besser über *inverse Gaussian* Verteilung als Gamma-Verteilung (siehe NBIN) beschreibbar
+So wie die *NB* als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz betrachtet werden kann, ist die *Poisson Inverse Gaussian* (*PIG*) eine mixture aus Poisson-Verteilung mit [invers-normalverteilter](https://en.wikipedia.org/wiki/Inverse_Gaussian_distribution) Varianz. Demnach kann man *PIG* als Alternative zur *NB* verwenden.
+
 
 - Dispersionsparameter $\alpha$, Interpretation analog NBIN
 - Interpretation der exponentierten Koeffizienten: IRRs
 
 - Software:
 - R: `gamlss` (CRAN)
-- Stata: `pigreg` ()
+- Stata: `pigreg`
 
 ### Generalized Poisson {#mod-gp}
 
@@ -168,68 +197,4 @@ P(Y = 0) &= \pi + (1 - \pi) \cdot \frac{\theta^\theta}{(\theta + \mu)^\theta}  \
 P(Y = 1) &= (1 - \pi) \cdot \frac{\Gamma(\theta+y)}{\Gamma(\theta) \Gamma(y + 1)} \frac{\theta^\theta \mu^y}{(\theta + \mu)^{(\theta + y)}}
 \end{align}
 ```
-
-## Hurdle models {#mod-hurdle}
-
-- *Nested* hurdle models: Beide Komponenten nested (e.g. beide Poisson).
-- *Non-nested* hurdle models: Hurdle-Komponente als vollständig anderer Prozess betrachtet und via e.g. logit modelliert.
-
-Zwei Komponenten für unnested hurdle models:
-
-1. Binary 0,1 response, (logit oder probit)
-   - Modellierung der Wahrscheinlichkeit für die non-zero counts
-2. Zero-truncated count model
-
-- Erlauben sowohl under- als auch overdispersion
-- (Unnested models) erlauben systematischen Unterschied im Prozess, der zu e.g. Outcomes = 0 vs. Outcomes > 0 führt, was durch die Wahl unterschiedlicher Modelle für beide Komponenten abgebildet wird
-
-In diesem Fall entspricht das Resultat eines hurdle models zwei separat gefitteten Modellen (e.g. Pois + Logit), die getrennt interpretierbar sind (im Gegensatz zu zero-inflated models!).
-
-```{definition, name = "Hurdle Model"}
-Nach @winkelmannEconometricAnalysisCount2010, p. 179f:
-  
-Sei $g_1(0)$ die Wahrscheinlichkeit des Outcomes $0$ und $g_1(k), k = 1, 2, 3, \ldots$ die Wahrscheinlichkeitsfunktion für natürliche Zahlen, dann ist die Wahrscheinlichkeitsfunktion eines *hurdle-at-zero* Modells:
-  
-\begin{align*}
-f(y = 0) &= g_1(0) \\
-f(y = k) &= (1 - g_1(0)) g_2(k), \quad k = 1, 2, 3, \ldots
-\end{align*}
-
-Bzw. nach @mullahy1986SpecificationTesting mit $f_1$ und $f_2$ als PMFs für natürliche Zahlen
-
-\begin{align*}
-f(y = 0) &= f_1(0) \\
-f(y = 1) &= \frac{1 - f_1(0)}{1 - f_2(0)} f_2(k) \\
-         &= \Theta f_2(k), \quad k = 1, 2, 3, \ldots 
-\end{align*}
-
-Wobei 
-
-- $f_2$ als *parent process* bezeichnet wird
-- $1 - f_1(0)$ die Wahrscheinlichkeit angibt, die Hürde ($y = 0$) zu "überqueren" (*"crossing the hurdle"*).
-- $1 - f_2(0)$ zur Normalisierung von $f_2$ dient, um deren truncation zu berücksichtigen.
-
-Der Erwartungswert des hurdle models ist
-
-$$
-  \mathbb{E}_h(y) = \Theta \sum_{k=1}^\infty k f_2(k) = \Theta \mathbb{E}_2(y)
-$$
-  
-Mit $\mathbb{E}_2$ als Erwartunsgwert von $f_2$.
-
-Mit $f_2 = \mathrm{Poisson}$:
-  
-- $0 < \Theta < 1$: Overdispersion  
-- $1 < \Theta < \frac{\lambda_2 + 1}{\lambda_2}$: Underdispersion
-
-```
-
-
-> "By far the most popular hurdle model in practice is the hurdle-at-zero negative bonomial model"
-[@winkelmannEconometricAnalysisCount2010, p. 183]
-
-mit $f_1 \sim NB(\beta_1, \alpha_1)$ und $f_2 \sim NB(\beta_2, \alpha_2)$
-
-
-Im Falle von **binären Outcomes** ist es fraglich plausibel hurdle models anzuwenden, da in diesem Fall die Nullen und die Einsen durch separate Modelle modelliert würden.
 

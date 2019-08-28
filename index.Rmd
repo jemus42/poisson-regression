@@ -44,6 +44,7 @@ knitr::opts_chunk$set(
 library(dplyr)
 library(tidyr)
 library(broom)
+library(purrr)
 
 # Tables
 library(kableExtra)
@@ -66,6 +67,11 @@ library(DiagrammeR)
 
 # Read data ----
 fish <- readRDS("data/fish.rds")
+data("azprocedure", package = "COUNT")
+data("fasttrakg", package = "COUNT")
+data("rwm5yr", package = "COUNT")
+rwm1984 <- subset(rwm5yr, year == 1984)
+data("medpar", package = "COUNT")
 ```
 
 
@@ -74,12 +80,14 @@ fish <- readRDS("data/fish.rds")
 Dieses Dokument soll einen Überblick zum Umgang mit Zähldaten (*count data*) liefern.  
 Zähldaten können im Allgemeinen mittels Poissonverteilung modelliert werden, wobei in der Praxis einige Komplikationen zu erwarten sind:
 
-- Over-/underdispersion (siehe Abschnitt \@ref(dispersion)): Die Poissonverteilung besitzt nur einen Parameter für sowohl Erwartungswert als auch Varianz und nimmt somit *equidispersion* an – diese Annahme ist meist in Form von overdispersion verletzt
+- Over-/underdispersion (siehe Abschnitt \@ref(dispersion)): Die Poissonverteilung besitzt nur einen Parameter für sowohl Erwartungswert als auch Varianz und nimmt somit Gleichheit zwischen den beiden an (*equidispersion*) – diese Annahme ist meist in Form von overdispersion verletzt
 - Zero-Inflation (siehe Abschnitt \@ref(zeros)): Aus einem Modell lässt sich die erwartete Anzahl an Beobachtungen mit Anzahl $0$ bestimmen – wenn die beobachtete Anzahl (bzw. der Anteil) an Nullen deutlich größer ist, spricht man von *zero-inflation*
 
-Diese Umstände benötigen in der Regel Generalisierungen der einfach Poisson-Regression, entweder durch Erweiterung der Verteilung um zusätzliche Parameter (siehe z.B. *Negative Binomialverteilung* für overdispersion in Abschnitt \@ref(mod-nb), *Generalized Poisson* für underdispersion in Abschnitt \@ref(mod-gp)) oder die Konstruktion von *mixture models* oder *hurdle models* für zero-inflation (Abschnitte \@ref(mod-zi) und  \@ref(mod-hurdle)).
+Diese Umstände benötigen in der Regel Generalisierungen der einfach Poisson-Regression, entweder durch Erweiterung der Verteilung um zusätzliche Parameter (siehe z.B. *Negative Binomialverteilung* für overdispersion in Abschnitt \@ref(mod-nb), *Generalized Poisson* für underdispersion in Abschnitt \@ref(mod-gp)) oder die Konstruktion von *mixture models* oder *hurdle models* für zero-inflation (Abschnitte \@ref(mod-zi) und  \@ref(mod-hurdle)). 
 
-## Datenbeispiele {#data}
+## Beispieldaten {#data}
+
+Als Anwendungsbeispiele werden einige Datensätze aus 
 
 ```{r datasets, echo=FALSE}
 tribble(
@@ -131,7 +139,7 @@ Siehe dazu auch Anhang \@ref(repro).
 Zur Reproduktion der Beispiele sind insbesondere die folgenden `R` packages notwendig, die durch den angegebenen Code installiert werden, sofern sie nicht bereits verfügbar sind:
 
 ```r
-# Data transformation
+# Data transformation / modelling
 if (!("dplyr" %in% installed.packages())) install.packages("dplyr")
 if (!("purrr" %in% installed.packages())) install.packages("purrr")
 if (!("broom" %in% installed.packages())) install.packages("broom")
@@ -139,11 +147,12 @@ if (!("broom" %in% installed.packages())) install.packages("broom")
 # Plots
 if (!("ggplot2" %in% installed.packages())) install.packages("ggplot2")
 
-# Data
+# Data (and maybe modelling)
 if (!("COUNT" %in% installed.packages())) install.packages("COUNT")
 
-# Output formatting (für RMarkdown/pandoc markdown documents)
+# Output formatting (for RMarkdown/pandoc markdown documents)
 if (!("pander" %in% installed.packages())) install.packages("pander")
+if (!("kableExtra" %in% installed.packages())) install.packages("kableExtra")
 ```
 
 Siehe auch Anhang \@ref(repro) zu verwendeten Packages.
@@ -204,7 +213,7 @@ Der *Lagrange Multiplier Test*:
 
 ```{r lagrange_test}
 #' Lagrange Multiplier Test according to Hilbe (2014)
-#' @param mod A `glm` or similiar object
+#' @param model A `glm` or similiar object
 #' @return Invisibly: Chi^2 statistic and corresponding p-value
 lagrange_test <- function(model) {
    mu     <- predict(model, type = "response")

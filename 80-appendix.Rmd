@@ -12,7 +12,86 @@ Zu den Begriffen im Kontext von missingness wird folgende Unterscheidung bezügl
 - **MAR** (missing at random): Es gibt einen Zusammenhang zwischen Ausfallwahrscheinlichkeit und *beobachteten* Daten. Das heißt auch, dass missingness durch beobachtete Daten erklärt werden kann, weshalb dieser Fall noch akzeptabel wäre.
 - **MNAR** / **NMAR** (missing not at random): Weder *MCAR* noch *MAR* – die Ausfallwahrscheinlichkeit hängt von *unbeobachten* Daten ab. Das heißt, es gibt ein Ausfallmuster in $Y$, das nicht durch vorliegende Daten erklärt werden kann, wodurch in der Regel verzerrte Effektschätzungen entstehen.
 
+## Truncation und Censoring {#trunc-cens}
+
+Wenn die Beobachtungen keine Nullen enthalten bzw. im Modell aus inhaltlichen Gründen nicht möglich sind, können *zero-truncated* (ZT) Modelle verwendet werden. Diese Modelle sind insbesondere im Kontext von *hurdle models* interessant (siehe Abschnitt \@ref(mod-hurdle)), in denen die positiven counts getrennt von den Null-counts modelliert werden. Eine *truncated* distribution wäre die zero-truncated Poisson (ZTP).
+
+Bemerke, dass *truncation* hier etwas anderes meint als *censoring*:
+
+**Truncation** bedeutet, dass bestimmte counts (i.e. Merkmalsausprägungen in $Y$) _nicht möglich_ sind. Als Beispiel könnte die Dauer eines Krankenhausaufenthalts dienen, da Aufenthaltstage erst ab einem Tag aufgezeichnet werden. (siehe auch Datensatz `azprocedure`, \@ref(data)).  
+Unterschieden werden kann zwischen *left truncation* (z.B. keine counts kleiner als 5), *right truncation* (analog, keine counts größer als 5), oder *interval truncation* (nur counts im Intervall $[2, 10]$).
+
+**Censoring** wiederum bedeutet, dass eine Merkmalsausprägung (wie etwa $Y = 0$ oder auch $Y = 1029$) zwar im Modell prinzipiell möglich ist, aber lediglich nicht in einer konkreten Stichprobe beobachtet wurde.
+
+## Hurdle models {#mod-hurdle}
+
+Im Falle von **binären Outcomes** ist es fraglich plausibel hurdle models anzuwenden, da in diesem Fall die Nullen und die Einsen durch separate Modelle modelliert würden – normalerweise würde man die Nullen durch ein logit- und die positiven Counts durch ein Poisson(ähnliches) Modell beschreiben wollen, was aber natürlich für binäre Outcomes entsprechend schwierig wäre.  
+Die nachfolgende Beschreibung dient daher eher der Vollständigkeit, insbesondere da hurdle models in bestimmten Anwendungsgebieten scheinbar recht populär sind.
+
+Im Allgemeinen kann man zwei Arten von hurdle models unterscheiden:
+
+- *Nested* hurdle models: Beide Komponenten nested (e.g. beide Poisson).
+- *Non-nested* hurdle models: Hurdle-Komponente als vollständig anderer Prozess betrachtet und via e.g. logit modelliert.
+
+Zwei gängige Komponenten für unnested hurdle models:
+
+1. Binary 0,1 response, (logit oder probit)
+   - Modellierung der Wahrscheinlichkeit für die non-zero counts
+2. Zero-truncated count model
+
+- Erlauben sowohl under- als auch overdispersion
+- (Unnested models) erlauben systematischen Unterschied im Prozess, der zu e.g. Outcomes = 0 vs. Outcomes > 0 führt, was durch die Wahl unterschiedlicher Modelle für beide Komponenten abgebildet wird
+
+In diesem Fall entspricht das Resultat eines hurdle models zwei separat gefitteten Modellen (e.g. Pois + Logit), die getrennt interpretierbar sind (im Gegensatz zu zero-inflated models!).
+
+```{definition, name = "Hurdle Model"}
+Nach @winkelmannEconometricAnalysisCount2010, p. 179f:
+  
+Sei $g_1(0)$ die Wahrscheinlichkeit des Outcomes $0$ und $g_1(k), k = 1, 2, 3, \ldots$ die Wahrscheinlichkeitsfunktion für natürliche Zahlen, dann ist die Wahrscheinlichkeitsfunktion eines *hurdle-at-zero* Modells:
+  
+\begin{align*}
+f(y = 0) &= g_1(0) \\
+f(y = k) &= (1 - g_1(0)) g_2(k), \quad k = 1, 2, 3, \ldots
+\end{align*}
+
+Bzw. nach @mullahy1986SpecificationTesting mit $f_1$ und $f_2$ als PMFs für natürliche Zahlen
+
+\begin{align*}
+f(y = 0) &= f_1(0) \\
+f(y = 1) &= \frac{1 - f_1(0)}{1 - f_2(0)} f_2(k) \\
+         &= \Theta f_2(k), \quad k = 1, 2, 3, \ldots 
+\end{align*}
+
+Wobei 
+
+- $f_2$ als *parent process* bezeichnet wird
+- $1 - f_1(0)$ die Wahrscheinlichkeit angibt, die Hürde ($y = 0$) zu "überqueren" (*"crossing the hurdle"*).
+- $1 - f_2(0)$ zur Normalisierung von $f_2$ dient, um deren truncation zu berücksichtigen.
+
+Der Erwartungswert des hurdle models ist
+
+$$
+  \mathbb{E}_h(y) = \Theta \sum_{k=1}^\infty k f_2(k) = \Theta \mathbb{E}_2(y)
+$$
+  
+Mit $\mathbb{E}_2$ als Erwartunsgwert von $f_2$.
+
+Mit $f_2 = \mathrm{Poisson}$:
+  
+- $0 < \Theta < 1$: Overdispersion  
+- $1 < \Theta < \frac{\lambda_2 + 1}{\lambda_2}$: Underdispersion
+
+```
+
+
+> "By far the most popular hurdle model in practice is the hurdle-at-zero negative bonomial model"
+[@winkelmannEconometricAnalysisCount2010, p. 183]
+
+mit $f_1 \sim NB(\beta_1, \alpha_1)$ und $f_2 \sim NB(\beta_2, \alpha_2)$
+
 # Reproduzierbarkeit {#repro}
+
+## R-Code 
 
 Hier verwendeter Code profitiert stark vom [`tidyverse`](https://www.tidyverse.org/).  
 Insbesondere wird anstelle der Funktion `data.frame` in der Regel `tibble` (package `tibble`, automatisch re-exportiert von `dplyr`) verwendet. Diese Alternative bietet einige quality of life improvements für schnelle Simulationen, zum Beispiel die Verwendung von Variablen während diese noch definiert werden:
@@ -64,7 +143,7 @@ iris %>%
 
 Letztlich stellt das Package [`broom`](https://broom.tidyverse.org/) eine wichtige Ergänzung dar. Mitunter ist [`augment()`](https://broom.tidyverse.org/reference/augment.lm.html#examples) eine komfortable Möglichkeit um schnell in tabellarischer Form an gefittete Werte mit ihren dazugehörigen x-Werten gelangen.
 
-Session info:
+## Session Info
 
 ```{r sessioninfo, echo=FALSE}
 sinfo <- sessioninfo::session_info()[c("platform", "packages")]
