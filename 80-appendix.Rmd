@@ -25,10 +25,10 @@ Unterschieden werden kann zwischen *left truncation* (z.B. keine counts kleiner 
 
 ## Hurdle models {#mod-hurdle}
 
-Im Falle von **binären Outcomes** ist es fraglich plausibel hurdle models anzuwenden, da in diesem Fall die Nullen und die Einsen durch separate Modelle modelliert würden – normalerweise würde man die Nullen durch ein logit- und die positiven Counts durch ein Poisson(ähnliches) Modell beschreiben wollen, was aber natürlich für binäre Outcomes entsprechend schwierig wäre.  
+Im Falle von **binären Outcomes** ist es fraglich plausibel hurdle models anzuwenden, da in diesem Fall die Nullen und die Einsen separat modelliert würden – normalerweise würde man die Nullen durch ein logit- und die positiven Counts durch ein Poisson(ähnliches) Modell beschreiben wollen, was aber natürlich für binäre Outcomes entsprechend schwierig wäre.  
 Die nachfolgende Beschreibung dient daher eher der Vollständigkeit, insbesondere da hurdle models in bestimmten Anwendungsgebieten scheinbar recht populär sind.
 
-Im Allgemeinen kann man zwei Arten von hurdle models unterscheiden:
+Im Allgemeinen kann man zwei Arten von hurdle models unterscheiden, die jjeweils aus zwei Modellkomponenten bestehen:
 
 - *Nested* hurdle models: Beide Komponenten nested (e.g. beide Poisson).
 - *Non-nested* hurdle models: Hurdle-Komponente als vollständig anderer Prozess betrachtet und via e.g. logit modelliert.
@@ -112,12 +112,13 @@ tibble(
 )
 ```
 
-Zusätzlich kann die Pipe (`%>%`) Verwendung finden, ein function composition operator:
+Zusätzlich kann die Pipe (`%>%`) Verwendung finden, ein function composition operator.  
+Es gilt:
+
+`f(g(h(x), b = 4), a = 1)` = `h(x) %>% g(b = 4) %>% f(a = 1)`
+
 
 ```{r pipe, eval=FALSE}
-# Es gilt:
-f(g(h(x), b = 4), a = 1) = h(x) %>% g(b = 4) %>% f(a = 1)
-
 # Klassisch
 x <- rnorm(100, mean = 15)
 x_mean <- mean(x)
@@ -135,13 +136,13 @@ rnorm(100, mean = 15) %>%
 iris_subset <- subset(iris, Species == "setosa")
 head(iris_subset[order(iris_subset$Sepal.Length, decreasing = TRUE), ], n = 5)
 
-# tidyverse-style (incl. filter() als subset()-Analog und top_n())
+# tidyverse-style (incl. filter() als subset()-Analog und top_n() für order() + head())
 iris %>%
    filter(Species == "setosa") %>%
    top_n(Sepal.Length, n = 5)
 ```
 
-Letztlich stellt das Package [`broom`](https://broom.tidyverse.org/) eine wichtige Ergänzung dar. Mitunter ist [`augment()`](https://broom.tidyverse.org/reference/augment.lm.html#examples) eine komfortable Möglichkeit um schnell in tabellarischer Form an gefittete Werte mit ihren dazugehörigen x-Werten gelangen.
+Letztlich stellt das Package [`broom`](https://broom.tidyverse.org/) eine wichtige Ergänzung dar. Mitunter ist [`augment()`](https://broom.tidyverse.org/reference/augment.lm.html#examples) eine komfortable Möglichkeit um schnell in tabellarischer Form gefittete Werte mit ihren dazugehörigen x-Werten zu erhalten.
 
 ## Session Info
 
@@ -149,7 +150,7 @@ Letztlich stellt das Package [`broom`](https://broom.tidyverse.org/) eine wichti
 sinfo <- sessioninfo::session_info()[c("platform", "packages")]
 
 sinfo$platform %>% 
-  unclass() %>% 
+  unclass() %>%
   as_tibble() %>% 
   t() %>% 
   as_tibble(rownames = "m", .name_repair = make.names) %>%

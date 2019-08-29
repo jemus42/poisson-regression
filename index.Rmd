@@ -17,7 +17,7 @@ sansfont: "TeX Gyre Heros"
 monofont: "Fira Mono"
 monofontoptions:
   - Mapping=tex-ansi
-  - Scale=0.75
+  - Scale=0.8
 mathfont: "Asana Math"
 always_allow_html: yes
 links-as-notes: yes
@@ -70,7 +70,7 @@ fish <- readRDS("data/fish.rds")
 data("azprocedure", package = "COUNT")
 data("fasttrakg", package = "COUNT")
 data("rwm5yr", package = "COUNT")
-rwm1984 <- subset(rwm5yr, year == 1984)
+data("rwm1984", package = "COUNT")
 data("medpar", package = "COUNT")
 ```
 
@@ -87,14 +87,33 @@ Diese Umstände benötigen in der Regel Generalisierungen der einfach Poisson-Re
 
 ## Beispieldaten {#data}
 
-Als Anwendungsbeispiele werden einige Datensätze aus 
+Als Anwendungsbeispiele werden einige Beispieldatensätze verwendet, die verschiedene Probleme illustrieren:
+
+- `azprocedure`: Patienten kardiovaskulärer Behandlungen in Arizona
+  - Count: `los`, Dauer eines Krankenhausaufenthalts in Tagen (1 - 83)
+  - Kovariablen:
+    - `sex`: Male (1), female(0)
+    - `admit`: Type of admission. Urgent/emergency (1), elective (0)
+- `rwm5yr` (`rwm1984`): "German health registry" 1984-1988 (bzw. nur 1984)
+  - Count: `docvis`: Anzahl der Arztbesuche (0 - 121)
+  - Kovariablen:
+    - `outwork`: Arbeitslos (1), arbeitend (0)
+    - `age`: Alter (25 - 64)
+- `fish`: Geangelte Fische an einem Campingwochenende
+    - Count: `count`, Anzahl der Fische
+    - Kovariablen:
+      - `child`: Anzahl der Kinder in der Campergruppe
+      - `persons`: Anzahl der Personen in der Campergruppe
+      - `camper`: `[0, 1]` Hat die Gruppe einen Campingwagen mitgebracht?
+
+Diese Datensätze finden sich entweder in R-packages oder auf der website der UCLA IDRE:
 
 ```{r datasets, echo=FALSE}
 tribble(
    ~dataset,      ~rpkg,   ~source,
    "azprocedure", "COUNT", "Hilbe (2014)",
-   "fasttrakg",   "COUNT", "Hilbe (2014)",
    "rwm5yr",      "COUNT", "Hilbe (2014)",
+   "rwm1984",     "COUNT", "Hilbe (2014)",
    "fish",        "–",  "UCLA IDRE (https://stats.idre.ucla.edu)"
 ) %>%
   setNames(c("Dataset", "R Package", "Quelle")) %>%
@@ -191,7 +210,7 @@ x[sample(100, 10)] <- NA
 describe_counts(x)
 ```
 
-Die Pearson-Dispersionsstatistik (eingeführt in Abschnitt \@ref(dispersion)):
+Die Pearson-Dispersionsstatistik (eingeführt in Abschnitt \@ref(dispersion), Definition \@ref(def:pearsondisp)):
 
 ```{r pearson_disp_function}
 #' Pearson-Dispersion

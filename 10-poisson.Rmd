@@ -1,0 +1,320 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Das Poisson-Modell {#poisson-modell}
+
+Das *Poisson*-Modell ist die allgemeine Grundlage für die Modellierung von Zählvorgängen / Counts, und auch wenn es in seiner "reinen" Form in der Praxis meist nicht ausreicht, bauen alle weiteren Methoden auf die eine oder andere Art darauf auf. Auch die häufig verwendete *Negative Binomialverteilung* ist letztlich eine *Poisson*-Verteilung mit *Gamma*-verteilter Varianz, also eine Erweiterung der *Poisson* um einen zusätzlichen Parameter. Das gleiche Prinzip findet sich in allen hier besprochenen Verteilungen. 
+
+Für eine ausführliche Diskussion der Eigenschaften, siehe @winkelmannEconometricAnalysisCount2010 (p. 7-20).
+
+Grundlage zur Modellierung ist das GLM mit den dazugehörigen Voraussetzungen:
+
+- Die abhängige Variable $Y$ kommt aus der Exponentialfamilie (Normal-, Poisson-, Gamma-, Binomialverteilung)
+- Modelliert wird der lineare Prädiktor $\eta_i = \boldsymbol{x}_i' \boldsymbol{\beta}$.
+- Response- und Linkfunktionen $h(x)$ und $g(x) = h^{-1}(x)$ 
+
+
+```{definition, name = "Poisson-Verteilung"}
+Eine Poisson-verteilte Zufallsvariable $Y \sim \mathrm{Poi}(\lambda)$ [^poiparam] hat die Dichte
+
+\begin{equation*}
+\mathrm{P}(Y = y) = \frac{\lambda^y \exp(-\lambda)}{y!} \quad, y \in \mathbb{N}_0
+\end{equation*}
+```
+
+```{r poisson_dists, echo=FALSE}
+map_df(c(0.5, 1, 2, 5, 10, 15), ~{
+  tibble(
+    lambda = .x,
+    x = 0:20,
+    poi = dpois(x, lambda)
+  )
+}) %>%
+  ggplot(aes(x = x, y = poi, color = factor(lambda), fill = factor(lambda))) +
+  geom_path(aes(group = lambda), linetype = "dotted") +
+  geom_point(shape = 21, color = "black", size = 2.5, stroke = .2) +
+  #geom_segment(aes(x = x, xend = x, y = 0 , yend = poi)) +
+  scale_color_viridis_d(direction = -1, guide = FALSE) +
+  scale_fill_viridis_d(
+    direction = -1, guide = guide_legend(
+      keywidth = .5,
+      nrow = 1,
+      direction = "horizontal"
+      )
+  ) +
+  labs(
+    title = expression(Poi(lambda)),
+    x = "y", y = expression(Poi(y, lambda)), fill = expression(lambda)
+  ) +
+  theme(legend.position = c(.7, .9))
+```
+
+```{definition, name = "Poisson-Modell"}
+Die Zielvariablen $y_i \in \mathbb{N}_0$ sind (bedingt) unabhängig gegeben der Kovariablen $x_i1, x_i2, \ldots, x_ik$.
+
+Die Rate $\lambda_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)$ der Poissonverteilung wird in der Regel log-linear modelliert als
+
+\begin{align*}
+  \log(\lambda_i) &= \eta_i 
+    = \mathbf{x}_i^\prime \boldsymbol{\beta} 
+    = \beta_0 + \beta_1 x_1 + \ldots + \beta_k x_{ik} \\
+  \lambda_i &= \exp(\eta_i) 
+    = \exp(\beta_0) \cdot \exp(\beta_1 x_1) \cdot \ldots \cdot \exp(\beta_k x_k)
+\end{align*}
+
+```
+
+
+[^poiparam]: Der Poisson-Parameter wird von unterschiedlichen Autoren als $\lambda$ oder $\mu$ bezeichnet, und ich habe mich noch nicht für eine Variante entschieden).
+
+
+Vgl. @fahrmeirRegressionModelleMethoden2009
+
+Für das log-lineare Poisson-Modell entsprechen die resultierenden Koeffizienten der Veränderung der log-counts – durch Exponentiation lassen diese sich als *incidence rate ratios* (*IRR*) interpretieren.
+
+Um auf ungleiche Expositionsdauern oder -gebiete zu adjustieren wird ein **offset** (oder auch *exposure*) benötigt. Dazu dient der Koeffizient $t$, der die Länge der Zeit unter Exposition angibt:
+
+\begin{equation}
+f(y, \mu) = \frac{\exp(\mu) (t \mu)^y}{y!}
+\end{equation}
+
+Damit entspricht $t \mu$ der Inzidenzrate des Outcomes adjustiert auf e.g. die geographische Lage oder Expositionsdauer. Ohne Offset entspräche $t = 1$.
+Für als Offset wird in der Regel $\log(t)$ verwendet, womit gelten:
+
+\begin{align*}
+\hat{\lambda} &= \exp{x \boldsymbol{\beta} + \log(t)} \\
+\Leftrightarrow \exp(x \boldsymbol{\beta}) &= \frac{\hat{\lambda}}{t} \\
+\Leftrightarrow \hat{\lambda} &= t \exp(x \boldsymbol{\beta})
+\end{align*}
+
+Ein offset kann z.B. in `R` via `+ offset(log(variable))` in der model `formula` oder über das Argument `offset = log(variable)` in `glm` und verwandten Funktionen angegeben werden.
+
+
+## Annahmen
+
+1. Die Abhängige / Zielvariable $Y$ muss eine Zählung sein, i.e. die Verteilung ist diskret mit einem einzelnen Parameter $\lambda$ der Poisson-Verteilung für Erwartungswert und Varianz.
+2. $y \in \mathbb{N}_0$, insbesondere: $Y$ muss 0 enthalten *können* (siehe auch \@ref(trunc-cens) [Truncation und Censoring](#trunc-cens))
+3. Beobachtungen sind *unabhängig*, i.e. weder longitudinal noch gepoolt.
+   - Möglicher Test durch Vergleich der Modell-SE und der SE adjustiert durch robuste sandwich-estimators (siehe \@ref(sandwich)): Große Unterschiede implizieren korrelierte Daten
+4. Balanced: Die Zellen sind in etwa so besetzt wie es aufgrund der Poissonverteilung erwartet wird.
+5. Erwartungswert und Varianz sind identisch (*equidispersion*), i.e. ein größerer Erwartungswert impliziert auch eine größere Varianz (siehe \@ref(dispersion)).
+6. Die $\chi^2$-Statistik hat einen Wert nahe 1, i.e. beobachtete und erwartete Varianzen der response sind gleich (Dispersionsindex).
+
+(Nach Tabelle in [@hilbeModelingCountData2014], braucht noch Deduplizierung)
+
+Alternative Formulierung nach @winkelmannEconometricAnalysisCount2010 (p. 64):
+
+1. $f(y\ |\ \lambda) = \frac{e^{-\lambda} \lambda^y}{y!} \quad \lambda > 0, y = 0, 1, 2, \ldots$.
+2. $\lambda = \exp(\mathbf{x}' \boldsymbol{\beta})$.
+3. Beobachtungspaare $(y_i, x_i)$ sind unabhängig verteilt.
+
+## Dispersion {#dispersion}
+
+```{definition, name = "Equi-, Extra-, Over-, Underdispersion"}
+Für Zählvariablen $y_i \in \mathbb{N}_0$ und erklärenden Variablen $\mathbf{x}_i$ gilt innerhalb eines Modells:
+
+\begin{align*}
+\text{Equdispersion:}  \quad & \mathrm{Var}(y_i) = \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \\
+\text{Extradispersion:}\quad & \mathrm{Var}(y_i) \neq \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \\
+\text{Overdispersion:} \quad & \mathrm{Var}(y_i) > \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \\
+\text{Underdispersion:}\quad & \mathrm{Var}(y_i) < \mathrm{Var}(y_i\ |\ \mathbf{x}_i)
+\end{align*}
+
+```
+
+
+```{definition, name = "Poisson-Overdispersion"}
+Innerhalb eines Poisson-Modells (vgl. Abschnitt \@ref(poisson-modell)) mit der Annahme
+
+\begin{align*}
+y_i\ |\ \mathbf{x}_i &\sim \mathrm{Poi}(\lambda_i) \\[1.5em]
+\lambda_i &= \mathbb{E}(y_i\ |\ \mathbf{x}_i) = \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \quad \text{(Equidispersion)}
+\end{align*}
+
+spricht man von **Poisson-Overdispersion** wenn die Varianz der Beobachtungen die erwartete Varianz des Poisson-Modells übersteigt:
+
+\begin{equation*}
+  \mathrm{Var}(y_i\ |\ \mathbf{x}_i) > \mathbb{E}(y_i\ |\ \mathbf{x}_i)
+\end{equation*}
+
+in einem Modell mit overdispersion gilt die Annahme:
+
+\begin{equation*}
+  \mathrm{Var}(y_i\ |\ \mathbf{x}_i) = \theta \cdot \lambda_i
+\end{equation*}
+
+Mit *Dispersionsparameter* $\theta$ [vgl. @fahrmeirRegressionModelleMethoden2009, p. 210]
+
+```
+
+
+Als Dispersionsstatistik können *deviance dispersion* oder *Pearson dispersion* berechnet werden. Laut @hilbeModelingCountData2014 ist die *Pearson dispersion* zu bevorzugen, da sie für echte Poisson-Modelle gleich 1 ist, wohingegen die *deviance dispersion* nach oben verzerrt ist.
+
+
+```{definition pearsondisp, name = "Pearson-Dispersion"}
+Nach @hilbeModelingCountData2014 (p. 77ff):
+
+Die Pearson $\chi^2$-Statistik ist die Summe der quadriertern (Pearson-)Residuen gewichtet mit der Modellvarianz:
+
+\begin{equation*}
+\chi_{\text{Pearson}}^2 = \sum_{i=1}^n \frac{(y_i - \hat{\mu}_i)^2}{\mathrm{Var}(\hat{\mu}_i)}
+\end{equation*}
+
+und die **Pearson-Dispersionsstatistik**:
+  
+\begin{equation*}
+D = \frac{\chi_{\text{Pearson}}^2}{\mathrm{df}}
+\end{equation*}
+
+Mit der Interpretation
+
+\begin{equation*}
+\mathrm{Dispersion} =
+  \begin{cases}
+    < 1 & \Longrightarrow \text{Underdispersion} \\
+      1 & \Longrightarrow \text{Equidispersion (Poisson)} \\
+    > 1 & \Longrightarrow \text{Overdispersion}
+  \end{cases}
+\end{equation*}
+
+Für Modelle moderater Größe kann man ab Werten über 1.25 von ovderdispersion reden, wobei für große Stichproben auch schon ab 1.05 overdispersion vorliegen kann – zumindest nach @hilbeModelingCountData2014 (p. 82), der aber leider keine konkreten Zahlen für seine Definition von "moderaten" oder "großen" Stichproben nennt.
+```
+
+In `R` kann die Pearson-Dispersion wie folgt berechnet werden:
+
+```r
+# Model fit
+mod <- glm(y ~ x1 + x2 + x3, data = sim, family = poisson(link = "log"))
+
+# Pearson dispersion
+sum(resid(mod, type = "pearson")^2) / mod$df.residual
+```
+
+...wofür wir in Abschnitt \@ref(helperfuns) eine Hilfsfunktion `dispersion()` definiert haben.
+
+### Overdispersion {#overdispersion}
+
+Der vermutlich häufigste Fall für Count-Daten: Die Varianz der abhängigen Variable ist größer als ihr Erwartungswert, bzw. größer als ihre erwartete Varianz innerhalb eines Modells. 
+@hilbeModelingCountData2014 unterscheidet zwischen echter und scheinbarer (*apparent*) Overdispersion, wobei letztere oft durch geeignete Korrekturen kompensiert werden kann, wobei *echte* Overdisperion sowohl Parameterschätzung und Modellanpassung im Allgemeinen beeinträchtigt.
+
+Nach @hilbeModelingCountData2014 (p. 82) entsteht *echte* Overdispersion durch:
+
+- Positive Korrelation zwischen responses
+- Große Variation zwischen response-probabilities und counts
+- Verletzungen der Verteilungsannahme (i.e. Poissonverteilung)
+- "Proneness": Frühere Ereignisse beeinflussen das Auftreten späterer Ereignisse [^poiind]
+
+[^poiind]: Diese Annahme (Unabhängigkeit der Ereignisse) der Poissonverteilung ist auch der Grund, warum sich die Poissonverteilung prinzipiell **nicht** eignet um Epidemien wie Ebola zu modellieren. Freundliche Grüße an Frau Pigeot, "Statistische Modellierung I", WiSe 18/19.
+
+
+Ursachen für *scheinbare* (*apparent*), und damit (bedingt) korrigierbare Overdispersion nach @hilbeModelingCountData2014, p. 41, 82
+
+1. Fehlende explanatorische Prädiktoren
+2. Ausreißer
+3. Fehlende Interaktionsterme
+4. Ein Prädiktor muss transformiert werden
+5. Die Daten sind zu dünn besetzt (*sparse*)
+6. Fehlende Werte, die nicht zufällig sind (missing not at random, *MNAR*) (siehe dazu auch Anhang \@ref(appendix-missingness))
+
+Ein einfaches simuliertes Beispiel zur Auswirkung von fehlenden Prädiktoren:
+
+```{r overdisp_misspecified_model_sim}
+# Generate binary variable in [0, 1] with a given proportion of 1's
+rbinary <- function(n, prob = 0.5) {
+  sample(0:1, size = n, replace = TRUE, prob = c(1 - prob, prob))
+}
+
+set.seed(436)
+n <- 1000
+
+sim <- tibble(
+  x1 = rbinary(n, .1),
+  x2 = rbinary(n, .2),
+  x3 = rbinary(n, .3),
+  eta = 0.5 + 1 * x1 + 2 * x2 + 0.5 * x3,
+  lambda = exp(eta),
+  py = rpois(n, lambda)
+)
+
+# Korrektes modell:
+mod <- glm(py ~ x1 + x2 + x3, data = sim, family = poisson(link = "log"))
+dispersion(mod)
+
+# Modell mit fehlendem Prädiktor:
+mod2 <- glm(py ~ x1 + x3, data = sim, family = poisson(link = "log"))
+dispersion(mod2)
+```
+
+### Umgang mit Overdispersion
+
+Zur expliziten Modellierung des Dispersionparameters kann ein NBH Modell (\@ref(mod-nbh)) genutzt werden, falls die Quelle der overdispersion von besonderem Interesse ist.  
+
+Abseits davon bleiben 2 grobe Strategien : 
+
+1. Adjustierung der durch die overdispersion verzerrten Standardfehler (Quasipoisson, Quasi-Likelihood, robuste Varianzschätzer)
+2. Wechsel auf ein Modell, das overdispersion (oder allgemeine extradispersion) erlaubt (e.g. NB)
+
+(Bemerke: Standardfehler für IRRs werden i.A. über die *delta method* bestimmt, die ich noch recherchieren und irgendwo einbauen muss)
+
+##### Quasipoisson: Skalierung der Standardfehler {-}
+
+Hier werden lediglich die Standardfehler der Koeffizienten eines Poisson-Modells adjustiert, die bei overdispersion i.d.R. unterschätzt werden – die eigentliche Parameterschätzung wird nicht beeinflusst:
+
+$$\mathrm{SE}(\beta_k) \cdot \sqrt{D}$$
+Wobei $D$ der Pearson-Dispersionsindex ist (vgl. @hilbeModelingCountData2014, p. 92ff), den wir in \@ref(def:pearsondisp) als $\frac{\chi^2_{\mathrm{Pearson}}}{\mathrm{df}}$ definiert hatten.
+
+Ein möglicher Nachteil jedoch: Es wird zuerst ein reguläres Poisson-Modell gefittet, Standardfehler und Dispersionsindex bestimmt, und dann dasselbe Modell mit skalierten Standardfehlern erneut gefittet – dementsprechend ist diese Methode vermutlich für größere Datensätze eher ineffizient.
+
+Einmal auf unser voriges Beispiel anhand der `rwm5yr`-Daten angewandt:
+
+```{r quasipois-example}
+# Urprüngliches Model
+mod <- glm(docvis ~ outwork + age, family = poisson(), data = rwm1984)
+
+mod_qp <- glm(docvis ~ outwork + age, family = quasipoisson(), data = rwm1984)
+
+dispersion(mod)
+dispersion(mod_qp)
+```
+
+An der Dispersion hat sich nichts geändert, nur an den Standardfehlern der Koeffizienten (in folgenden Tabellen auf log-Skala):
+
+```{r quasipois-example2}
+pander(mod, caption = "Poisson-Modell")
+pander(mod_qp, caption = "Quasipoisson-Modell")
+```
+
+In diesem Fall "lohnt" sich dieser Ansatz zwar eher nicht, da wir neben overdispersion noch ein Problem mit zero-inflation haben, aber in manchen Fällen kann Quasipoisson-Methode ausreichen.
+
+> Scaling is an easy, quick-and-dirty method of adjusting standard errors for overdispersion. However, when data are highly correlated or clustered, model slopes or coefficients usually need to be adjusted as well. Scaling does not accommodate that need, but simulations demonstrate that it is quite useful for models with little to moderate overdispersion.
+>
+> --- @hilbeModelingCountData2014, p. 96
+
+#### Robuste Varianzschätzer (Sandwich Estimators) {#sandwich}
+
+(Andere Namen: Huber & White standard errors, empirical standard errors)
+
+Sandwich estimators sind in erster Linie für nicht unabhängige bzw. korrellierte Daten gedacht, zum Beispiel für Daten, die innerhalb mehrere Haushalte, Krankenhäuser, Städte etc. gesammelt wurden.
+
+Robuste Varianzschätzer können (und je nach Quelle: *sollten*) standardmäßig für Count-response Daten verwendet werden, da die resultierenden Schätzer im Falle tatsächlich unkorrellierter Daten äquivalent zu den Standardfehlern des ursprünglichen Modells sind (i.e. "schadet nicht").
+
+Bootstrapped SEs wiederum erfordern mehr Aufwand, ähneln aber den robusten SEs sowieso sehr stark, weshalb sich der Aufwand ggf. nicht wirklich lohnt.
+
+Siehe @hilbeModelingCountData2014 (p. 99f) für eine ausführlichere Beshreibung.
+
+
+### Underdispersion
+
+Underdispersion entsteht, wenn die Daten eine geringere Varianz aufweisen, als auf Basis eines Poisson- oder NB-Modells erwartet würde.
+Bei nichtberücksichtigter underdispersion werden die Standardfehler des Modells überschätzt [@hilbeModelingCountData2014, p. 210].
+
+Im Kontext von hurdle models taucht folgende Bemerkung auf:
+
+> [...] that underdispersion occurs if zeros are less frequent than the parent distribution would predict.
+> The higher the expected value of the Poisson distribution, the lowert the predicted probability of zero outcome and the lower the scope for underdispersion.
+> -- [@winkelmannEconometricAnalysisCount2010, p. 180]
+
+Im Allgemeinen wird [generalized Poisson empfohlen](https://stats.stackexchange.com/a/237177/80056) (R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html) [@hilbeModelingCountData2014].
