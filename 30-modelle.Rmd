@@ -26,7 +26,7 @@ tibble::tribble(
 
 ### Negativ Binomial (NB) {#mod-nb}
 
-Die Negative Binomialverteilung (*NB*) kann als zweiparametrische Erweiterung der *Poisson* betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird [^Unter Umständen kann von einem *Poisson-Gamma Mischmodell* die Rede sein – damit ist genau dieser Umstand gemeint]. 
+Die Negative Binomialverteilung (*NB*) kann als zweiparametrische Erweiterung der *Poisson* betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird (*Poisson-Gamma Mischmodell*). 
 
 ```{definition, name = "Negative Binomialverteilung"}
 Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675):
@@ -42,27 +42,28 @@ Mit $\mathbb{E}(Y) = \mu$ und $\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}$
 ```
 
 
-Der gängigste Anwendungsfall der *NB* findet sich bei Daten mit nicht korrigierbarer overdispersion (siehe Abschnitt \@ref(overdispersion)), da der Parameter $\theta$ (oder auch $\alpha = \frac 1 \theta$) als *Dispersionsparameter* dient. Für diesen Parameter gilt:
+Der gängigste Anwendungsfall der *NB* findet sich bei Daten mit nicht korrigierbarer overdispersion (siehe Abschnitt \@ref(overdispersion)), da der Parameter $\theta$ (oder auch $\alpha = \frac 1 \theta$) als *Dispersionsparameter* dient:
 
 
 ```{definition nbdisppar, name = "NB-Dispersionsparameter"}
 
-Im Allgemeinen wird der Parameter $\theta$ verwendet mit der Interpretation (relativ zum Poisson-Modell):
+Meist wird der Parameter als $\theta$ bezeichnet, mit der Interpretation (relativ zum Poisson-Modell):
 
 \begin{align}
   \theta &> 0 &&\Longrightarrow \text{ Overdispersion} \\
   \theta &\to \infty &&\Longrightarrow \text{ Äquivalent zur Poissonverteilung}
 \end{align}
 
-Unter anderem in R (z.B. `MASS::glm.nb`) wird die inverse Variante $\alpha = \frac 1 \theta$ verwendet, womit gilt:
+Je nach Quelle (und unter Anderem in R (z.B. `MASS::glm.nb`)) wird die inverse Variante $\alpha = \frac 1 \theta$ verwendet, womit gilt:
 
 $$\mathrm{Var}(Y) = \mu + \alpha \mu^2$$
-  
   
 \begin{align}
   \alpha &= 0 &&\Longrightarrow \text{ Äquivalent zur Poissonverteilung} \\
   \alpha &> 0 &&\Longrightarrow \text{ Overdispersion}
 \end{align}
+
+Die Interpretation (und numerische Handhabung) könnte dementsprechend der Grund für die Präferenz von $\alpha$ sein.
 
 ```
 
@@ -80,7 +81,6 @@ Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob $\alp
 - Interpretation der exponentierten Koeffizienten: IRRs
 - Zwei Varianten: NB1, NB2
 
-  
 
 ### Poisson Inverse Gaussian (PIG) {#mod-pig}
 
@@ -149,16 +149,18 @@ Die Verteilung hat als Spezialfälle:
 - $\nu = 0,\ \lambda < 1$: Geometrisch mit $P(X = x) = \lambda^x (1 - \lambda)$
 
 
-- **Vorteile**:
+**Vorteile**:
+
 - "Low cost", i.e. "nur" ein zusätzlicher Parameter
 - Einfach zu handhaben
 - Over- und underdispersion abbildbar
 - Zero-inflation abbildbar
 
-- Software:
-   - `CompGLM::glm.comp`
-   - `COMPoissonReg` (GitHub: `lotze/COMPoissonReg`)
-   - `compoisson` (Not sure if modelling)
+**Software**:
+
+- `CompGLM::glm.comp`
+- `COMPoissonReg` (GitHub: `lotze/COMPoissonReg`)
+- `compoisson` (Not sure if modelling)
 
 ## Zero-Inflated Models (*mixture models*) {#mod-zi}
 
@@ -168,33 +170,35 @@ Die Verteilung hat als Spezialfälle:
    - -> Nicht getrennt interpretierbar
 - -> Erzeugen eigene PDF, e.g. ZIP, die mixture aus beiden Komponenten darstellt
 
-Beispiel: Poisson-logit hurdle Modell, bestehend aus logit-Modell für zeros und zero-truncated Poisson für die non-zero counts
 
 ZIP und ZINB wurde hergeleitet als zweiteilige mixture distributions. Die allgemeine Form für mixture distributions ist
 
-\begin{equation}
+\begin{equation*}
   P(Y = y) = p \cdot g_1(y) + (1-p) \cdot g_2(y)
-\end{equation}
+\end{equation*}
 
 mit $p$ als *mixture proportion* und $g_1, g_2$ als Dichte-/Massefunktionen der beiden Komponenten.
 
-In dieser Darstellung entspricht $p$ der *rate of zero-inflation* $\pi$, $g_1$ einer degenerierten 0-verteilung und $g_2$ einer Poisson-PMF.
+In dieser Darstellung entspricht $p$ der *rate of zero-inflation* $\pi$, $g_1$ einer degenerierten 0-Verteilung und $g_2$ einer Poisson-PMF.
 
 ```{definition, name = "Zero-Inflated Poisson Verteilung (ZIP)"}
 Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675)
 
-\begin{align}
+\begin{align*}
 P(Y = 0) &= \pi + (1-\pi) \cdot e^{-\mu} \\
-P(Y = 1) &= (1 - \pi) \cdot \frac{\mu^y e^{-\mu}}{y!}
-\end{align}
+P(Y = y) &= (1 - \pi) \cdot \frac{\mu^y e^{-\mu}}{y!}, \quad y = 1, 2, 3, \ldots
+\end{align*}
 ```
 
 ```{definition, name = "Zero-Inflated Negative Binomialverteilung (ZINB)"}
 Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675)
 
-\begin{align}
+\begin{align*}
 P(Y = 0) &= \pi + (1 - \pi) \cdot \frac{\theta^\theta}{(\theta + \mu)^\theta}  \\
-P(Y = 1) &= (1 - \pi) \cdot \frac{\Gamma(\theta+y)}{\Gamma(\theta) \Gamma(y + 1)} \frac{\theta^\theta \mu^y}{(\theta + \mu)^{(\theta + y)}}
-\end{align}
+P(Y = y) &= (1 - \pi) \cdot \frac{\Gamma(\theta+y)}{\Gamma(\theta) \Gamma(y + 1)} \frac{\theta^\theta \mu^y}{(\theta + \mu)^{(\theta + y)}}, \quad y = 1, 2, 3, \ldots
+\end{align*}
 ```
 
+
+Die ZI-Modelle sind dabei **geschachtelt** mit ihren ursprünglichen Count-Modellen, da sich letzteres für bestimmte $\pi$ aus dem ZI-Modell ergeben. 
+Dieser Umstand ist Teil der Kritik an der Verwendung des Vuong-Test für den Vergleich von  _**un**geschachtelten_ Modellen von @wilson2015MisuseVuong, der sich gegen die Verwendung des Tests ausspricht um die Modellanpassung von Modellen mit ihren ZI-Gegenstücken zu evaluieren (siehe z.B. @perumean-chaneyZeroinflatedOverdispersedWhat2013 für eine solche Anwendung des Vuong-Tests).

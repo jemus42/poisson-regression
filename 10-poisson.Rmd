@@ -180,7 +180,8 @@ Mit der Interpretation
   \end{cases}
 \end{equation*}
 
-Für Modelle moderater Größe kann man ab Werten über 1.25 von ovderdispersion reden, wobei für große Stichproben auch schon ab 1.05 overdispersion vorliegen kann – zumindest nach @hilbeModelingCountData2014 (p. 82), der aber leider keine konkreten Zahlen für seine Definition von "moderaten" oder "großen" Stichproben nennt.
+Für Modelle moderater Größe kann man ab Werten über 1.25 von overdispersion sprechen, wobei für große Stichproben auch schon ab 1.05 overdispersion vorliegen kann – zumindest nach @hilbeModelingCountData2014 (p. 82), der aber leider keine konkreten Angaben für seine Definition von "moderaten" oder "großen" Stichproben macht.
+
 ```
 
 In `R` kann die Pearson-Dispersion wie folgt berechnet werden:
