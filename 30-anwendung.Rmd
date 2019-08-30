@@ -6,8 +6,6 @@ editor_options:
 
 # Anwendung
 
-(Kopiert aus Abschnitt Annahmen/Overdispersion, not sure where to put:)
-
 Als Beispiel verwenden wir hier `rwm1984`, ein Subset des Datensatz `rwm5yr` (vgl. Abschnitt \@ref(data), `?COUNT::rwm1984`), der Angaben zur Anzahl der Arztbesuche pro Person mit zusätzlichen demographischen Merkmalen enthält. Für unser Beispielmodell verwenden wir folgende Variablen:
 
 - `docvis`: Abhängige Variable, Anzahl der Arztbesuche im Jahr (0-121)
@@ -21,8 +19,8 @@ data(rwm1984, package = "COUNT")
 # Model fit
 mod_rwm <- glm(docvis ~ outwork + age, family = poisson(), data = rwm1984)
 
+# Summary display
 pander(mod_rwm)
-
 pander(glance(mod_rwm))
 ```
 
@@ -76,7 +74,7 @@ Anhand der ersten Tabelle können wir recht schnell erkennen, dass wir hier *deu
 Der Plot veranschaulicht den eher suboptimalen model fit unter diesen Umständen (overdispersion & zero-inflation).
 
 
-## Diagnostik {#overdisp-diag}
+## Overdispersion: Erkennung und Handhabung {#overdisp-diag}
 
 Der *Score-Test* wird nicht unbedingt empfohlen, findet sich aber in der Literatur:
 
@@ -155,65 +153,63 @@ pchisq(4.2, df = 1, lower.tail = FALSE) / 2
 (1 - pchisq(4.2, df = 1)) / 2
 ```
 
+### Umgang mit Overdispersion
 
-## Beispiel nach @hilbeModelingCountData2014, p. 211ff
+Zur expliziten Modellierung des Dispersionparameters kann ein NBH Modell (\@ref(mod-nbh)) genutzt werden, falls die Quelle der overdispersion von besonderem Interesse ist.  
 
-(Eigentlich kompliziertes Beispiel, weil 0 counts nicht möglich sind, müsste man truncated drangehen)
+Abseits davon bleiben 2 grobe Strategien : 
 
-Grundlage ist der Datensatz `azprocedure` (siehe Abschnitt \@ref(data)) zur Dauer des Krankenhausaufenthalts.
+1. Adjustierung der durch die overdispersion verzerrten Standardfehler (Quasipoisson, Quasi-Likelihood, robuste Varianzschätzer)
+2. Wechsel auf ein Modell, das overdispersion (oder allgemeine extradispersion) erlaubt (e.g. NB)
 
-Zuerst werfen wir einen Blick auf die Daten und fitten ein reguläres Poissonmodell.
+(Bemerke: Standardfehler für IRRs werden i.A. über die *delta method* bestimmt, die ich noch recherchieren und irgendwo einbauen muss)
 
-```{r underdisp_azprocedure_over}
-data(azprocedure, package = "COUNT")
+##### Quasipoisson: Skalierung der Standardfehler {-}
 
-describe_counts(azprocedure$los)
+Hier werden lediglich die Standardfehler der Koeffizienten eines Poisson-Modells adjustiert, die bei overdispersion i.d.R. unterschätzt werden – die eigentliche Parameterschätzung wird nicht beeinflusst:
 
-# Barchart: So grob poissonverteilt?
-ggplot(data = azprocedure, aes(x = los)) +
-  geom_bar(alpha = .75) +
-  labs(
-    title = "Hospital length of stay (LOS)",
-    subtitle = "azprocedure data (Hilbe 2014)",
-    x = "LOS", y = "Count" 
-  )
+$$\mathrm{SE}(\beta_k) \cdot \sqrt{D}$$
+Wobei $D$ der Pearson-Dispersionsindex ist (vgl. @hilbeModelingCountData2014, p. 92ff), den wir in \@ref(def:pearsondisp) als $\frac{\chi^2_{\mathrm{Pearson}}}{\mathrm{df}}$ definiert hatten.
 
-# Model fit
-model_azproc <- glm(los ~ procedure + sex + admit, 
-                    data = azprocedure, family = poisson())
- 
-# Model output (ohne exponentierte Koeffizienten)
-pander(model_azproc)
+Ein möglicher Nachteil jedoch: Es wird zuerst ein reguläres Poisson-Modell gefittet, Standardfehler und Dispersionsindex bestimmt, und dann dasselbe Modell mit skalierten Standardfehlern erneut gefittet – dementsprechend ist diese Methode vermutlich für größere Datensätze eher ineffizient.
 
-# Pearson Dispersion:
-dispersion(model_azproc)
+Einmal auf unser voriges Beispiel anhand der `rwm5yr`-Daten angewandt:
+
+```{r quasipois-example}
+# Urprüngliches Model
+mod <- glm(docvis ~ outwork + age, family = poisson(), data = rwm1984)
+
+mod_qp <- glm(docvis ~ outwork + age, family = quasipoisson(), data = rwm1984)
+
+dispersion(mod)
+dispersion(mod_qp)
 ```
 
-Der Dispersionsindex lässt auf overdispersion schließen.  
-Betrachten wir ein Subset der Daten, indem wir nur Beobachtungen mit $\mathtt{LOS} \le 8$ betrachten, erhalten wir ein anderes Bild:
+An der Dispersion hat sich nichts geändert, nur an den Standardfehlern der Koeffizienten (in folgenden Tabellen auf log-Skala):
 
-```{r underdisp_azprocedure_under}
-azprocedure_subset <- subset(azprocedure, los <= 8)
-
-describe_counts(azprocedure_subset$los)
-
-# Barchart
-ggplot(data = azprocedure_subset, aes(x = los)) +
-  geom_bar(alpha = .75) +
-  labs(
-    title = "Hospital length of stay (LOS)",
-    subtitle = "Subset (LOS <= 8) der azprocedure data (Hilbe 2014)",
-    x = "LOS", y = "Count" 
-  )
-
-model_azproc_u <- glm(los ~ procedure + sex + admit, 
-                      data = azprocedure_subset, family = poisson())
-
-pander(model_azproc_u)
-dispersion(model_azproc_u)
+```{r quasipois-example2}
+pander(mod, caption = "Poisson-Modell")
+pander(mod_qp, caption = "Quasipoisson-Modell")
 ```
 
-In diesem Fall haben wir es mit underdispersion zu tun.
+In diesem Fall "lohnt" sich dieser Ansatz zwar eher nicht, da wir neben overdispersion noch ein Problem mit zero-inflation haben, aber in manchen Fällen kann Quasipoisson-Methode ausreichen.
+
+> Scaling is an easy, quick-and-dirty method of adjusting standard errors for overdispersion. However, when data are highly correlated or clustered, model slopes or coefficients usually need to be adjusted as well. Scaling does not accommodate that need, but simulations demonstrate that it is quite useful for models with little to moderate overdispersion.
+>
+> --- @hilbeModelingCountData2014, p. 96
+
+#### Robuste Varianzschätzer (Sandwich Estimators) {#sandwich}
+
+(Andere Namen: Huber & White standard errors, empirical standard errors)
+
+Sandwich estimators sind in erster Linie für nicht unabhängige bzw. korrellierte Daten gedacht, zum Beispiel für Daten, die innerhalb mehrere Haushalte, Krankenhäuser, Städte etc. gesammelt wurden.
+
+Robuste Varianzschätzer können (und je nach Quelle: *sollten*) standardmäßig für Count-response Daten verwendet werden, da die resultierenden Schätzer im Falle tatsächlich unkorrellierter Daten äquivalent zu den Standardfehlern des ursprünglichen Modells sind (i.e. "schadet nicht").
+
+Bootstrapped SEs wiederum erfordern mehr Aufwand, ähneln aber den robusten SEs sowieso sehr stark, weshalb sich der Aufwand ggf. nicht wirklich lohnt.
+
+Siehe @hilbeModelingCountData2014 (p. 99f) für eine ausführlichere Beschreibung.
+
 
 
 ## Zero-Inflation (ZI) {#zeros}

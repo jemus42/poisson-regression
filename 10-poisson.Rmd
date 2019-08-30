@@ -249,73 +249,19 @@ mod2 <- glm(py ~ x1 + x3, data = sim, family = poisson(link = "log"))
 dispersion(mod2)
 ```
 
-### Umgang mit Overdispersion
-
-Zur expliziten Modellierung des Dispersionparameters kann ein NBH Modell (\@ref(mod-nbh)) genutzt werden, falls die Quelle der overdispersion von besonderem Interesse ist.  
-
-Abseits davon bleiben 2 grobe Strategien : 
-
-1. Adjustierung der durch die overdispersion verzerrten Standardfehler (Quasipoisson, Quasi-Likelihood, robuste Varianzschätzer)
-2. Wechsel auf ein Modell, das overdispersion (oder allgemeine extradispersion) erlaubt (e.g. NB)
-
-(Bemerke: Standardfehler für IRRs werden i.A. über die *delta method* bestimmt, die ich noch recherchieren und irgendwo einbauen muss)
-
-##### Quasipoisson: Skalierung der Standardfehler {-}
-
-Hier werden lediglich die Standardfehler der Koeffizienten eines Poisson-Modells adjustiert, die bei overdispersion i.d.R. unterschätzt werden – die eigentliche Parameterschätzung wird nicht beeinflusst:
-
-$$\mathrm{SE}(\beta_k) \cdot \sqrt{D}$$
-Wobei $D$ der Pearson-Dispersionsindex ist (vgl. @hilbeModelingCountData2014, p. 92ff), den wir in \@ref(def:pearsondisp) als $\frac{\chi^2_{\mathrm{Pearson}}}{\mathrm{df}}$ definiert hatten.
-
-Ein möglicher Nachteil jedoch: Es wird zuerst ein reguläres Poisson-Modell gefittet, Standardfehler und Dispersionsindex bestimmt, und dann dasselbe Modell mit skalierten Standardfehlern erneut gefittet – dementsprechend ist diese Methode vermutlich für größere Datensätze eher ineffizient.
-
-Einmal auf unser voriges Beispiel anhand der `rwm5yr`-Daten angewandt:
-
-```{r quasipois-example}
-# Urprüngliches Model
-mod <- glm(docvis ~ outwork + age, family = poisson(), data = rwm1984)
-
-mod_qp <- glm(docvis ~ outwork + age, family = quasipoisson(), data = rwm1984)
-
-dispersion(mod)
-dispersion(mod_qp)
-```
-
-An der Dispersion hat sich nichts geändert, nur an den Standardfehlern der Koeffizienten (in folgenden Tabellen auf log-Skala):
-
-```{r quasipois-example2}
-pander(mod, caption = "Poisson-Modell")
-pander(mod_qp, caption = "Quasipoisson-Modell")
-```
-
-In diesem Fall "lohnt" sich dieser Ansatz zwar eher nicht, da wir neben overdispersion noch ein Problem mit zero-inflation haben, aber in manchen Fällen kann Quasipoisson-Methode ausreichen.
-
-> Scaling is an easy, quick-and-dirty method of adjusting standard errors for overdispersion. However, when data are highly correlated or clustered, model slopes or coefficients usually need to be adjusted as well. Scaling does not accommodate that need, but simulations demonstrate that it is quite useful for models with little to moderate overdispersion.
->
-> --- @hilbeModelingCountData2014, p. 96
-
-#### Robuste Varianzschätzer (Sandwich Estimators) {#sandwich}
-
-(Andere Namen: Huber & White standard errors, empirical standard errors)
-
-Sandwich estimators sind in erster Linie für nicht unabhängige bzw. korrellierte Daten gedacht, zum Beispiel für Daten, die innerhalb mehrere Haushalte, Krankenhäuser, Städte etc. gesammelt wurden.
-
-Robuste Varianzschätzer können (und je nach Quelle: *sollten*) standardmäßig für Count-response Daten verwendet werden, da die resultierenden Schätzer im Falle tatsächlich unkorrellierter Daten äquivalent zu den Standardfehlern des ursprünglichen Modells sind (i.e. "schadet nicht").
-
-Bootstrapped SEs wiederum erfordern mehr Aufwand, ähneln aber den robusten SEs sowieso sehr stark, weshalb sich der Aufwand ggf. nicht wirklich lohnt.
-
-Siehe @hilbeModelingCountData2014 (p. 99f) für eine ausführlichere Beshreibung.
-
-
 ### Underdispersion
 
-Underdispersion entsteht, wenn die Daten eine geringere Varianz aufweisen, als auf Basis eines Poisson- oder NB-Modells erwartet würde.
+Underdispersion ist der Fall, wenn vorliegende Daten eine geringere Varianz aufweisen, als auf Basis eines Poisson-Modells erwartet würde.
 Bei nichtberücksichtigter underdispersion werden die Standardfehler des Modells überschätzt [@hilbeModelingCountData2014, p. 210].
 
-Im Kontext von hurdle models taucht folgende Bemerkung auf:
+Im Allgemeinen wird [generalized Poisson empfohlen](https://stats.stackexchange.com/a/237177/80056) (R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html) [@hilbeModelingCountData2014], da diese Erweiterung der Poisson-Verteilung nicht nur einen zusätzlichen Parameter für die Varianz hat (analog NB, PIG), sondern dieser Parameter auch negativ sein kann.
 
-> [...] that underdispersion occurs if zeros are less frequent than the parent distribution would predict.
-> The higher the expected value of the Poisson distribution, the lowert the predicted probability of zero outcome and the lower the scope for underdispersion.
-> -- [@winkelmannEconometricAnalysisCount2010, p. 180]
 
-Im Allgemeinen wird [generalized Poisson empfohlen](https://stats.stackexchange.com/a/237177/80056) (R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html) [@hilbeModelingCountData2014].
+
+Weiterhin taucht im Kontext von hurdle models (siehe \@ref(mod-hurdle)) folgende Bemerkung auf:
+
+> [...] that underdispersion occurs if **zeros are less frequent than the parent distribution would predict**.
+> The higher the expected value of the Poisson distribution, the lower the predicted probability of zero outcome and the lower the scope for underdispersion.
+> -- [@winkelmannEconometricAnalysisCount2010, p. 180 (eigene Hervorhebung)]
+
+Daraus lässt sich auch schließen, dass in Situationen mit binären outcomes und sehr niedrigem Erwartungswert die erwartete Anzahl an Nullen sehr hoch sein wird – weshalb es an dieser Stelle vermutlich eine großer Überlappung zwischen underdispersion und zero-inflation gibt.

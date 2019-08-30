@@ -166,3 +166,66 @@ sinfo$packages %>%
   kable_styling(position = "center")
 ```
 
+
+## Unsorted
+
+Hier liegen temporär Opfer der Umstrukturierung, bis sie ein passendes zu Hause gefunden haben, oder auf die farm upstate umziehen.
+
+### Beispiel nach @hilbeModelingCountData2014, p. 211ff
+
+(Eigentlich kompliziertes Beispiel, weil 0 counts nicht möglich sind, müsste man truncated drangehen)
+
+Grundlage ist der Datensatz `azprocedure` (siehe Abschnitt \@ref(data)) zur Dauer des Krankenhausaufenthalts.
+
+Zuerst werfen wir einen Blick auf die Daten und fitten ein reguläres Poissonmodell.
+
+```{r underdisp_azprocedure_over}
+data(azprocedure, package = "COUNT")
+
+describe_counts(azprocedure$los)
+
+# Barchart: So grob poissonverteilt?
+ggplot(data = azprocedure, aes(x = los)) +
+  geom_bar(alpha = .75) +
+  labs(
+    title = "Hospital length of stay (LOS)",
+    subtitle = "azprocedure data (Hilbe 2014)",
+    x = "LOS", y = "Count" 
+  )
+
+# Model fit
+model_azproc <- glm(los ~ procedure + sex + admit, 
+                    data = azprocedure, family = poisson())
+ 
+# Model output (ohne exponentierte Koeffizienten)
+pander(model_azproc)
+
+# Pearson Dispersion:
+dispersion(model_azproc)
+```
+
+Der Dispersionsindex lässt auf overdispersion schließen.  
+Betrachten wir ein Subset der Daten, indem wir nur Beobachtungen mit $\mathtt{LOS} \le 8$ betrachten, erhalten wir ein anderes Bild:
+
+```{r underdisp_azprocedure_under}
+azprocedure_subset <- subset(azprocedure, los <= 8)
+
+describe_counts(azprocedure_subset$los)
+
+# Barchart
+ggplot(data = azprocedure_subset, aes(x = los)) +
+  geom_bar(alpha = .75) +
+  labs(
+    title = "Hospital length of stay (LOS)",
+    subtitle = "Subset (LOS <= 8) der azprocedure data (Hilbe 2014)",
+    x = "LOS", y = "Count" 
+  )
+
+model_azproc_u <- glm(los ~ procedure + sex + admit, 
+                      data = azprocedure_subset, family = poisson())
+
+pander(model_azproc_u)
+dispersion(model_azproc_u)
+```
+
+In diesem Fall haben wir es mit underdispersion zu tun.

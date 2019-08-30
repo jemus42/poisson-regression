@@ -4,9 +4,11 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Modelle {#modelle}
+# Zweiparametrische Modelle {#zweiparam}
 
-Ein Überblick einiger Modelle mit parametrisierter Varianz (nach @hilbeModelingCountData2014, p. 12).
+Zweiparametrische Modelle haben neben dem Parameter für den Erwartungswert einen weiteren Parameter für die Varianz – was wir natürlich insbesondere im Kontext der Dispersionsproblematik sehr nützlich finden.
+
+Ein Überblick einiger zweiparametrischer Modelle mit parametrisierter Varianz (nach @hilbeModelingCountData2014, p. 12).
 
 ```{r models_table_1, echo=FALSE}
 tibble::tribble(
@@ -22,7 +24,6 @@ tibble::tribble(
   kable_styling(position = "center", protect_latex = TRUE)
 ```
 
-## Zweiparametrische Modelle
 
 ### Negativ Binomial (NB) {#mod-nb}
 
@@ -106,22 +107,9 @@ So wie die *NB* als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz 
 - R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html)
 
 
-### Heterogenous Negative Binomial (NBH) {#mod-nbh}
-
-- Selling feature: Erlaubt Parametrisierung von $\alpha$
-- -> Ursache für under-/overdispersion modellierbar
-
-### Negative binomial-P (NB-P) {#mod-nbp}
-
-- NB: Varianz statisch für alle Beobachtungen
-- -> NB-P: Varianz kann für Beobachtungen variieren (Parameter $\rho$)
-
-- Primärer Anwendungsfall: Bestimmen, ob NB1 oder NB2 besser passt
-  - Wenn $\rho \approx 2$ -> NB2, sonst NB1 (@hilbeModelingCountData2014, p. 21)
-
+# Weitere Modelle
 
 ## Dreiparametrische Modelle
-
 
 ### Conway-Maxwell Poisson {#mod-comp}
 
@@ -162,6 +150,23 @@ Die Verteilung hat als Spezialfälle:
 - `COMPoissonReg` (GitHub: `lotze/COMPoissonReg`)
 - `compoisson` (Not sure if modelling)
 
+
+## Diagnostische Modelle
+
+### Heterogenous Negative Binomial (NBH) {#mod-nbh}
+
+- Selling feature: Erlaubt Parametrisierung von $\alpha$
+- -> Ursache für under-/overdispersion modellierbar
+
+### Negative binomial-P (NB-P) {#mod-nbp}
+
+- NB: Varianz statisch für alle Beobachtungen
+- -> NB-P: Varianz kann für Beobachtungen variieren (Parameter $\rho$)
+
+- Primärer Anwendungsfall: Bestimmen, ob NB1 oder NB2 besser passt
+  - Wenn $\rho \approx 2$ -> NB2, sonst NB1 (@hilbeModelingCountData2014, p. 21)
+
+
 ## Zero-Inflated Models (*mixture models*) {#mod-zi}
 
 - Logit/Probit Komponente für zeros
@@ -181,7 +186,7 @@ mit $p$ als *mixture proportion* und $g_1, g_2$ als Dichte-/Massefunktionen der 
 
 In dieser Darstellung entspricht $p$ der *rate of zero-inflation* $\pi$, $g_1$ einer degenerierten 0-Verteilung und $g_2$ einer Poisson-PMF.
 
-```{definition, name = "Zero-Inflated Poisson Verteilung (ZIP)"}
+```{definition defzip, name = "Zero-Inflated Poisson Verteilung (ZIP)"}
 Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675)
 
 \begin{align*}
@@ -190,7 +195,7 @@ P(Y = y) &= (1 - \pi) \cdot \frac{\mu^y e^{-\mu}}{y!}, \quad y = 1, 2, 3, \ldots
 \end{align*}
 ```
 
-```{definition, name = "Zero-Inflated Negative Binomialverteilung (ZINB)"}
+```{definition defzinb, name = "Zero-Inflated Negative Binomialverteilung (ZINB)"}
 Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675)
 
 \begin{align*}
@@ -200,5 +205,5 @@ P(Y = y) &= (1 - \pi) \cdot \frac{\Gamma(\theta+y)}{\Gamma(\theta) \Gamma(y + 1)
 ```
 
 
-Die ZI-Modelle sind dabei **geschachtelt** mit ihren ursprünglichen Count-Modellen, da sich letzteres für bestimmte $\pi$ aus dem ZI-Modell ergeben. 
-Dieser Umstand ist Teil der Kritik an der Verwendung des Vuong-Test für den Vergleich von  _**un**geschachtelten_ Modellen von @wilson2015MisuseVuong, der sich gegen die Verwendung des Tests ausspricht um die Modellanpassung von Modellen mit ihren ZI-Gegenstücken zu evaluieren (siehe z.B. @perumean-chaneyZeroinflatedOverdispersedWhat2013 für eine solche Anwendung des Vuong-Tests).
+Die ZI-Modelle sind dabei **geschachtelt** mit ihren ursprünglichen Modellen, da sich letzteres für bestimmte $\pi$ aus dem ZI-Modell ergeben.  
+Dieser Umstand ist Teil der Kritik an der Verwendung des Vuong-Test (entworfen für den Vergleich von  _**un**geschachtelten_ Modellen) von @wilson2015MisuseVuong, der sich gegen die Verwendung des Tests ausspricht um die Modellanpassung von Modellen mit ihren ZI-Gegenstücken zu vergleichen (siehe z.B. @perumean-chaneyZeroinflatedOverdispersedWhat2013 für eine solche Anwendung des Vuong-Tests).
