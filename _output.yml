@@ -8,7 +8,8 @@ bookdown::gitbook:
       before: |
         <li><a href="./">Poisson Regression</a></li>
       after: |
-        <li><a href="https://github.com/rstudio/bookdown" target="blank">Built with bookdown</a></li>
+        <li>Built with <a href="https://github.com/rstudio/bookdown" target="blank">bookdown</a></li>
+        <li>Code on <a href="https://git.tadaa-data.de/lukas/poisson-regression" target="blank">Gitea</a></li>
     download: ["pdf", "tex"]
     sharing:
       facebook: no
@@ -24,3 +25,6 @@ bookdown::pdf_book:
   keep_tex: yes
   dev: "cairo_pdf"
   toc_appendix: yes
+bookdown::epub_book:
+  dev: svglite
+  stylesheet: css/style.css

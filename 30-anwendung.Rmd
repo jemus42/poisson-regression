@@ -133,7 +133,16 @@ Eine Variante des Tests kann verwendet werden, um den Dispersionsparameter $\alp
 \end{equation}
 ```
 
+> It is important, though, to remember that the BLR test has a lower limiting case for the value of $\alpha$, which is what is being tested. Given that the standard parameterization of the negative binomial variance function is $\mu + \alpha \mu^2$ , when $\alpha = 0$, the variance reduces to $\mu$.
+>
+> --- @hilbeModelingCountData2014, p. 115
+
 Der resultierende Wert ist $\chi^2_{(1)}$-verteilt. Der resultierende p-Wert muss zusätzlich halbiert werden [siehe @hilbeModelingCountData2014, p. 115].
+
+> Since the distribution being tested can go no lower than 0, that is the boundary. Only one half of the full distribution is used. Therefore the Chi2 (sic!) test is divided by 2
+>
+> --- @hilbeModelingCountData2014, p. 115
+
 
 Am Beispiel der `rwm1984`-Daten:
 
@@ -144,7 +153,7 @@ mod_p <- glm(docvis ~ outwork + age, family = poisson(), data = rwm1984)
 # NB-Modell
 mod_nb <- MASS::glm.nb(docvis ~ outwork + age, data = rwm1984)
 
-# BLR
+# BLR: Recht eindeutig.
 lmtest::lrtest(mod_p, mod_nb)
 
 # Bei gegebenem BLR-Wert von 4.2 ließe sich der p-Wert wie folgt berechnen:

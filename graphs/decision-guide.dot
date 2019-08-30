@@ -5,40 +5,48 @@ graph [layout = dot]
 ################################
 #### Global node attributes ####
 ################################
-node [shape = rectangle,
+node [shape = oval,
       style = filled,
       color = grey,
       fontname = "Roboto"]
 edge [fontname = "Roboto"]
 
 node [fillcolor = white]
-start [label = "You have found yourself some count data",
-       shape = plaintext]
+start [label = "Start with fitting a Poisson model",
+       shape = plaintext,
+       fillcolor = "lightblue"]
 
 ################################
 #### First step             ####
 ################################
-node [fillcolor = firebrick]
-od [label = "Overdispersion (OD)"]
-ud [label = "Underdispersion (UD)"]
-zi [label = "Zero-Inflation (ZI)"]
-odzi [label = "OD + ZI"]
-udzi [label = "UD + ZI"]
+node [fillcolor = white]
+checkdisp [label = "Check Pearson-Dispersion"]
+
+ud [label = "Underdispersion"]
+unicorn [label = "You have found a unicorn!\nUse Poisson", fillcolor = pink]
+od [label = "Overdispersion"]
 
 node [fillcolor = orange]
 
 edge [color = grey]
-start -> {od ud zi odzi udzi}
+start -> checkdisp [label = ""]
+checkdisp -> ud [label = "Dispersion < 1"]
+checkdisp -> unicorn [label = "Dispersion ≈ 1"]
+checkdisp -> od [label = "Dispersion > 1"]
+#unicorn -> start [label = "Use actual Poisson regression"]
 
-node [fillcolor = green]
-nbin [label = "Negative Binomial (NB)"]
-znbin [label = "Zero-Inflated Negative Binomial (ZINB)"]
-gpois [label = "Generalized Poisson"]
-cmp [label = "Conway-Maxwell Poisson"]
+node []
+se_adjust [label = "Adjust SE", color = lightblue]
+nbin [label = "NB", fillcolor = red]
+pig [label = "PIG", fillcolor = red]
+cmp [label = "COMP", fillcolor = orange]
+gpois [label = "GP", fillcolor = yellow]
 
-edge [color = green]
-od -> nbin [label = "Ovderdispersion only"]
-ud -> gpois [label = "Underdispersion"]
-odzi -> znbin [label = "Zero-inflated overdispersion"]
-udzi -> cmp [label = "Zero-inflated underdispersion"]
+edge [color = red]
+od -> {nbin pig se_adjust}
+edge [color = yellow]
+ud -> gpois
+edge [color = orange]
+od, ud -> cmp
+
 }

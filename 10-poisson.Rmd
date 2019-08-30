@@ -6,7 +6,7 @@ editor_options:
 
 # Das Poisson-Modell {#poisson-modell}
 
-Das *Poisson*-Modell ist die allgemeine Grundlage für die Modellierung von Zählvorgängen / Counts, und auch wenn es in seiner "reinen" Form in der Praxis meist nicht ausreicht, bauen alle weiteren Methoden auf die eine oder andere Art darauf auf. Auch die häufig verwendete *Negative Binomialverteilung* ist letztlich eine *Poisson*-Verteilung mit *Gamma*-verteilter Varianz, also eine Erweiterung der *Poisson* um einen zusätzlichen Parameter. Das gleiche Prinzip findet sich in allen hier besprochenen Verteilungen. 
+Das Poisson-Modell ist die allgemeine Grundlage für die Modellierung von Zählvorgängen / Counts, und auch wenn es in seiner "reinen" Form in der Praxis meist nicht ausreicht, bauen alle weiteren Methoden auf die eine oder andere Art darauf auf. Auch die häufig verwendete Negative Binomialverteilung ist letztlich eine Poisson-Verteilung mit Gamma-verteilter Varianz, also eine Erweiterung der Poisson um einen zusätzlichen Parameter. Das gleiche Prinzip findet sich in allen hier besprochenen Verteilungen. 
 
 Für eine ausführliche Diskussion der Eigenschaften, siehe @winkelmannEconometricAnalysisCount2010 (p. 7-20).
 

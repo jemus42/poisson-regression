@@ -10,25 +10,37 @@ library(cliapp)
 
 timestamp()
 
-cli_h2("1.2 Removing previously built output")
+# Cleanup ----
+cli_alert_info("Removing previously built output")
 if (fs::dir_exists("poisson-regression"))  fs::dir_delete("poisson-regression")
 if (fs::file_exists("poisson-regression.Rmd")) fs::file_delete("poisson-regression.Rmd")
 if (fs::dir_exists("poisson-regression_files"))  fs::dir_delete("poisson-regression_files")
 
-# Gitbook
-cli_h2("2.1 Rendering HTML site")
+cli_h1("Rendering documents")
+cli_div(id = "list", theme = list(ol = list("margin-left" = 1)))
+
+# Gitbook ----
+cli_ol("Rendering HTML site", .close = FALSE)
 bookdown::render_book(
   "index.Rmd", output_format = "bookdown::gitbook", envir = new.env(), quiet = TRUE
-)
+) -> tmp
 
-# PDF
-cli_h2("2.2 Rendering PDF")
+# PDF ----
+cli_it("Rendering PDF")
 bookdown::render_book(
   "index.Rmd", output_format = "bookdown::pdf_book", envir = new.env(), quiet = TRUE
-)
+) -> tmp
 
+# EPUB ----
+# cli_it("Rendering epub")
+# bookdown::render_book(
+#   "index.Rmd", output_format = "bookdown::epub_book", envir = new.env(), quiet = TRUE
+# ) -> tmp
+
+cli_end(id = "list")
 cli_alert_success("Done rendering!")
 
+# Copy things ----
 if (all(Sys.info()[c("sysname", "login")] == c("Windows", "burk"))) {
   cli_h2("Copying to G:\\EVERYONE\\Burk...")
   fs::dir_copy("poisson-regression", "G:/EVERYONE/Burk/poisson-regression", overwrite = TRUE)

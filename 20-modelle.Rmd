@@ -6,6 +6,11 @@ editor_options:
 
 # Mehrparametrische Modelle {#multiparam}
 
+```{r model-graph, echo=FALSE}
+grViz(readLines("graphs/model-graph.dot"))
+```
+
+
 Zweiparametrische Modelle haben neben dem Parameter für den Erwartungswert einen weiteren Parameter für die Dispersion, was wir natürlich insbesondere im Kontext der Dispersionsproblematik sehr nützlich finden.  
 Alle hier aufgeführten Modelle (inklusive der zero-inflation models) können als Verallgemeinerung der Poisson-Verteilung um (mindestens) einen weiteren Parameter aufgefasst werden. Die Unterschiede liegen hauptsächlich in der Parametrisierung und den damit zusammenhängenden Einschränkungen. Die *Negative Binomialverteilung* und die *Poisson Inverse Gaussian* zum Beispiel erweitern beide die Poisson um einen Dispersionsparameter, machen aber unterschiedliche Annahmen zur Verteilung der Varianz (gamma- vs. invers-normalverteilt).  
 
@@ -96,7 +101,7 @@ So wie die *NB* als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz 
 - R: `gamlss` (CRAN)
 - Stata: `pigreg`
 
-## Generalized Poisson {#mod-gp}
+## Generalized Poisson (GP) {#mod-gp}
 
 - Auch mit dispersion/scale Parameter $\alpha$
 - Analog NB: $\alpha = 0 \Rightarrow y \sim \mathrm{Pois}(\lambda)$
@@ -108,7 +113,7 @@ So wie die *NB* als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz 
 - R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html)
 
 
-## Conway-Maxwell Poisson {#mod-comp}
+## Conway-Maxwell Poisson (COMP) {#mod-comp}
 
 ```{definition, name = "Conway-Maxwell-Poisson Modell (CMP)"}
 Nach @shmueli2005UsefulDistribution (p. 129):
@@ -120,11 +125,20 @@ Z(\lambda, \nu) &= \sum_{j = 0}^\infty \frac{\lambda^j}{(j!)^\nu} \\
 \lambda > 0&, \nu \ge 0
 \end{align}
 
-Mit nichtlinearer Zerfallsrate $\nu$ *rate of decay*, so dass:
+Mit (im Unterschied zur Poisson) nichtlinearer Zerfallsrate $\nu$ *rate of decay*, so dass:
 
 \begin{equation}  
 \frac{P(X = x -1)}{P(X = x)} = \frac{x^\nu}{\lambda}
 \end{equation}
+
+Der Zusammenhang zwischen $\nu$ und $\lambda$ nach @sellers2010FlexibleRegression (p. 946) legt Nahe, dass $\nu$ ähnlich $\alpha$ in NB-Modellen die Dispersion bestimmt:
+  
+\begin{align*}
+  \mathrm{Var}(Y_i) =& \lambda_i \frac{\partial}{\partial \lambda_i} \mathbb{E}(Y_i)
+            \approx \lambda_i \frac{\partial}{\partial \lambda_i} \left( \lambda_i^{\frac{1}{\nu}} - \frac{\nu - 1}{2 \nu} \right) \\
+                  =& \frac{1}{\nu} \lambda^{\frac{1}{\nu}}
+           \approx \frac{1}{\nu} \mathbb{E}(Y_i)
+\end{align*}
 ```
 
 Die Verteilung hat als Spezialfälle:
@@ -136,8 +150,14 @@ Die Verteilung hat als Spezialfälle:
 
 **Vorteile**:
 
+- "Brücke" zwischen logistischer und Poisson-Regression [@sellers2010FlexibleRegression]
+
+> Although the logistic regression is a limiting case $(\nu \to \infty)$, in practice, fitting a COM-Poisson regression to binary data yields estimates and predictions that are practically identical to those from a logistic regression.
+>
+> --- @sellers2010FlexibleRegression, p. 945
+
 - "Low cost", i.e. "nur" ein zusätzlicher Parameter
-- Einfach zu handhaben
+- Einfach zu handhaben (wenn in GLM mit MLE statt MCMC estimation)
 - Over- und underdispersion abbildbar
 - Zero-inflation abbildbar
 
@@ -147,6 +167,12 @@ Die Verteilung hat als Spezialfälle:
 - `COMPoissonReg` (GitHub: `lotze/COMPoissonReg`)
 - `compoisson` (Not sure if modelling)
 
+
+Siehe auch
+
+- @sellers2010FlexibleRegression für eine gute Übersicht
+- @lord2010ExtensionApplication, @lord2008ApplicationConwayMaxwellPoisson für eine Anwendung
+- @shmueli2005UsefulDistribution
 
 
 # Weitere Modelle
