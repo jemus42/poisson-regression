@@ -4,28 +4,30 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Zweiparametrische Modelle {#zweiparam}
+# Mehrparametrische Modelle {#multiparam}
 
-Zweiparametrische Modelle haben neben dem Parameter für den Erwartungswert einen weiteren Parameter für die Varianz – was wir natürlich insbesondere im Kontext der Dispersionsproblematik sehr nützlich finden.
+Zweiparametrische Modelle haben neben dem Parameter für den Erwartungswert einen weiteren Parameter für die Dispersion, was wir natürlich insbesondere im Kontext der Dispersionsproblematik sehr nützlich finden.  
+Alle hier aufgeführten Modelle (inklusive der zero-inflation models) können als Verallgemeinerung der Poisson-Verteilung um (mindestens) einen weiteren Parameter aufgefasst werden. Die Unterschiede liegen hauptsächlich in der Parametrisierung und den damit zusammenhängenden Einschränkungen. Die *Negative Binomialverteilung* und die *Poisson Inverse Gaussian* zum Beispiel erweitern beide die Poisson um einen Dispersionsparameter, machen aber unterschiedliche Annahmen zur Verteilung der Varianz (gamma- vs. invers-normalverteilt).  
 
-Ein Überblick einiger zweiparametrischer Modelle mit parametrisierter Varianz (nach @hilbeModelingCountData2014, p. 12).
+Tabelle \@ref(tab:modelstable) zeigt eine Reihe von Verteilungen mit entsprechend parametrisierter Varianz abhängig vom Erwartungswert $\mu$ und einem Dispersionsparameter $\alpha$.
 
-```{r models_table_1, echo=FALSE}
+```{r modelstable, echo=FALSE}
 tibble::tribble(
   ~Model,                         ~Mean,  ~Variance,
   "Poisson",                     "$\\mu$", "$\\mu$",
-  "Negative Binomial (NB1)",     "$\\mu$", "$\\mu (1 + \\alpha) = \\mu + \\alpha\\mu$",
-  "Negative Binomial (NB2)",     "$\\mu$", "$\\mu (1 + \\alpha\\mu) = \\mu + \\alpha\\mu^2$",
+  "Negative Binomial I (NB1)",   "$\\mu$", "$\\mu (1 + \\alpha) = \\mu + \\alpha\\mu$",
+  "Negative Binomial II (NB2)",  "$\\mu$", "$\\mu (1 + \\alpha\\mu) = \\mu + \\alpha\\mu^2$",
+  "Negative Binomial-P (NBP)",   "$\\mu$", "$\\mu (1 + \\alpha\\mu^p) = \\mu + \\alpha\\mu^p$",
   "Poisson Inverse Gaussian (PIG)", "$\\mu$", "$\\mu (1 + \\alpha\\mu^2) = \\mu + \\alpha\\mu^3$",
-  "Negative binomial-P (NBP)",   "$\\mu$", "$\\mu (1 + \\alpha\\mu^p) = \\mu + \\alpha\\mu^p$",
   "Generalized Poisson (GP)",    "$\\mu$", "$\\mu (1 + \\alpha\\mu)^2 = \\mu + 2\\alpha\\mu^3 + \\alpha^2\\mu^3$"
  ) %>%
-  kable(booktabs = TRUE, escape = FALSE, linesep = "") %>%
-  kable_styling(position = "center", protect_latex = TRUE)
+  kable(booktabs = TRUE, escape = FALSE, linesep = "",
+        caption = " Ein Überblick einiger Modelle mit Varianzparametrisierung (nach @hilbeModelingCountData2014, p. 12).") %>%
+  kable_styling(position = "center", protect_latex = FALSE)
 ```
 
 
-### Negativ Binomial (NB) {#mod-nb}
+## Negativ Binomial (NB) {#mod-nb}
 
 Die Negative Binomialverteilung (*NB*) kann als zweiparametrische Erweiterung der *Poisson* betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird (*Poisson-Gamma Mischmodell*). 
 
@@ -43,7 +45,7 @@ Mit $\mathbb{E}(Y) = \mu$ und $\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}$
 ```
 
 
-Der gängigste Anwendungsfall der *NB* findet sich bei Daten mit nicht korrigierbarer overdispersion (siehe Abschnitt \@ref(overdispersion)), da der Parameter $\theta$ (oder auch $\alpha = \frac 1 \theta$) als *Dispersionsparameter* dient:
+Der gängigste Anwendungsfall der *NB* findet sich bei Daten mit nicht korrigierbarer overdispersion (siehe Abschnitt \@ref(overdispersion)), da der Parameter $\theta$ bzw. auch $\alpha = \frac 1 \theta$ als *Dispersionsparameter* dient:
 
 
 ```{definition nbdisppar, name = "NB-Dispersionsparameter"}
@@ -78,12 +80,11 @@ Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob $\alp
 > --- [@hilbeModelingCountData2014 (p. 11), eigene Hervorhebung]
 
 
-
 - Interpretation der exponentierten Koeffizienten: IRRs
 - Zwei Varianten: NB1, NB2
 
 
-### Poisson Inverse Gaussian (PIG) {#mod-pig}
+## Poisson Inverse Gaussian (PIG) {#mod-pig}
 
 So wie die *NB* als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz betrachtet werden kann, ist die *Poisson Inverse Gaussian* (*PIG*) eine mixture aus Poisson-Verteilung mit [invers-normalverteilter](https://en.wikipedia.org/wiki/Inverse_Gaussian_distribution) Varianz. Demnach kann man *PIG* als Alternative zur *NB* verwenden.
 
@@ -95,7 +96,7 @@ So wie die *NB* als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz 
 - R: `gamlss` (CRAN)
 - Stata: `pigreg`
 
-### Generalized Poisson {#mod-gp}
+## Generalized Poisson {#mod-gp}
 
 - Auch mit dispersion/scale Parameter $\alpha$
 - Analog NB: $\alpha = 0 \Rightarrow y \sim \mathrm{Pois}(\lambda)$
@@ -107,11 +108,7 @@ So wie die *NB* als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz 
 - R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html)
 
 
-# Weitere Modelle
-
-## Dreiparametrische Modelle
-
-### Conway-Maxwell Poisson {#mod-comp}
+## Conway-Maxwell Poisson {#mod-comp}
 
 ```{definition, name = "Conway-Maxwell-Poisson Modell (CMP)"}
 Nach @shmueli2005UsefulDistribution (p. 129):
@@ -150,6 +147,9 @@ Die Verteilung hat als Spezialfälle:
 - `COMPoissonReg` (GitHub: `lotze/COMPoissonReg`)
 - `compoisson` (Not sure if modelling)
 
+
+
+# Weitere Modelle
 
 ## Diagnostische Modelle
 
