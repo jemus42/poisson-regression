@@ -4,6 +4,7 @@ author: "Lukas Burk"
 date: "Stand: `r format(Sys.time(), '%d. %B %Y, %H:%M Uhr')`"
 lang: de-DE
 site: bookdown::bookdown_site
+cover-image: "images/poiscovr-orly.png"
 url: ''
 documentclass: scrartcl
 bibliography: ["Poisson.bib", "references.bib"]
@@ -33,6 +34,7 @@ options(
 knitr::opts_chunk$set(
   fig.width = 8,
   fig.asp = 1/1.618,
+  fig.align = "center",
   fig.pos = "center",
   comment = "#>",
   tidy = FALSE # "formatR",
@@ -73,7 +75,6 @@ data("rwm5yr", package = "COUNT")
 data("rwm1984", package = "COUNT")
 data("medpar", package = "COUNT")
 ```
-
 
 # Einführung 
 

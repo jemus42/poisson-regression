@@ -157,7 +157,7 @@ Als Dispersionsstatistik können *deviance dispersion* oder *Pearson dispersion*
 ```{definition pearsondisp, name = "Pearson-Dispersion"}
 Nach @hilbeModelingCountData2014 (p. 77ff):
 
-Die Pearson $\chi^2$-Statistik ist die Summe der quadriertern (Pearson-)Residuen gewichtet mit der Modellvarianz:
+Die Pearson $\chi^2$-Statistik ist die Summe der quadrierten (Pearson-)Residuen gewichtet mit der Modellvarianz:
 
 \begin{equation*}
 \chi_{\text{Pearson}}^2 = \sum_{i=1}^n \frac{(y_i - \hat{\mu}_i)^2}{\mathrm{Var}(\hat{\mu}_i)}
@@ -172,7 +172,7 @@ D = \frac{\chi_{\text{Pearson}}^2}{\mathrm{df}}
 Mit der Interpretation
 
 \begin{equation*}
-\mathrm{Dispersion} =
+\mathrm{D} =
   \begin{cases}
     < 1 & \Longrightarrow \text{Underdispersion} \\
       1 & \Longrightarrow \text{Equidispersion (Poisson)} \\
@@ -199,7 +199,7 @@ sum(resid(mod, type = "pearson")^2) / mod$df.residual
 ### Overdispersion {#overdispersion}
 
 Der vermutlich häufigste Fall für Count-Daten: Die Varianz der abhängigen Variable ist größer als ihr Erwartungswert, bzw. größer als ihre erwartete Varianz innerhalb eines Modells. 
-@hilbeModelingCountData2014 unterscheidet zwischen echter und scheinbarer (*apparent*) Overdispersion, wobei letztere oft durch geeignete Korrekturen kompensiert werden kann, wobei *echte* Overdisperion sowohl Parameterschätzung und Modellanpassung im Allgemeinen beeinträchtigt.
+@hilbeModelingCountData2014 unterscheidet zwischen echter und scheinbarer (*apparent*) Overdispersion, wobei letztere oft durch geeignete Korrekturen kompensiert werden kann, wobei *echte* Overdisperion sowohl Parameterschätzung als auch Modellanpassung im Allgemeinen beeinträchtigt.
 
 Nach @hilbeModelingCountData2014 (p. 82) entsteht *echte* Overdispersion durch:
 
@@ -211,14 +211,14 @@ Nach @hilbeModelingCountData2014 (p. 82) entsteht *echte* Overdispersion durch:
 [^poiind]: Diese Annahme (Unabhängigkeit der Ereignisse) der Poissonverteilung ist auch der Grund, warum sich die Poissonverteilung prinzipiell **nicht** eignet um Epidemien wie Ebola zu modellieren. Freundliche Grüße an Frau Pigeot, "Statistische Modellierung I", WiSe 18/19.
 
 
-Ursachen für *scheinbare* (*apparent*), und damit (bedingt) korrigierbare Overdispersion nach @hilbeModelingCountData2014, p. 41, 82
+Ursachen für *scheinbare* (*apparent*), und damit (bedingt) korrigierbare Overdispersion nach @hilbeModelingCountData2014 (p. 41, 82):
 
 1. Fehlende explanatorische Prädiktoren
 2. Ausreißer
 3. Fehlende Interaktionsterme
 4. Ein Prädiktor muss transformiert werden
 5. Die Daten sind zu dünn besetzt (*sparse*)
-6. Fehlende Werte, die nicht zufällig sind (missing not at random, *MNAR*) (siehe dazu auch Anhang \@ref(appendix-missingness))
+6. Fehlende Werte, die nicht zufällig sind (missing not at random, *MNAR* – siehe auch Anhang \@ref(appendix-missingness)
 
 Ein einfaches simuliertes Beispiel zur Auswirkung von fehlenden Prädiktoren:
 
@@ -264,4 +264,4 @@ Weiterhin taucht im Kontext von hurdle models (siehe \@ref(mod-hurdle)) folgende
 > The higher the expected value of the Poisson distribution, the lower the predicted probability of zero outcome and the lower the scope for underdispersion.
 > -- [@winkelmannEconometricAnalysisCount2010, p. 180 (eigene Hervorhebung)]
 
-Daraus lässt sich auch schließen, dass in Situationen mit binären outcomes und sehr niedrigem Erwartungswert die erwartete Anzahl an Nullen sehr hoch sein wird – weshalb es an dieser Stelle vermutlich eine großer Überlappung zwischen underdispersion und zero-inflation gibt.
+Daraus lässt sich auch schließen, dass in Situationen mit binären outcomes und sehr niedrigem Erwartungswert die erwartete Anzahl an Nullen sehr hoch sein wird – weshalb es an dieser Stelle vermutlich eine Überlappung zwischen underdispersion und zero-inflation gibt.
