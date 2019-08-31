@@ -1,4 +1,4 @@
-#! /usr/bin/env Rscript
+#! /usr/bin/env Rscript --no-init-file
 # (1.1 Update source from git repository and)
 # 1.2 clean up previous output
 # 2. Build the project (HTML + PDF output)
@@ -8,7 +8,8 @@
 # git2r::pull(credentials = git2r::cred_ssh_key())
 library(cliapp)
 
-timestamp()
+t1 <- Sys.time()
+cli_text("# ------ {format(Sys.time(), '%b. %d, %T')} ------ #")
 
 # Cleanup ----
 cli_alert_info("Removing previously built output")
@@ -51,5 +52,7 @@ if (all(Sys.info()[c("sysname", "login")] == c("Darwin", "Lukas"))) {
   fs::dir_copy("poisson-regression", "~/Sync/lukas.tadaa-data.de/poisson/", overwrite = TRUE)
 }
 
-cli_alert_success("Done!")
-timestamp()
+t2 <- Sys.time()
+
+cli_alert_success("Done! Took {round(as.numeric(difftime(t2, t1, units = 'secs')), 2)} seconds.")
+cli_text("# ------ {format(Sys.time(), '%b. %d, %T')} ------ #")
