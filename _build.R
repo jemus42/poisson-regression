@@ -19,9 +19,10 @@ if (fs::dir_exists("poisson-regression_files"))  fs::dir_delete("poisson-regress
 
 cli_h1("Rendering documents")
 cli_div(id = "list", theme = list(ol = list("margin-left" = 1)))
+cli_ol()
 
 # Gitbook ----
-cli_ol("Rendering HTML site", .close = FALSE)
+cli_it("Rendering HTML site")
 bookdown::render_book(
   "index.Rmd", output_format = "bookdown::gitbook", envir = new.env(), quiet = TRUE
 ) -> tmp
