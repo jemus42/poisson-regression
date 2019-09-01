@@ -12,7 +12,7 @@ node [shape = oval,
 edge [fontname = "Roboto"]
 
 node [fillcolor = white]
-start [label = "Start with fitting a Poisson model",
+start [label = "Start with a Poisson model",
        shape = plaintext,
        fillcolor = "lightblue"]
 
@@ -30,9 +30,9 @@ node [fillcolor = orange]
 
 edge [color = grey]
 start -> checkdisp [label = ""]
-checkdisp -> ud [label = "Dispersion < 1"]
-checkdisp -> unicorn [label = "Dispersion ≈ 1"]
-checkdisp -> od [label = "Dispersion > 1"]
+checkdisp -> ud [label = "D < 1"]
+checkdisp -> unicorn [label = "D ≈ 1"]
+checkdisp -> od [label = "D > 1"]
 #unicorn -> start [label = "Use actual Poisson regression"]
 
 node []
@@ -48,5 +48,4 @@ edge [color = yellow]
 ud -> gpois
 edge [color = orange]
 od, ud -> cmp
-
 }

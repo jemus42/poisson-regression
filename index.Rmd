@@ -233,8 +233,8 @@ Der *Lagrange Multiplier Test*:
 
 ```{r lagrange_test}
 #' Lagrange Multiplier Test according to Hilbe (2014)
-#' @param model A `glm` or similiar object
-#' @return Invisibly: Chi^2 statistic and corresponding p-value
+#' @param model A `glm` or similiar object.
+#' @return Chi^2 statistic and corresponding p-value in a list of class "htest".
 lagrange_test <- function(model) {
    mu     <- predict(model, type = "response")
    n_ybar <- length(model$y) * mean(mu)
