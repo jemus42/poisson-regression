@@ -6,7 +6,7 @@ editor_options:
 
 # Mehrparametrische Modelle {#multiparam}
 
-```{r model-graph, echo=FALSE}
+```{r model-graph, echo=FALSE, cache=FALSE, fig.cap="Hierarchie ausgewählter Count-Modelle. In Klammern: Zu schätzende Parameter der zugrundeliegenden Verteilung"}
 grViz(readLines("graphs/model-graph.dot"))
 ```
 
@@ -34,9 +34,9 @@ tibble::tribble(
 
 ## Negativ Binomial (NB) {#mod-nb}
 
-Die Negative Binomialverteilung (*NB*) kann als zweiparametrische Erweiterung der *Poisson* betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird (*Poisson-Gamma Mischmodell*). 
+Die Negative Binomialverteilung (*NB*) kann als zweiparametrische Erweiterung der *Poisson* betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird (*Poisson-Gamma Mischmodell*). Für eine ausführliche Beschreibung, siehe @hilbeModelingCountData2014 (p. 126ff).
 
-```{definition, name = "Negative Binomialverteilung"}
+```{definition defNB, name = "Negative Binomialverteilung"}
 Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675):
 
 Für $Y \sim NB(\mu, \theta)$ gilt
@@ -46,37 +46,35 @@ P(Y = y) = \frac{\Gamma(\theta + y)}{\Gamma(\theta) \Gamma(y+1)} \frac{\theta^\t
 \end{equation}
 
 Mit $\mathbb{E}(Y) = \mu$ und $\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}$
-  
 ```
 
+Für eine alternative Darstellung unter Verwendung von $\alpha = \frac{1}{\theta}$, siehe @hilbeModelingCountData2014 (p. 130)
 
 Der gängigste Anwendungsfall der *NB* findet sich bei Daten mit nicht korrigierbarer overdispersion (siehe Abschnitt \@ref(overdispersion)), da der Parameter $\theta$ bzw. auch $\alpha = \frac 1 \theta$ als *Dispersionsparameter* dient:
 
-
 ```{definition nbdisppar, name = "NB-Dispersionsparameter"}
 
-Meist wird der Parameter als $\theta$ bezeichnet, mit der Interpretation (relativ zum Poisson-Modell):
+Meist wird der Parameter als $\alpha$ bezeichnet, mit der Interpretation (relativ zum Poisson-Modell):
+  
+$$\mathrm{Var}(Y) = \mu + \alpha \mu^2$$
+
+\begin{align}
+  \alpha &= 0 &&\Longrightarrow \text{ Äquivalent zur Poissonverteilung} \\
+  \alpha &> 0 &&\Longrightarrow \text{ Overdispersion}
+\end{align}
+
+Je nach Quelle (und unter Anderem in R (z.B. `MASS::glm.nb`)) wird die inverse Variante $\theta = \frac 1 \alpha$ verwendet, womit gilt:
+
+$$\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}$$
 
 \begin{align}
   \theta &> 0 &&\Longrightarrow \text{ Overdispersion} \\
   \theta &\to \infty &&\Longrightarrow \text{ Äquivalent zur Poissonverteilung}
 \end{align}
 
-Je nach Quelle (und unter Anderem in R (z.B. `MASS::glm.nb`)) wird die inverse Variante $\alpha = \frac 1 \theta$ verwendet, womit gilt:
-
-$$\mathrm{Var}(Y) = \mu + \alpha \mu^2$$
-  
-\begin{align}
-  \alpha &= 0 &&\Longrightarrow \text{ Äquivalent zur Poissonverteilung} \\
-  \alpha &> 0 &&\Longrightarrow \text{ Overdispersion}
-\end{align}
-
-Die Interpretation (und numerische Handhabung) könnte dementsprechend der Grund für die Präferenz von $\alpha$ sein.
+Siehe dazu auch @hilbeModelingCountData2014 (p. 131).
 
 ```
-
-(Vgl. @hilbeModelingCountData2014, @hilbe2011NegativeBinomial)
-
 
 Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob $\alpha$ oder $\theta$ verwendet wird, ist sein Vorzeichen: Er ist _immer_ positiv, das heißt die Varianz der NB ist entweder _größer oder gleich_ der Poisson, oder mit anderen Worten:
 
@@ -85,8 +83,30 @@ Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob $\alp
 > --- [@hilbeModelingCountData2014 (p. 11), eigene Hervorhebung]
 
 
-- Interpretation der exponentierten Koeffizienten: IRRs
-- Zwei Varianten: NB1, NB2
+Weiterhin gibt es zwei verschiedene Formulierungen der Negativen Binomialverteilung, NB1 und NB2, deren Nummerierung auf den Exponent im zweiten Term ihrer Varianzen zurückzuführen ist:
+
+```{definition defNB1NB2, name = "NB1 und NB2"}
+Nach @hilbeModelingCountData2014 (p. 126f):
+
+Die **NB1**, oder auch *lineare* Negative Binomialverteilung hat die Varianz
+
+\begin{equation*}
+\mathrm{Var}(Y) = \mu + \alpha \mu
+\end{equation*}
+
+…und die gängigere **NB2**, oder auch *quadratische* Negative Binomialverteilung hat (wie oben beschrieben) die Varianz
+
+\begin{equation*}
+\mathrm{Var}(Y) = \mu + \alpha \mu^2
+\end{equation*}
+
+```
+
+Beide Varianten können wie MLE geschätzt werden, wobei NB2 zusätzlich im Kontext des GLM via IRLS geschätzt werden kann.
+
+Als link wird $\log \mu$ verwendet, wobei der *canonical link* eigentlich $\log\left(\frac{\alpha\mu}{1 + \alpha\mu}\right)$ ist [^nblink]. 
+
+[^nblink]: Daher können Standardfehler nicht wie für canonical models überlich via OIM (*observed information matrix*), sondern via EIM (*expected information matrix*) geschätzt werden. Die EIM-Methode liefert weniger genaue Resultate für kleine Stichproben (n < 30).
 
 
 ## Poisson Inverse Gaussian (PIG) {#mod-pig}
@@ -139,6 +159,8 @@ Der Zusammenhang zwischen $\nu$ und $\lambda$ nach @sellers2010FlexibleRegressio
                   =& \frac{1}{\nu} \lambda^{\frac{1}{\nu}}
            \approx \frac{1}{\nu} \mathbb{E}(Y_i)
 \end{align*}
+
+Als link wird $\log \lambda$ verwendet, da so die links für Poisson- und logistische Regression Spezialfälle der COMP sind.
 ```
 
 Die Verteilung hat als Spezialfälle:
@@ -163,9 +185,9 @@ Die Verteilung hat als Spezialfälle:
 
 **Software**:
 
-- `CompGLM::glm.comp`
-- `COMPoissonReg` (GitHub: `lotze/COMPoissonReg`)
-- `compoisson` (Not sure if modelling)
+- `CompGLM::glm.comp`: Funktioniert, aber crasht RStudio wenn `nuFormula` spezifiziert wird
+- `compoisson::com.fit`: Entweder generell nicht geeignet oder unfassbar langsam (und deshalb nicht geeignet)
+- `COMPoissonReg` (GitHub: `lotze/COMPoissonReg`): Scheint zu funktionieren
 
 
 Siehe auch

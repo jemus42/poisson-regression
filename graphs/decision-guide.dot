@@ -22,9 +22,9 @@ start [label = "Start with a Poisson model",
 node [fillcolor = white]
 checkdisp [label = "Check Pearson-Dispersion"]
 
-ud [label = "Underdispersion"]
+ud [label = "Underdispersion", fillcolor = "yellow"]
 unicorn [label = "You have found a unicorn!\nUse Poisson", fillcolor = pink]
-od [label = "Overdispersion"]
+od [label = "Overdispersion", fillcolor = "red"]
 
 node [fillcolor = orange]
 
@@ -44,8 +44,8 @@ gpois [label = "GP", fillcolor = yellow]
 
 edge [color = red]
 od -> {nbin pig se_adjust}
-edge [color = yellow]
-ud -> gpois
+#edge [color = yellow]
+#ud -> gpois
 edge [color = orange]
-od, ud -> cmp
+od, ud -> {cmp, gpois}
 }

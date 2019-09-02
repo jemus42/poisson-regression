@@ -32,10 +32,11 @@ options(
 )
 
 knitr::opts_chunk$set(
+  cache = TRUE,
   fig.width = 8,
   fig.asp = 1/1.618,
   fig.align = "center",
-  fig.pos = "center",
+  #fig.pos = "center",
   comment = "#>",
   tidy = FALSE # "formatR",
   # tidy.opts = list(blank = FALSE, width.cutoff = 80)
@@ -88,7 +89,7 @@ Diese Umstände benötigen in der Regel Generalisierungen der einfach Poisson-Re
 
 ## Beispieldaten {#data}
 
-Als Anwendungsbeispiele werden einige Beispieldatensätze verwendet, die verschiedene Probleme illustrieren:
+Als Anwendungsbeispiele werden einige Datensätze verwendet, die verschiedene Probleme illustrieren:
 
 - `azprocedure`: Patienten kardiovaskulärer Behandlungen in Arizona
   - Count: `los`, Dauer eines Krankenhausaufenthalts in Tagen (1 - 83)
@@ -211,7 +212,7 @@ x[sample(100, 10)] <- NA
 describe_counts(x)
 ```
 
-Die Pearson-Dispersionsstatistik (eingeführt in Abschnitt \@ref(dispersion), Definition \@ref(def:pearsondisp)):
+Die Pearson-Dispersionsstatistik (eingeführt in Abschnitt \@ref(dispersion), Definition \@ref(def:def-pearsondisp)):
 
 ```{r pearson_disp_function}
 #' Pearson-Dispersion

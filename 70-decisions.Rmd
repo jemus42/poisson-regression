@@ -8,7 +8,7 @@ editor_options:
 
 @perumean-chaneyZeroinflatedOverdispersedWhat2013 schlagen folgendes Vorgehen vor um Overdispersion und Zero-Inflation zu erkennen:
 
-```{r perumean_chaney_decision_tree, echo=FALSE}
+```{r perumean_chaney_decision_tree, echo=FALSE, cache=FALSE}
 grViz(readLines("graphs/PerumeanChaney.dot"))
 ```
 
@@ -18,7 +18,7 @@ Im zweiten Schritt werden die jeweiligen Modelle (entweder Poisson oder NB) mit 
 
 Eine allgemeinere Darstellung zur Veranschaulichung der sich ergebenden Möglichkeiten:
 
-```{r decision_tree, echo=FALSE}
+```{r decision_tree, echo=FALSE, cache=FALSE}
 grViz(readLines("graphs/decision-guide.dot"))
 ```
 

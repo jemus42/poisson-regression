@@ -25,7 +25,7 @@ Eine Poisson-verteilte Zufallsvariable $Y \sim \mathrm{Poi}(\lambda)$ [^poiparam
 \end{equation*}
 ```
 
-```{r poisson_dists, echo=FALSE}
+```{r poisson-dists, echo=FALSE, fig.cap="Poisson-Verteilungen mit ausgewählten Parametern."}
 map_df(c(0.5, 1, 2, 5, 10, 15), ~{
   tibble(
     lambda = .x,
@@ -52,7 +52,7 @@ map_df(c(0.5, 1, 2, 5, 10, 15), ~{
   theme(legend.position = c(.7, .9))
 ```
 
-```{definition, name = "Poisson-Modell"}
+```{definition poisson-modell, name = "Poisson-Modell"}
 Die Zielvariablen $y_i \in \mathbb{N}_0$ sind (bedingt) unabhängig gegeben der Kovariablen $x_i1, x_i2, \ldots, x_ik$.
 
 Die Rate $\lambda_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)$ der Poissonverteilung wird in der Regel log-linear modelliert als
@@ -113,7 +113,7 @@ Alternative Formulierung nach @winkelmannEconometricAnalysisCount2010 (p. 64):
 
 ## Dispersion {#dispersion}
 
-```{definition, name = "Equi-, Extra-, Over-, Underdispersion"}
+```{definition def-dispersions, name = "Equi-, Extra-, Over-, Underdispersion"}
 Für Zählvariablen $y_i \in \mathbb{N}_0$ und erklärenden Variablen $\mathbf{x}_i$ gilt innerhalb eines Modells:
 
 \begin{align*}
@@ -126,7 +126,7 @@ Für Zählvariablen $y_i \in \mathbb{N}_0$ und erklärenden Variablen $\mathbf{x
 ```
 
 
-```{definition, name = "Poisson-Overdispersion"}
+```{definition def-pois-overdispersion, name = "Poisson-Overdispersion"}
 Innerhalb eines Poisson-Modells (vgl. Abschnitt \@ref(poisson-modell)) mit der Annahme
 
 \begin{align*}
@@ -154,7 +154,7 @@ Mit *Dispersionsparameter* $\theta$ [vgl. @fahrmeirRegressionModelleMethoden2009
 Als Dispersionsstatistik können *deviance dispersion* oder *Pearson dispersion* berechnet werden. Laut @hilbeModelingCountData2014 ist die *Pearson dispersion* zu bevorzugen, da sie für echte Poisson-Modelle gleich 1 ist, wohingegen die *deviance dispersion* nach oben verzerrt ist.
 
 
-```{definition pearsondisp, name = "Pearson-Dispersion"}
+```{definition def-pearsondisp, name = "Pearson-Dispersion"}
 Nach @hilbeModelingCountData2014 (p. 77ff):
 
 Die Pearson $\chi^2$-Statistik ist die Summe der quadrierten (Pearson-)Residuen gewichtet mit der Modellvarianz:

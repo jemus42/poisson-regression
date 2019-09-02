@@ -9,32 +9,37 @@ node [shape = oval, style = filled, fontname = "Roboto"]
 edge [fontname = "Roboto"]
 
 node [fillcolor = aliceblue]
-pois [label = "Poisson Modell\n(Erwartungswert = Varianz)",
+pois [label = "Poisson Modell\n(mean)",
       shape = rectangle,
       fillcolor = "lightblue"]
 
-twoparam [label = "Zweiparametrische Modelle\n(Erwartungswert, Dispersion)"]
-zi [label = "Zero-Inflated"]
+twoparam [label = "Zweiparametrische Modelle\n(mean, dispersion)"]
+zi [label = "Zero-Inflated Model\n(mean, [dispersion], zero-inflation parameter)"]
 
 node []
 disp_pos [label = "Positive Dispersion", fillcolor = "red"]
-disp_flexible [label = "Positive und negative\nDispersion", fillcolor = "orange"]
+disp_flexible [label = "Positive/negative Dispersion", fillcolor = "orange"]
 
 edge [color = grey]
-pois -- {twoparam zi}
+pois -- twoparam
+pois -- zi
 twoparam -- {disp_pos disp_flexible}
 
 node [fillcolor = white]
 nb [label = "NB"]
 pig [label = "PIG"]
+gpois [label = "GP"]
+cmp [label = "COMP"]
+
 zip [label = "ZIP"]
 zinb [label = "ZINB"]
 zmisc [label = "..."]
-gpois [label = "GP"]
-cmp [label = "COMP"]
 
 edge [color = orange]
 disp_flexible -- {gpois cmp}
 disp_pos -- {nb pig}
+
+nb, pig, gpois, cmp -- zi
+
 zi -- {zip zinb zmisc}
 }

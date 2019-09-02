@@ -7,9 +7,10 @@
 # cat("1.1 Pulling from git repository\n")
 # git2r::pull(credentials = git2r::cred_ssh_key())
 library(cliapp)
+start_app(theme = simple_theme(dark = TRUE))
 
 t1 <- Sys.time()
-cli_text("# ------ {format(Sys.time(), '%b. %d, %T')} ------ #")
+cli_h1("{format(Sys.time(), '%b. %d, %T')}")
 
 # Cleanup ----
 cli_alert_info("Removing previously built output")
@@ -17,7 +18,7 @@ if (fs::dir_exists("poisson-regression"))  fs::dir_delete("poisson-regression")
 if (fs::file_exists("poisson-regression.Rmd")) fs::file_delete("poisson-regression.Rmd")
 if (fs::dir_exists("poisson-regression_files"))  fs::dir_delete("poisson-regression_files")
 
-cli_h1("Rendering documents")
+cli_h2("Rendering documents")
 cli_div(id = "list", theme = list(ol = list("margin-left" = 1)))
 cli_ol()
 
@@ -54,6 +55,7 @@ if (all(Sys.info()[c("sysname", "login")] == c("Darwin", "Lukas"))) {
 }
 
 t2 <- Sys.time()
+difft <- round(as.numeric(difftime(t2, t1, units = 'secs')), 1)
 
-cli_alert_success("Done! Took {round(as.numeric(difftime(t2, t1, units = 'secs')), 2)} seconds.")
-cli_text("# ------ {format(Sys.time(), '%b. %d, %T')} ------ #")
+cli_alert_success("Done! Took {difft} seconds.")
+cli_h1("{format(Sys.time(), '%b. %d, %T')}")

@@ -149,10 +149,10 @@ Letztlich stellt das Package [`broom`](https://broom.tidyverse.org/) eine wichti
 ```{r sessioninfo, echo=FALSE}
 sinfo <- sessioninfo::session_info()[c("platform", "packages")]
 
-sinfo$platform %>% 
+sinfo$platform %>%
   unclass() %>%
-  as_tibble() %>% 
-  t() %>% 
+  as_tibble() %>%
+  t() %>%
   as_tibble(rownames = "m", .name_repair = make.names) %>%
   setNames(c("Umgebungsvariable", "Wert")) %>%
   kable(booktabs = TRUE, linesep = "") %>%
@@ -164,6 +164,22 @@ sinfo$packages %>%
   setNames(c("Package", "Version", "Quelle")) %>%
   kable(booktabs = TRUE, linesep = "") %>%
   kable_styling(position = "center")
+
+
+# list(
+#   sinfo$platform %>% 
+#   unclass() %>%
+#   as_tibble() %>% 
+#   t() %>% 
+#   as_tibble(rownames = "m", .name_repair = make.names) %>%
+#   setNames(c("Umgebungsvariable", "Wert")),
+#   sinfo$packages %>%
+#   filter(attached) %>%
+#   select(package, loadedversion, source) %>%
+#   setNames(c("Package", "Version", "Quelle")) 
+# ) %>%
+#   kable(booktabs = TRUE, linesep = "") %>%
+#   kable_styling(position = "center")
 ```
 
 

@@ -178,7 +178,7 @@ Abseits davon bleiben 2 grobe Strategien :
 Hier werden lediglich die Standardfehler der Koeffizienten eines Poisson-Modells adjustiert, die bei overdispersion i.d.R. unterschätzt werden – die eigentliche Parameterschätzung wird nicht beeinflusst:
 
 $$\mathrm{SE}(\beta_k) \cdot \sqrt{D}$$
-Wobei $D$ der Pearson-Dispersionsindex ist (vgl. @hilbeModelingCountData2014, p. 92ff), den wir in \@ref(def:pearsondisp) als $\frac{\chi^2_{\mathrm{Pearson}}}{\mathrm{df}}$ definiert hatten.
+Wobei $D$ der Pearson-Dispersionsindex ist (vgl. @hilbeModelingCountData2014, p. 92ff), den wir in \@ref(def:def-pearsondisp) als $\frac{\chi^2_{\mathrm{Pearson}}}{\mathrm{df}}$ definiert hatten.
 
 Ein möglicher Nachteil jedoch: Es wird zuerst ein reguläres Poisson-Modell gefittet, Standardfehler und Dispersionsindex bestimmt, und dann dasselbe Modell mit skalierten Standardfehlern erneut gefittet – dementsprechend ist diese Methode vermutlich für größere Datensätze eher ineffizient.
 
@@ -268,10 +268,7 @@ Zwar schlagen @perumean-chaneyZeroinflatedOverdispersedWhat2013 den Vuong Test (
 > --- @wilson2015MisuseVuong, p. 52
 
 
-(Hausman Test ?)
-
-Für sowohl overdispersion als auch zero-inflation: Score-Tests (?) [@perumean-chaneyZeroinflatedOverdispersedWhat2013, p. 1674, siehe auch entsprechende citations]
-
+(Hausman Test: Vergleich der Koeffizienten zweier Modelle, taucht in Hilbe (2014) aber eher im Kontext von Validation samples auf)
 
 ### Modellierung {-}
 
