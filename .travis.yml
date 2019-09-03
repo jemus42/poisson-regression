@@ -23,9 +23,9 @@ before_install:
 #  - "Rscript -e \"tinytex::tlmgr_install('Asana-Math')\""
   - "cp $HOME/.TinyTeX/texmf-var/fonts/conf/texlive-fontconfig.conf ~/.fonts.conf"
   - "mkdir -p $HOME/.fonts"
-  - "[ -e $HOME/.fonts/gyre.zip ] ||wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/pagella/qpl2_501otf.zip -O $HOME/gyre.zip && unzip $HOME/.fonts/gyre.zip -d $HOME/.fonts/"
-  - "[ -e $HOME/.fonts/gyreheros.zip ] || wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip -O $HOME/gyreheros.zip && unzip $HOME/.fonts/gyreheros.zip -d $HOME/.fonts/"
-  - "[ -e $HOME/.fonts/fira.zip ] || wget https://github.com/bBoxType/FiraSans/archive/master.zip -O $HOME/.fonts/fira.zip && unzip ~/.fonts/fira.zip '*.ttf' -d $HOME/.fonts/"
+  - "[ -e $HOME/.fonts/gyre.zip ] || wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/pagella/qpl2_501otf.zip -O $HOME/gyre.zip || unzip $HOME/.fonts/gyre.zip -d $HOME/.fonts/"
+  - "[ -e $HOME/.fonts/gyreheros.zip ] || wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip -O $HOME/gyreheros.zip || unzip $HOME/.fonts/gyreheros.zip -d $HOME/.fonts/"
+  - "[ -e $HOME/.fonts/fira.zip ] || wget https://github.com/bBoxType/FiraSans/archive/master.zip -O $HOME/.fonts/fira.zip || unzip ~/.fonts/fira.zip '*.ttf' -d $HOME/.fonts/"
   - "fc-cache -fv; fc-list"
 
 
