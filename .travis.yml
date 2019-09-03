@@ -8,7 +8,7 @@ cache:
 
 before_script:
   - "tlmgr install fira"
-  - "tlmgr install asana-math"
+  - "tlmgr install Asana-Math"
   - "tlmgr install tex-gyre"
   - "[ -x \"$HOME/bin/phantomjs\" ] || Rscript -e \"webshot::install_phantomjs()\""
   - chmod +x ./_build.travis.sh
