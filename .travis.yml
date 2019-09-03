@@ -12,11 +12,18 @@ before_script:
   - "tlmgr install Asana-Math"
   - "tlmgr install tex-gyre"
   - "[ -x \"$HOME/bin/phantomjs\" ] || Rscript -e \"webshot::install_phantomjs()\""
-  - chmod +x ./_deploy.sh
+#  - chmod +x ./_deploy.sh
 
 
 script:
   - "Rscript -e \"bookdown::render_book('index.Rmd', 'bookdown::gitbook')\""
   - "Rscript -e \"bookdown::render_book('index.Rmd', 'bookdown::pdf_book')\""
-  - ./_deploy.sh
+#  - ./_deploy.sh
 
+deploy:
+  provider: pages
+  local_dir: poisson-reg
+  skip_cleanup: true
+  keep-history: true
+  github_token: $GITHUB_PAT
+  target_branch: gh-pages
