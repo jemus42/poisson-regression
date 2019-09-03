@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de-DE" xml:lang="de-DE">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Kapitel 6 Entscheidungshilfen | Poisson-Regression und ihre Leiden</title>
+  <meta name="description" content="Because count data is hard" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Kapitel 6 Entscheidungshilfen | Poisson-Regression und ihre Leiden" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:image" content="images/poiscovr-orly.png" />
+  <meta property="og:description" content="Because count data is hard" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Kapitel 6 Entscheidungshilfen | Poisson-Regression und ihre Leiden" />
+  
+  <meta name="twitter:description" content="Because count data is hard" />
+  <meta name="twitter:image" content="images/poiscovr-orly.png" />
+
+<meta name="author" content="Lukas Burk" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="anwendung.html"/>
+<link rel="next" href="erganzungen.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/viz-0.3/viz.js"></script>
+<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { fonts: ["Asana-Math"] },
+    MathMenu: { showFontMenu: true },
+    menuSettings: { zoom: "Click" }
+  });
+</script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Poisson Regression</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Einführung</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#data"><i class="fa fa-check"></i><b>1.1</b> Beispieldaten</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#software-funs"><i class="fa fa-check"></i><b>1.2</b> Verwendete Software</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="index.html"><a href="index.html#r-packages"><i class="fa fa-check"></i><b>1.2.1</b> R-Packages</a></li>
+<li class="chapter" data-level="1.2.2" data-path="index.html"><a href="index.html#helperfuns"><i class="fa fa-check"></i><b>1.2.2</b> Funktionen</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="poisson-modell.html"><a href="poisson-modell.html"><i class="fa fa-check"></i><b>2</b> Das Poisson-Modell</a><ul>
+<li class="chapter" data-level="2.1" data-path="poisson-modell.html"><a href="poisson-modell.html#annahmen"><i class="fa fa-check"></i><b>2.1</b> Annahmen</a></li>
+<li class="chapter" data-level="2.2" data-path="poisson-modell.html"><a href="poisson-modell.html#dispersion"><i class="fa fa-check"></i><b>2.2</b> Dispersion</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="poisson-modell.html"><a href="poisson-modell.html#overdispersion"><i class="fa fa-check"></i><b>2.2.1</b> Overdispersion</a></li>
+<li class="chapter" data-level="2.2.2" data-path="poisson-modell.html"><a href="poisson-modell.html#underdispersion"><i class="fa fa-check"></i><b>2.2.2</b> Underdispersion</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="multiparam.html"><a href="multiparam.html"><i class="fa fa-check"></i><b>3</b> Mehrparametrische Modelle</a><ul>
+<li class="chapter" data-level="3.1" data-path="multiparam.html"><a href="multiparam.html#mod-nb"><i class="fa fa-check"></i><b>3.1</b> Negativ Binomial (NB)</a></li>
+<li class="chapter" data-level="3.2" data-path="multiparam.html"><a href="multiparam.html#mod-pig"><i class="fa fa-check"></i><b>3.2</b> Poisson Inverse Gaussian (PIG)</a></li>
+<li class="chapter" data-level="3.3" data-path="multiparam.html"><a href="multiparam.html#mod-gp"><i class="fa fa-check"></i><b>3.3</b> Generalized Poisson (GP)</a></li>
+<li class="chapter" data-level="3.4" data-path="multiparam.html"><a href="multiparam.html#mod-comp"><i class="fa fa-check"></i><b>3.4</b> Conway-Maxwell Poisson (COMP)</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="weitere-modelle.html"><a href="weitere-modelle.html"><i class="fa fa-check"></i><b>4</b> Weitere Modelle</a><ul>
+<li class="chapter" data-level="4.1" data-path="weitere-modelle.html"><a href="weitere-modelle.html#diagnostische-modelle"><i class="fa fa-check"></i><b>4.1</b> Diagnostische Modelle</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="weitere-modelle.html"><a href="weitere-modelle.html#mod-nbh"><i class="fa fa-check"></i><b>4.1.1</b> Heterogenous Negative Binomial (NBH)</a></li>
+<li class="chapter" data-level="4.1.2" data-path="weitere-modelle.html"><a href="weitere-modelle.html#mod-nbp"><i class="fa fa-check"></i><b>4.1.2</b> Negative binomial-P (NB-P)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="weitere-modelle.html"><a href="weitere-modelle.html#mod-zi"><i class="fa fa-check"></i><b>4.2</b> Zero-Inflated Models (<em>mixture models</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="anwendung.html"><a href="anwendung.html"><i class="fa fa-check"></i><b>5</b> Anwendung</a><ul>
+<li class="chapter" data-level="5.1" data-path="anwendung.html"><a href="anwendung.html#overdisp-diag"><i class="fa fa-check"></i><b>5.1</b> Overdispersion: Erkennung und Handhabung</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="anwendung.html"><a href="anwendung.html#boundary-likelihood-ratio-test-blr"><i class="fa fa-check"></i><b>5.1.1</b> (Boundary) Likelihood Ratio Test (BLR)</a></li>
+<li class="chapter" data-level="5.1.2" data-path="anwendung.html"><a href="anwendung.html#umgang-mit-overdispersion"><i class="fa fa-check"></i><b>5.1.2</b> Umgang mit Overdispersion</a><ul>
+<li class="chapter" data-level="5.1.2.1" data-path="anwendung.html"><a href="anwendung.html#sandwich"><i class="fa fa-check"></i><b>5.1.2.1</b> Robuste Varianzschätzer (Sandwich Estimators)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="anwendung.html"><a href="anwendung.html#zeros"><i class="fa fa-check"></i><b>5.2</b> Zero-Inflation (ZI)</a><ul>
+<li class="chapter" data-level="" data-path="anwendung.html"><a href="anwendung.html#tests-auf-zero-inflation"><i class="fa fa-check"></i>Tests auf Zero-Inflation</a></li>
+<li class="chapter" data-level="" data-path="anwendung.html"><a href="anwendung.html#modellierung"><i class="fa fa-check"></i>Modellierung</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="entscheidungshilfen.html"><a href="entscheidungshilfen.html"><i class="fa fa-check"></i><b>6</b> Entscheidungshilfen</a></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="erganzungen.html"><a href="erganzungen.html"><i class="fa fa-check"></i><b>A</b> Ergänzungen</a><ul>
+<li class="chapter" data-level="A.1" data-path="erganzungen.html"><a href="erganzungen.html#appendix-missingness"><i class="fa fa-check"></i><b>A.1</b> Missing values und missingness patterns</a></li>
+<li class="chapter" data-level="A.2" data-path="erganzungen.html"><a href="erganzungen.html#trunc-cens"><i class="fa fa-check"></i><b>A.2</b> Truncation und Censoring</a></li>
+<li class="chapter" data-level="A.3" data-path="erganzungen.html"><a href="erganzungen.html#mod-hurdle"><i class="fa fa-check"></i><b>A.3</b> Hurdle models</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="repro.html"><a href="repro.html"><i class="fa fa-check"></i><b>B</b> Reproduzierbarkeit</a><ul>
+<li class="chapter" data-level="B.1" data-path="repro.html"><a href="repro.html#r-code"><i class="fa fa-check"></i><b>B.1</b> R-Code</a></li>
+<li class="chapter" data-level="B.2" data-path="repro.html"><a href="repro.html#session-info"><i class="fa fa-check"></i><b>B.2</b> Session Info</a></li>
+<li class="chapter" data-level="B.3" data-path="repro.html"><a href="repro.html#unsorted"><i class="fa fa-check"></i><b>B.3</b> Unsorted</a><ul>
+<li class="chapter" data-level="B.3.1" data-path="repro.html"><a href="repro.html#general-advice"><i class="fa fa-check"></i><b>B.3.1</b> General Advice</a></li>
+<li class="chapter" data-level="B.3.2" data-path="repro.html"><a href="repro.html#beispiel-nach-hilbemodelingcountdata2014-p.211ff"><i class="fa fa-check"></i><b>B.3.2</b> Beispiel nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 211ff</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="literatur.html"><a href="literatur.html"><i class="fa fa-check"></i>Literatur</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Built with bookdown</a></li>
+<li><a href="https://git.tadaa-data.de/lukas/poisson-regression" target="blank">Source on Gitea</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Poisson-Regression und ihre Leiden</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="entscheidungshilfen" class="section level1">
+<h1><span class="header-section-number">Kapitel 6</span> Entscheidungshilfen</h1>
+<p><span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">2013</a>)</span> schlagen folgendes Vorgehen vor um Overdispersion und Zero-Inflation zu erkennen:</p>
+<div id="htmlwidget-f000dc53229bcb346b9d" style="width:768px;height:474.660074165637px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f000dc53229bcb346b9d">{"x":{"diagram":"digraph PerumeanChaney {\n\ngraph [layout = dot]\n\n################################\n#### Global node attributes ####\n################################\nnode [shape = plaintext,\n      color = black,\n      fontname = \"Roboto\"]\nedge [fontname = \"Roboto\"]\n\nnode [fillcolor = white]\nstart [label = \"Test for Overdispersion\\n(Poisson vs. NB)\"]\ntest_zi_poi [label = \"Test for Zero-Inflation\\n(Poisson vs. ZIP)\"]\ntest_zi_nb [label = \"Test for Zero-Inflation\\n(NB vs. ZINB)\"]\nPoisson\nZIP\nNB\nZINB\n\nedge []\nstart -> test_zi_poi [label = \"N.S.\"]\nstart -> test_zi_nb  [label = \"S\"]\ntest_zi_poi -> Poisson [label = \"N.S.\"]\ntest_zi_poi -> ZIP [label = \"S\"]\ntest_zi_nb -> NB [label = \"N.S.\"]\ntest_zi_nb -> ZINB [label = \"S\"]\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<p>Wobei im ersten Schritt sowohl Poisson als auch NB-Modelle gefittet werden, und dann nach Goodness-of-Fit (via LRT) (NB &gt; Poisson?) entschieden wird.<br />
+Im zweiten Schritt werden die jeweiligen Modelle (entweder Poisson oder NB) mit ihren ZI-Counterparts verglichen (model fit, Vuong-Test), analog Schritt 1.<br />
+“LRT-Vuong Method”.</p>
+<p>Eine allgemeinere Darstellung zur Veranschaulichung der sich ergebenden Möglichkeiten:</p>
+<div id="htmlwidget-c13b84c8cc28b813c085" style="width:768px;height:474.660074165637px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c13b84c8cc28b813c085">{"x":{"diagram":"digraph decisiontree {\n\ngraph [layout = dot]\n\n################################\n#### Global node attributes ####\n################################\nnode [shape = oval,\n      style = filled,\n      color = grey,\n      fontname = \"Roboto\"]\nedge [fontname = \"Roboto\"]\n\nnode [fillcolor = white]\nstart [label = \"Start with a Poisson model\",\n       shape = plaintext,\n       fillcolor = \"lightblue\"]\n\n################################\n#### First step             ####\n################################\nnode [fillcolor = white]\ncheckdisp [label = \"Check Pearson-Dispersion\"]\n\nud [label = \"Underdispersion\", fillcolor = \"yellow\"]\nunicorn [label = \"You have found a unicorn!\\nUse Poisson\", fillcolor = pink]\nod [label = \"Overdispersion\", fillcolor = \"red\"]\n\nnode [fillcolor = orange]\n\nedge [color = grey]\nstart -> checkdisp [label = \"\"]\ncheckdisp -> ud [label = \"D < 1\"]\ncheckdisp -> unicorn [label = \"D ≈ 1\"]\ncheckdisp -> od [label = \"D > 1\"]\n#unicorn -> start [label = \"Use actual Poisson regression\"]\n\nnode []\nse_adjust [label = \"Adjust SE\", color = lightblue]\nnbin [label = \"NB\", fillcolor = red]\npig [label = \"PIG\", fillcolor = red]\ncmp [label = \"COMP\", fillcolor = orange]\ngpois [label = \"GP\", fillcolor = yellow]\n\nedge [color = red]\nod -> {nbin pig se_adjust}\n#edge [color = yellow]\n#ud -> gpois\nedge [color = orange]\nod, ud -> {cmp, gpois}\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+
+</div>
+
+
+
+<h3>Literatur</h3>
+<div id="refs" class="references">
+<div id="ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">
+<p>Perumean-Chaney, Suzanne E., Charity Morgan, David McDowall, und Inmaculada Aban. 2013. „Zero-Inflated and Overdispersed: What’s One to Do?“ <em>Journal of Statistical Computation and Simulation</em> 83 (9): 1671–83. <a href="https://doi.org/10.1080/00949655.2012.668550" class="uri">https://doi.org/10.1080/00949655.2012.668550</a>.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="anwendung.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="erganzungen.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["poisson-regression.pdf", "poisson-regression.tex"],
+"toc": {
+"collapse": "subsection",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

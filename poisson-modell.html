@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de-DE" xml:lang="de-DE">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden</title>
+  <meta name="description" content="Because count data is hard" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:image" content="images/poiscovr-orly.png" />
+  <meta property="og:description" content="Because count data is hard" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden" />
+  
+  <meta name="twitter:description" content="Because count data is hard" />
+  <meta name="twitter:image" content="images/poiscovr-orly.png" />
+
+<meta name="author" content="Lukas Burk" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="multiparam.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/viz-0.3/viz.js"></script>
+<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { fonts: ["Asana-Math"] },
+    MathMenu: { showFontMenu: true },
+    menuSettings: { zoom: "Click" }
+  });
+</script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Poisson Regression</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Einführung</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#data"><i class="fa fa-check"></i><b>1.1</b> Beispieldaten</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#software-funs"><i class="fa fa-check"></i><b>1.2</b> Verwendete Software</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="index.html"><a href="index.html#r-packages"><i class="fa fa-check"></i><b>1.2.1</b> R-Packages</a></li>
+<li class="chapter" data-level="1.2.2" data-path="index.html"><a href="index.html#helperfuns"><i class="fa fa-check"></i><b>1.2.2</b> Funktionen</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="poisson-modell.html"><a href="poisson-modell.html"><i class="fa fa-check"></i><b>2</b> Das Poisson-Modell</a><ul>
+<li class="chapter" data-level="2.1" data-path="poisson-modell.html"><a href="poisson-modell.html#annahmen"><i class="fa fa-check"></i><b>2.1</b> Annahmen</a></li>
+<li class="chapter" data-level="2.2" data-path="poisson-modell.html"><a href="poisson-modell.html#dispersion"><i class="fa fa-check"></i><b>2.2</b> Dispersion</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="poisson-modell.html"><a href="poisson-modell.html#overdispersion"><i class="fa fa-check"></i><b>2.2.1</b> Overdispersion</a></li>
+<li class="chapter" data-level="2.2.2" data-path="poisson-modell.html"><a href="poisson-modell.html#underdispersion"><i class="fa fa-check"></i><b>2.2.2</b> Underdispersion</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="multiparam.html"><a href="multiparam.html"><i class="fa fa-check"></i><b>3</b> Mehrparametrische Modelle</a><ul>
+<li class="chapter" data-level="3.1" data-path="multiparam.html"><a href="multiparam.html#mod-nb"><i class="fa fa-check"></i><b>3.1</b> Negativ Binomial (NB)</a></li>
+<li class="chapter" data-level="3.2" data-path="multiparam.html"><a href="multiparam.html#mod-pig"><i class="fa fa-check"></i><b>3.2</b> Poisson Inverse Gaussian (PIG)</a></li>
+<li class="chapter" data-level="3.3" data-path="multiparam.html"><a href="multiparam.html#mod-gp"><i class="fa fa-check"></i><b>3.3</b> Generalized Poisson (GP)</a></li>
+<li class="chapter" data-level="3.4" data-path="multiparam.html"><a href="multiparam.html#mod-comp"><i class="fa fa-check"></i><b>3.4</b> Conway-Maxwell Poisson (COMP)</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="weitere-modelle.html"><a href="weitere-modelle.html"><i class="fa fa-check"></i><b>4</b> Weitere Modelle</a><ul>
+<li class="chapter" data-level="4.1" data-path="weitere-modelle.html"><a href="weitere-modelle.html#diagnostische-modelle"><i class="fa fa-check"></i><b>4.1</b> Diagnostische Modelle</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="weitere-modelle.html"><a href="weitere-modelle.html#mod-nbh"><i class="fa fa-check"></i><b>4.1.1</b> Heterogenous Negative Binomial (NBH)</a></li>
+<li class="chapter" data-level="4.1.2" data-path="weitere-modelle.html"><a href="weitere-modelle.html#mod-nbp"><i class="fa fa-check"></i><b>4.1.2</b> Negative binomial-P (NB-P)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="weitere-modelle.html"><a href="weitere-modelle.html#mod-zi"><i class="fa fa-check"></i><b>4.2</b> Zero-Inflated Models (<em>mixture models</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="anwendung.html"><a href="anwendung.html"><i class="fa fa-check"></i><b>5</b> Anwendung</a><ul>
+<li class="chapter" data-level="5.1" data-path="anwendung.html"><a href="anwendung.html#overdisp-diag"><i class="fa fa-check"></i><b>5.1</b> Overdispersion: Erkennung und Handhabung</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="anwendung.html"><a href="anwendung.html#boundary-likelihood-ratio-test-blr"><i class="fa fa-check"></i><b>5.1.1</b> (Boundary) Likelihood Ratio Test (BLR)</a></li>
+<li class="chapter" data-level="5.1.2" data-path="anwendung.html"><a href="anwendung.html#umgang-mit-overdispersion"><i class="fa fa-check"></i><b>5.1.2</b> Umgang mit Overdispersion</a><ul>
+<li class="chapter" data-level="5.1.2.1" data-path="anwendung.html"><a href="anwendung.html#sandwich"><i class="fa fa-check"></i><b>5.1.2.1</b> Robuste Varianzschätzer (Sandwich Estimators)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="anwendung.html"><a href="anwendung.html#zeros"><i class="fa fa-check"></i><b>5.2</b> Zero-Inflation (ZI)</a><ul>
+<li class="chapter" data-level="" data-path="anwendung.html"><a href="anwendung.html#tests-auf-zero-inflation"><i class="fa fa-check"></i>Tests auf Zero-Inflation</a></li>
+<li class="chapter" data-level="" data-path="anwendung.html"><a href="anwendung.html#modellierung"><i class="fa fa-check"></i>Modellierung</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="entscheidungshilfen.html"><a href="entscheidungshilfen.html"><i class="fa fa-check"></i><b>6</b> Entscheidungshilfen</a></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="erganzungen.html"><a href="erganzungen.html"><i class="fa fa-check"></i><b>A</b> Ergänzungen</a><ul>
+<li class="chapter" data-level="A.1" data-path="erganzungen.html"><a href="erganzungen.html#appendix-missingness"><i class="fa fa-check"></i><b>A.1</b> Missing values und missingness patterns</a></li>
+<li class="chapter" data-level="A.2" data-path="erganzungen.html"><a href="erganzungen.html#trunc-cens"><i class="fa fa-check"></i><b>A.2</b> Truncation und Censoring</a></li>
+<li class="chapter" data-level="A.3" data-path="erganzungen.html"><a href="erganzungen.html#mod-hurdle"><i class="fa fa-check"></i><b>A.3</b> Hurdle models</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="repro.html"><a href="repro.html"><i class="fa fa-check"></i><b>B</b> Reproduzierbarkeit</a><ul>
+<li class="chapter" data-level="B.1" data-path="repro.html"><a href="repro.html#r-code"><i class="fa fa-check"></i><b>B.1</b> R-Code</a></li>
+<li class="chapter" data-level="B.2" data-path="repro.html"><a href="repro.html#session-info"><i class="fa fa-check"></i><b>B.2</b> Session Info</a></li>
+<li class="chapter" data-level="B.3" data-path="repro.html"><a href="repro.html#unsorted"><i class="fa fa-check"></i><b>B.3</b> Unsorted</a><ul>
+<li class="chapter" data-level="B.3.1" data-path="repro.html"><a href="repro.html#general-advice"><i class="fa fa-check"></i><b>B.3.1</b> General Advice</a></li>
+<li class="chapter" data-level="B.3.2" data-path="repro.html"><a href="repro.html#beispiel-nach-hilbemodelingcountdata2014-p.211ff"><i class="fa fa-check"></i><b>B.3.2</b> Beispiel nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 211ff</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="literatur.html"><a href="literatur.html"><i class="fa fa-check"></i>Literatur</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Built with bookdown</a></li>
+<li><a href="https://git.tadaa-data.de/lukas/poisson-regression" target="blank">Source on Gitea</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Poisson-Regression und ihre Leiden</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="poisson-modell" class="section level1">
+<h1><span class="header-section-number">Kapitel 2</span> Das Poisson-Modell</h1>
+<p>Das Poisson-Modell ist die allgemeine Grundlage für die Modellierung von Zählvorgängen / Counts, und auch wenn es in seiner “reinen” Form in der Praxis meist nicht ausreicht, bauen alle weiteren Methoden auf die eine oder andere Art darauf auf. Auch die häufig verwendete Negative Binomialverteilung ist letztlich eine Poisson-Verteilung mit Gamma-verteilter Varianz, also eine Erweiterung der Poisson um einen zusätzlichen Parameter. Das gleiche Prinzip findet sich in allen hier besprochenen Verteilungen.</p>
+<p>Für eine ausführliche Diskussion der Eigenschaften, siehe <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>)</span> (p. 7-20).</p>
+<p>Grundlage zur Modellierung ist das GLM mit den dazugehörigen Voraussetzungen:</p>
+<ul>
+<li>Die abhängige Variable <span class="math inline">\(Y\)</span> kommt aus der Exponentialfamilie (Normal-, Poisson-, Gamma-, Binomialverteilung)</li>
+<li>Modelliert wird der lineare Prädiktor <span class="math inline">\(\eta_i = \boldsymbol{x}_i&#39; \boldsymbol{\beta}\)</span>.</li>
+<li>Response- und Linkfunktionen <span class="math inline">\(h(x)\)</span> und <span class="math inline">\(g(x) = h^{-1}(x)\)</span></li>
+</ul>
+
+<div class="definition">
+<p><span id="def:unnamed-chunk-1" class="definition"><strong>Definition 2.1  (Poisson-Verteilung)  </strong></span>Eine Poisson-verteilte Zufallsvariable <span class="math inline">\(Y \sim \mathrm{Poi}(\lambda)\)</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> hat die Dichte</p>
+<span class="math display">\[\begin{equation*}
+\mathrm{P}(Y = y) = \frac{\lambda^y \exp(-\lambda)}{y!} \quad, y \in \mathbb{N}_0
+\end{equation*}\]</span>
+</div>
+
+<div class="figure" style="text-align: center"><span id="fig:poissondists"></span>
+<img src="poisson-regression_files/figure-html/poissondists-1.png" alt="Poisson-Verteilungen mit ausgewählten Parametern." width="768" />
+<p class="caption">
+Abbildung 2.1: Poisson-Verteilungen mit ausgewählten Parametern.
+</p>
+</div>
+
+<div class="definition">
+<p><span id="def:poisson-modell" class="definition"><strong>Definition 2.2  (Poisson-Modell)  </strong></span>Die Zielvariablen <span class="math inline">\(y_i \in \mathbb{N}_0\)</span> sind (bedingt) unabhängig gegeben der Kovariablen <span class="math inline">\(x_i1, x_i2, \ldots, x_ik\)</span>.</p>
+<p>Die Rate <span class="math inline">\(\lambda_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)\)</span> der Poissonverteilung wird in der Regel log-linear modelliert als</p>
+</div>
+
+<p>Vgl. <span class="citation">Fahrmeir, Kneib, und Lang (<a href="#ref-fahrmeirRegressionModelleMethoden2009">2009</a>)</span></p>
+<p>Für das log-lineare Poisson-Modell entsprechen die resultierenden Koeffizienten der Veränderung der log-counts – durch Exponentiation lassen diese sich als <em>incidence rate ratios</em> (<em>IRR</em>) interpretieren.</p>
+<p>Um auf ungleiche Expositionsdauern oder -gebiete zu adjustieren wird ein <strong>offset</strong> (oder auch <em>exposure</em>) benötigt. Dazu dient der Koeffizient <span class="math inline">\(t\)</span>, der die Länge der Zeit unter Exposition angibt:</p>
+
+<p>Damit entspricht <span class="math inline">\(t \mu\)</span> der Inzidenzrate des Outcomes adjustiert auf e.g. die geographische Lage oder Expositionsdauer. Ohne Offset entspräche <span class="math inline">\(t = 1\)</span>.
+Für als Offset wird in der Regel <span class="math inline">\(\log(t)\)</span> verwendet, womit gelten:</p>
+
+<p>Ein offset kann z.B. in <code>R</code> via <code>+ offset(log(variable))</code> in der model <code>formula</code> oder über das Argument <code>offset = log(variable)</code> in <code>glm</code> und verwandten Funktionen angegeben werden.</p>
+<div id="annahmen" class="section level2">
+<h2><span class="header-section-number">2.1</span> Annahmen</h2>
+<ol style="list-style-type: decimal">
+<li>Die Abhängige / Zielvariable <span class="math inline">\(Y\)</span> muss eine Zählung sein, i.e. die Verteilung ist diskret mit einem einzelnen Parameter <span class="math inline">\(\lambda\)</span> der Poisson-Verteilung für Erwartungswert und Varianz.</li>
+<li><span class="math inline">\(y \in \mathbb{N}_0\)</span>, insbesondere: <span class="math inline">\(Y\)</span> muss 0 enthalten <em>können</em> (siehe auch <a href="erganzungen.html#trunc-cens">A.2</a> <a href="erganzungen.html#trunc-cens">Truncation und Censoring</a>)</li>
+<li>Beobachtungen sind <em>unabhängig</em>, i.e. weder longitudinal noch gepoolt.
+<ul>
+<li>Möglicher Test durch Vergleich der Modell-SE und der SE adjustiert durch robuste sandwich-estimators (siehe <a href="anwendung.html#sandwich">5.1.2.1</a>): Große Unterschiede implizieren korrelierte Daten</li>
+</ul></li>
+<li>Balanced: Die Zellen sind in etwa so besetzt wie es aufgrund der Poissonverteilung erwartet wird.</li>
+<li>Erwartungswert und Varianz sind identisch (<em>equidispersion</em>), i.e. ein größerer Erwartungswert impliziert auch eine größere Varianz (siehe <a href="poisson-modell.html#dispersion">2.2</a>).</li>
+<li>Die <span class="math inline">\(\chi^2\)</span>-Statistik hat einen Wert nahe 1, i.e. beobachtete und erwartete Varianzen der response sind gleich (Dispersionsindex).</li>
+</ol>
+<p>(Nach Tabelle in <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, braucht noch Deduplizierung)</p>
+<p>Alternative Formulierung nach <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>)</span> (p. 64):</p>
+<ol style="list-style-type: decimal">
+<li><span class="math inline">\(f(y\ |\ \lambda) = \frac{e^{-\lambda} \lambda^y}{y!} \quad \lambda &gt; 0, y = 0, 1, 2, \ldots\)</span>.</li>
+<li><span class="math inline">\(\lambda = \exp(\mathbf{x}&#39; \boldsymbol{\beta})\)</span>.</li>
+<li>Beobachtungspaare <span class="math inline">\((y_i, x_i)\)</span> sind unabhängig verteilt.</li>
+</ol>
+</div>
+<div id="dispersion" class="section level2">
+<h2><span class="header-section-number">2.2</span> Dispersion</h2>
+
+<div class="definition">
+<p><span id="def:def-dispersions" class="definition"><strong>Definition 2.3  (Equi-, Extra-, Over-, Underdispersion)  </strong></span>Für Zählvariablen <span class="math inline">\(y_i \in \mathbb{N}_0\)</span> und erklärenden Variablen <span class="math inline">\(\mathbf{x}_i\)</span> gilt innerhalb eines Modells:</p>
+</div>
+
+
+<div class="definition">
+<p><span id="def:def-pois-overdispersion" class="definition"><strong>Definition 2.4  (Poisson-Overdispersion)  </strong></span>Innerhalb eines Poisson-Modells (vgl. Abschnitt <a href="poisson-modell.html#poisson-modell">2</a>) mit der Annahme</p>
+<p>spricht man von <strong>Poisson-Overdispersion</strong> wenn die Varianz der Beobachtungen die erwartete Varianz des Poisson-Modells übersteigt:</p>
+<p>in einem Modell mit overdispersion gilt die Annahme:</p>
+<p>Mit <em>Dispersionsparameter</em> <span class="math inline">\(\theta\)</span> <span class="citation">(vgl. Fahrmeir, Kneib, und Lang <a href="#ref-fahrmeirRegressionModelleMethoden2009">2009</a>, p. 210)</span></p>
+</div>
+
+<p>Als Dispersionsstatistik können <em>deviance dispersion</em> oder <em>Pearson dispersion</em> berechnet werden. Laut <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> ist die <em>Pearson dispersion</em> zu bevorzugen, da sie für echte Poisson-Modelle gleich 1 ist, wohingegen die <em>deviance dispersion</em> nach oben verzerrt ist.</p>
+
+<div class="definition">
+<p><span id="def:def-pearsondisp" class="definition"><strong>Definition 2.5  (Pearson-Dispersion)  </strong></span>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 77ff):</p>
+<p>Die Pearson <span class="math inline">\(\chi^2\)</span>-Statistik ist die Summe der quadrierten (Pearson-)Residuen gewichtet mit der Modellvarianz:</p>
+<p>und die <strong>Pearson-Dispersionsstatistik</strong>:</p>
+<p>Mit der Interpretation</p>
+<p>Für Modelle moderater Größe kann man ab Werten über 1.25 von overdispersion sprechen, wobei für große Stichproben auch schon ab 1.05 overdispersion vorliegen kann – zumindest nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 82), der aber leider keine konkreten Angaben für seine Definition von “moderaten” oder “großen” Stichproben macht.</p>
+</div>
+
+<p>In <code>R</code> kann die Pearson-Dispersion wie folgt berechnet werden:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># Model fit</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">mod &lt;-<span class="st"> </span><span class="kw">glm</span>(y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span>x3, <span class="dt">data =</span> sim, <span class="dt">family =</span> <span class="kw">poisson</span>(<span class="dt">link =</span> <span class="st">&quot;log&quot;</span>))</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co"># Pearson dispersion</span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="kw">sum</span>(<span class="kw">resid</span>(mod, <span class="dt">type =</span> <span class="st">&quot;pearson&quot;</span>)<span class="op">^</span><span class="dv">2</span>) <span class="op">/</span><span class="st"> </span>mod<span class="op">$</span>df.residual</a></code></pre></div>
+<p>…wofür wir in Abschnitt <a href="index.html#helperfuns">1.2.2</a> eine Hilfsfunktion <code>dispersion()</code> definiert haben.</p>
+<div id="overdispersion" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Overdispersion</h3>
+<p>Der vermutlich häufigste Fall für Count-Daten: Die Varianz der abhängigen Variable ist größer als ihr Erwartungswert, bzw. größer als ihre erwartete Varianz innerhalb eines Modells.
+<span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> unterscheidet zwischen echter und scheinbarer (<em>apparent</em>) Overdispersion, wobei letztere oft durch geeignete Korrekturen kompensiert werden kann, wobei <em>echte</em> Overdisperion sowohl Parameterschätzung als auch Modellanpassung im Allgemeinen beeinträchtigt.</p>
+<p>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 82) entsteht <em>echte</em> Overdispersion durch:</p>
+<ul>
+<li>Positive Korrelation zwischen responses</li>
+<li>Große Variation zwischen response-probabilities und counts</li>
+<li>Verletzungen der Verteilungsannahme (i.e. Poissonverteilung)</li>
+<li>“Proneness”: Frühere Ereignisse beeinflussen das Auftreten späterer Ereignisse<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></li>
+</ul>
+<p>Ursachen für <em>scheinbare</em> (<em>apparent</em>), und damit (bedingt) korrigierbare Overdispersion nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 41, 82):</p>
+<ol style="list-style-type: decimal">
+<li>Fehlende explanatorische Prädiktoren</li>
+<li>Ausreißer</li>
+<li>Fehlende Interaktionsterme</li>
+<li>Ein Prädiktor muss transformiert werden</li>
+<li>Die Daten sind zu dünn besetzt (<em>sparse</em>)</li>
+<li>Fehlende Werte, die nicht zufällig sind (missing not at random, <em>MNAR</em> – siehe auch Anhang <a href="erganzungen.html#appendix-missingness">A.1</a></li>
+</ol>
+<p>Ein einfaches simuliertes Beispiel zur Auswirkung von fehlenden Prädiktoren:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co"># Generate binary variable in [0, 1] with a given proportion of 1&#39;s</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">rbinary &lt;-<span class="st"> </span><span class="cf">function</span>(n, <span class="dt">prob =</span> <span class="fl">0.5</span>) {</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">  <span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dt">size =</span> n, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> <span class="kw">c</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>prob, prob))</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">}</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="kw">set.seed</span>(<span class="dv">436</span>)</a>
+<a class="sourceLine" id="cb8-7" data-line-number="7">n &lt;-<span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb8-9" data-line-number="9">sim &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb8-10" data-line-number="10">  <span class="dt">x1 =</span> <span class="kw">rbinary</span>(n, <span class="fl">.1</span>),</a>
+<a class="sourceLine" id="cb8-11" data-line-number="11">  <span class="dt">x2 =</span> <span class="kw">rbinary</span>(n, <span class="fl">.2</span>),</a>
+<a class="sourceLine" id="cb8-12" data-line-number="12">  <span class="dt">x3 =</span> <span class="kw">rbinary</span>(n, <span class="fl">.3</span>),</a>
+<a class="sourceLine" id="cb8-13" data-line-number="13">  <span class="dt">eta =</span> <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span> <span class="op">*</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>x3,</a>
+<a class="sourceLine" id="cb8-14" data-line-number="14">  <span class="dt">lambda =</span> <span class="kw">exp</span>(eta),</a>
+<a class="sourceLine" id="cb8-15" data-line-number="15">  <span class="dt">py =</span> <span class="kw">rpois</span>(n, lambda)</a>
+<a class="sourceLine" id="cb8-16" data-line-number="16">)</a>
+<a class="sourceLine" id="cb8-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb8-18" data-line-number="18"><span class="co"># Korrektes modell:</span></a>
+<a class="sourceLine" id="cb8-19" data-line-number="19">mod &lt;-<span class="st"> </span><span class="kw">glm</span>(py <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span>x3, <span class="dt">data =</span> sim, <span class="dt">family =</span> <span class="kw">poisson</span>(<span class="dt">link =</span> <span class="st">&quot;log&quot;</span>))</a>
+<a class="sourceLine" id="cb8-20" data-line-number="20"><span class="kw">dispersion</span>(mod)</a></code></pre></div>
+<pre><code>#&gt; X-squared(996) = 1029.70
+#&gt; Pearson Dispersion = 1.034</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># Modell mit fehlendem Prädiktor:</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">mod2 &lt;-<span class="st"> </span><span class="kw">glm</span>(py <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x3, <span class="dt">data =</span> sim, <span class="dt">family =</span> <span class="kw">poisson</span>(<span class="dt">link =</span> <span class="st">&quot;log&quot;</span>))</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw">dispersion</span>(mod2)</a></code></pre></div>
+<pre><code>#&gt; X-squared(997) = 7669.65
+#&gt; Pearson Dispersion = 7.693</code></pre>
+</div>
+<div id="underdispersion" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Underdispersion</h3>
+<p>Underdispersion ist der Fall, wenn vorliegende Daten eine geringere Varianz aufweisen, als auf Basis eines Poisson-Modells erwartet würde.
+Bei nichtberücksichtigter underdispersion werden die Standardfehler des Modells überschätzt <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>, p. 210)</span>.</p>
+<p>Im Allgemeinen wird <a href="https://stats.stackexchange.com/a/237177/80056">generalized Poisson empfohlen</a> (R: <a href="https://rdrr.io/cran/VGAM/man/genpoisson.html"><code>VGAM</code></a> <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, da diese Erweiterung der Poisson-Verteilung nicht nur einen zusätzlichen Parameter für die Varianz hat (analog NB, PIG), sondern dieser Parameter auch negativ sein kann.</p>
+<p>Weiterhin taucht im Kontext von hurdle models (siehe <a href="erganzungen.html#mod-hurdle">A.3</a>) folgende Bemerkung auf:</p>
+<blockquote>
+<p>[…] that underdispersion occurs if <strong>zeros are less frequent than the parent distribution would predict</strong>.
+The higher the expected value of the Poisson distribution, the lower the predicted probability of zero outcome and the lower the scope for underdispersion.
+– <span class="citation">(Winkelmann <a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>, p. 180 (eigene Hervorhebung))</span></p>
+</blockquote>
+<p>Daraus lässt sich auch schließen, dass in Situationen mit binären outcomes und sehr niedrigem Erwartungswert die erwartete Anzahl an Nullen sehr hoch sein wird – weshalb es an dieser Stelle vermutlich eine Überlappung zwischen underdispersion und zero-inflation gibt.</p>
+
+</div>
+</div>
+</div>
+<h3>Literatur</h3>
+<div id="refs" class="references">
+<div id="ref-fahrmeirRegressionModelleMethoden2009">
+<p>Fahrmeir, Ludwig, Thomas Kneib, und Stefan Lang. 2009. <em>Regression: Modelle, Methoden und Anwendungen</em>. 2. Aufl. Statistik und ihre Anwendungen. Berlin: Springer.</p>
+</div>
+<div id="ref-hilbeModelingCountData2014">
+<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065" class="uri">https://doi.org/10.1017/CBO9781139236065</a>.</p>
+</div>
+<div id="ref-winkelmannEconometricAnalysisCount2010">
+<p>Winkelmann, Rainer. 2010. <em>Econometric Analysis of Count Data</em>. 5th ed. Berlin: Springer Berlin.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>Der Poisson-Parameter wird von unterschiedlichen Autoren als <span class="math inline">\(\lambda\)</span> oder <span class="math inline">\(\mu\)</span> bezeichnet, und ich habe mich noch nicht für eine Variante entschieden).<a href="poisson-modell.html#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>Diese Annahme (Unabhängigkeit der Ereignisse) der Poissonverteilung ist auch der Grund, warum sich die Poissonverteilung prinzipiell <strong>nicht</strong> eignet um Epidemien wie Ebola zu modellieren. Freundliche Grüße an Frau Pigeot, “Statistische Modellierung I”, WiSe 18/19.<a href="poisson-modell.html#fnref2" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="multiparam.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["poisson-regression.pdf", "poisson-regression.tex"],
+"toc": {
+"collapse": "subsection",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

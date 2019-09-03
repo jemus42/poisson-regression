@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de-DE" xml:lang="de-DE">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Kapitel 3 Mehrparametrische Modelle | Poisson-Regression und ihre Leiden</title>
+  <meta name="description" content="Because count data is hard" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Kapitel 3 Mehrparametrische Modelle | Poisson-Regression und ihre Leiden" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:image" content="images/poiscovr-orly.png" />
+  <meta property="og:description" content="Because count data is hard" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Kapitel 3 Mehrparametrische Modelle | Poisson-Regression und ihre Leiden" />
+  
+  <meta name="twitter:description" content="Because count data is hard" />
+  <meta name="twitter:image" content="images/poiscovr-orly.png" />
+
+<meta name="author" content="Lukas Burk" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="poisson-modell.html"/>
+<link rel="next" href="weitere-modelle.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/viz-0.3/viz.js"></script>
+<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { fonts: ["Asana-Math"] },
+    MathMenu: { showFontMenu: true },
+    menuSettings: { zoom: "Click" }
+  });
+</script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Poisson Regression</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Einführung</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#data"><i class="fa fa-check"></i><b>1.1</b> Beispieldaten</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#software-funs"><i class="fa fa-check"></i><b>1.2</b> Verwendete Software</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="index.html"><a href="index.html#r-packages"><i class="fa fa-check"></i><b>1.2.1</b> R-Packages</a></li>
+<li class="chapter" data-level="1.2.2" data-path="index.html"><a href="index.html#helperfuns"><i class="fa fa-check"></i><b>1.2.2</b> Funktionen</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="poisson-modell.html"><a href="poisson-modell.html"><i class="fa fa-check"></i><b>2</b> Das Poisson-Modell</a><ul>
+<li class="chapter" data-level="2.1" data-path="poisson-modell.html"><a href="poisson-modell.html#annahmen"><i class="fa fa-check"></i><b>2.1</b> Annahmen</a></li>
+<li class="chapter" data-level="2.2" data-path="poisson-modell.html"><a href="poisson-modell.html#dispersion"><i class="fa fa-check"></i><b>2.2</b> Dispersion</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="poisson-modell.html"><a href="poisson-modell.html#overdispersion"><i class="fa fa-check"></i><b>2.2.1</b> Overdispersion</a></li>
+<li class="chapter" data-level="2.2.2" data-path="poisson-modell.html"><a href="poisson-modell.html#underdispersion"><i class="fa fa-check"></i><b>2.2.2</b> Underdispersion</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="multiparam.html"><a href="multiparam.html"><i class="fa fa-check"></i><b>3</b> Mehrparametrische Modelle</a><ul>
+<li class="chapter" data-level="3.1" data-path="multiparam.html"><a href="multiparam.html#mod-nb"><i class="fa fa-check"></i><b>3.1</b> Negativ Binomial (NB)</a></li>
+<li class="chapter" data-level="3.2" data-path="multiparam.html"><a href="multiparam.html#mod-pig"><i class="fa fa-check"></i><b>3.2</b> Poisson Inverse Gaussian (PIG)</a></li>
+<li class="chapter" data-level="3.3" data-path="multiparam.html"><a href="multiparam.html#mod-gp"><i class="fa fa-check"></i><b>3.3</b> Generalized Poisson (GP)</a></li>
+<li class="chapter" data-level="3.4" data-path="multiparam.html"><a href="multiparam.html#mod-comp"><i class="fa fa-check"></i><b>3.4</b> Conway-Maxwell Poisson (COMP)</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="weitere-modelle.html"><a href="weitere-modelle.html"><i class="fa fa-check"></i><b>4</b> Weitere Modelle</a><ul>
+<li class="chapter" data-level="4.1" data-path="weitere-modelle.html"><a href="weitere-modelle.html#diagnostische-modelle"><i class="fa fa-check"></i><b>4.1</b> Diagnostische Modelle</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="weitere-modelle.html"><a href="weitere-modelle.html#mod-nbh"><i class="fa fa-check"></i><b>4.1.1</b> Heterogenous Negative Binomial (NBH)</a></li>
+<li class="chapter" data-level="4.1.2" data-path="weitere-modelle.html"><a href="weitere-modelle.html#mod-nbp"><i class="fa fa-check"></i><b>4.1.2</b> Negative binomial-P (NB-P)</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="weitere-modelle.html"><a href="weitere-modelle.html#mod-zi"><i class="fa fa-check"></i><b>4.2</b> Zero-Inflated Models (<em>mixture models</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="anwendung.html"><a href="anwendung.html"><i class="fa fa-check"></i><b>5</b> Anwendung</a><ul>
+<li class="chapter" data-level="5.1" data-path="anwendung.html"><a href="anwendung.html#overdisp-diag"><i class="fa fa-check"></i><b>5.1</b> Overdispersion: Erkennung und Handhabung</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="anwendung.html"><a href="anwendung.html#boundary-likelihood-ratio-test-blr"><i class="fa fa-check"></i><b>5.1.1</b> (Boundary) Likelihood Ratio Test (BLR)</a></li>
+<li class="chapter" data-level="5.1.2" data-path="anwendung.html"><a href="anwendung.html#umgang-mit-overdispersion"><i class="fa fa-check"></i><b>5.1.2</b> Umgang mit Overdispersion</a><ul>
+<li class="chapter" data-level="5.1.2.1" data-path="anwendung.html"><a href="anwendung.html#sandwich"><i class="fa fa-check"></i><b>5.1.2.1</b> Robuste Varianzschätzer (Sandwich Estimators)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="anwendung.html"><a href="anwendung.html#zeros"><i class="fa fa-check"></i><b>5.2</b> Zero-Inflation (ZI)</a><ul>
+<li class="chapter" data-level="" data-path="anwendung.html"><a href="anwendung.html#tests-auf-zero-inflation"><i class="fa fa-check"></i>Tests auf Zero-Inflation</a></li>
+<li class="chapter" data-level="" data-path="anwendung.html"><a href="anwendung.html#modellierung"><i class="fa fa-check"></i>Modellierung</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="entscheidungshilfen.html"><a href="entscheidungshilfen.html"><i class="fa fa-check"></i><b>6</b> Entscheidungshilfen</a></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="erganzungen.html"><a href="erganzungen.html"><i class="fa fa-check"></i><b>A</b> Ergänzungen</a><ul>
+<li class="chapter" data-level="A.1" data-path="erganzungen.html"><a href="erganzungen.html#appendix-missingness"><i class="fa fa-check"></i><b>A.1</b> Missing values und missingness patterns</a></li>
+<li class="chapter" data-level="A.2" data-path="erganzungen.html"><a href="erganzungen.html#trunc-cens"><i class="fa fa-check"></i><b>A.2</b> Truncation und Censoring</a></li>
+<li class="chapter" data-level="A.3" data-path="erganzungen.html"><a href="erganzungen.html#mod-hurdle"><i class="fa fa-check"></i><b>A.3</b> Hurdle models</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="repro.html"><a href="repro.html"><i class="fa fa-check"></i><b>B</b> Reproduzierbarkeit</a><ul>
+<li class="chapter" data-level="B.1" data-path="repro.html"><a href="repro.html#r-code"><i class="fa fa-check"></i><b>B.1</b> R-Code</a></li>
+<li class="chapter" data-level="B.2" data-path="repro.html"><a href="repro.html#session-info"><i class="fa fa-check"></i><b>B.2</b> Session Info</a></li>
+<li class="chapter" data-level="B.3" data-path="repro.html"><a href="repro.html#unsorted"><i class="fa fa-check"></i><b>B.3</b> Unsorted</a><ul>
+<li class="chapter" data-level="B.3.1" data-path="repro.html"><a href="repro.html#general-advice"><i class="fa fa-check"></i><b>B.3.1</b> General Advice</a></li>
+<li class="chapter" data-level="B.3.2" data-path="repro.html"><a href="repro.html#beispiel-nach-hilbemodelingcountdata2014-p.211ff"><i class="fa fa-check"></i><b>B.3.2</b> Beispiel nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 211ff</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="literatur.html"><a href="literatur.html"><i class="fa fa-check"></i>Literatur</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Built with bookdown</a></li>
+<li><a href="https://git.tadaa-data.de/lukas/poisson-regression" target="blank">Source on Gitea</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Poisson-Regression und ihre Leiden</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="multiparam" class="section level1">
+<h1><span class="header-section-number">Kapitel 3</span> Mehrparametrische Modelle</h1>
+<div class="figure" style="text-align: center"><span id="fig:model-graph"></span>
+<div id="htmlwidget-634fce9f20d26cdaa24d" style="width:768px;height:474.660074165637px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-634fce9f20d26cdaa24d">{"x":{"diagram":"graph models {\n\ngraph [layout = dot, overlap = scale, ratio = compress]\n\n################################\n#### Global node attributes ####\n################################\nnode [shape = oval, style = filled, fontname = \"Roboto\"]\nedge [fontname = \"Roboto\"]\n\nnode [fillcolor = aliceblue]\npois [label = \"Poisson Modell\\n(mean)\",\n      shape = rectangle,\n      fillcolor = \"lightblue\"]\n\ntwoparam [label = \"Zweiparametrische Modelle\\n(mean, dispersion)\"]\nzi [label = \"Zero-Inflated Model\\n(mean, [dispersion], zero-inflation parameter)\"]\n\nnode []\ndisp_pos [label = \"Positive Dispersion\", fillcolor = \"red\"]\ndisp_flexible [label = \"Positive/negative Dispersion\", fillcolor = \"orange\"]\n\nedge [color = grey]\npois -- twoparam\npois -- zi\ntwoparam -- {disp_pos disp_flexible}\n\nnode [fillcolor = white]\nnb [label = \"NB\"]\npig [label = \"PIG\"]\ngpois [label = \"GP\"]\ncmp [label = \"COMP\"]\n\nzip [label = \"ZIP\"]\nzinb [label = \"ZINB\"]\nzmisc [label = \"...\"]\n\nedge [color = orange]\ndisp_flexible -- {gpois cmp}\ndisp_pos -- {nb pig}\n\nnb, pig, gpois, cmp -- zi\n\nzi -- {zip zinb zmisc}\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<p class="caption">
+Abbildung 3.1: Hierarchie ausgewählter Count-Modelle. In Klammern: Zu schätzende Parameter der zugrundeliegenden Verteilung
+</p>
+</div>
+<p>Zweiparametrische Modelle haben neben dem Parameter für den Erwartungswert einen weiteren Parameter für die Dispersion, was wir natürlich insbesondere im Kontext der Dispersionsproblematik sehr nützlich finden.<br />
+Alle hier aufgeführten Modelle (inklusive der zero-inflation models) können als Verallgemeinerung der Poisson-Verteilung um (mindestens) einen weiteren Parameter aufgefasst werden. Die Unterschiede liegen hauptsächlich in der Parametrisierung und den damit zusammenhängenden Einschränkungen. Die <em>Negative Binomialverteilung</em> und die <em>Poisson Inverse Gaussian</em> zum Beispiel erweitern beide die Poisson um einen Dispersionsparameter, machen aber unterschiedliche Annahmen zur Verteilung der Varianz (gamma- vs. invers-normalverteilt).</p>
+<p>Tabelle <a href="multiparam.html#tab:modelstable">3.1</a> zeigt eine Reihe von Verteilungen mit entsprechend parametrisierter Varianz abhängig vom Erwartungswert <span class="math inline">\(\mu\)</span> und einem Dispersionsparameter <span class="math inline">\(\alpha\)</span>.</p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:modelstable">Tabelle 3.1: </span> Ein Überblick einiger Modelle mit Varianzparametrisierung (nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 12).
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Model
+</th>
+<th style="text-align:left;">
+Mean
+</th>
+<th style="text-align:left;">
+Variance
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Poisson
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\mu\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\mu\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Negative Binomial I (NB1)
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\mu\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\mu (1 + \alpha) = \mu + \alpha\mu\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Negative Binomial II (NB2)
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\mu\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\mu (1 + \alpha\mu) = \mu + \alpha\mu^2\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Negative Binomial-P (NBP)
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\mu\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\mu (1 + \alpha\mu^p) = \mu + \alpha\mu^p\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Poisson Inverse Gaussian (PIG)
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\mu\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\mu (1 + \alpha\mu^2) = \mu + \alpha\mu^3\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Generalized Poisson (GP)
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\mu\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\mu (1 + \alpha\mu)^2 = \mu + 2\alpha\mu^3 + \alpha^2\mu^3\)</span>
+</td>
+</tr>
+</tbody>
+</table>
+<div id="mod-nb" class="section level2">
+<h2><span class="header-section-number">3.1</span> Negativ Binomial (NB)</h2>
+<p>Die Negative Binomialverteilung (<em>NB</em>) kann als zweiparametrische Erweiterung der <em>Poisson</em> betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird (<em>Poisson-Gamma Mischmodell</em>). Für eine ausführliche Beschreibung, siehe <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 126ff).</p>
+
+<div class="definition">
+<p><span id="def:defNB" class="definition"><strong>Definition 3.1  (Negative Binomialverteilung)  </strong></span>Nach <span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">2013</a>)</span> (p. 1675):</p>
+<p>Für <span class="math inline">\(Y \sim NB(\mu, \theta)\)</span> gilt</p>
+Mit <span class="math inline">\(\mathbb{E}(Y) = \mu\)</span> und <span class="math inline">\(\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}\)</span>
+</div>
+
+<p>Für eine alternative Darstellung unter Verwendung von <span class="math inline">\(\alpha = \frac{1}{\theta}\)</span>, siehe <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 130)</p>
+<p>Der gängigste Anwendungsfall der <em>NB</em> findet sich bei Daten mit nicht korrigierbarer overdispersion (siehe Abschnitt <a href="poisson-modell.html#overdispersion">2.2.1</a>), da der Parameter <span class="math inline">\(\theta\)</span> bzw. auch <span class="math inline">\(\alpha = \frac 1 \theta\)</span> als <em>Dispersionsparameter</em> dient:</p>
+
+<div class="definition">
+<p><span id="def:nbdisppar" class="definition"><strong>Definition 3.2  (NB-Dispersionsparameter)  </strong></span>
+Meist wird der Parameter als <span class="math inline">\(\alpha\)</span> bezeichnet, mit der Interpretation (relativ zum Poisson-Modell):</p>
+<p><span class="math display">\[\mathrm{Var}(Y) = \mu + \alpha \mu^2\]</span></p>
+<p>Je nach Quelle (und unter Anderem in R (z.B. <code>MASS::glm.nb</code>)) wird die inverse Variante <span class="math inline">\(\theta = \frac 1 \alpha\)</span> verwendet, womit gilt:</p>
+<p><span class="math display">\[\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}\]</span></p>
+<p>Siehe dazu auch <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 131).</p>
+</div>
+
+<p>Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob <span class="math inline">\(\alpha\)</span> oder <span class="math inline">\(\theta\)</span> verwendet wird, ist sein Vorzeichen: Er ist <em>immer</em> positiv, das heißt die Varianz der NB ist entweder <em>größer oder gleich</em> der Poisson, oder mit anderen Worten:</p>
+<blockquote>
+<p>“The negative binomial model adjusts for Poisson overdispersion; it <strong>cannot be used to model underdispersed</strong> Poisson data”</p>
+<p>— <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a> (p. 11), eigene Hervorhebung)</span></p>
+</blockquote>
+<p>Weiterhin gibt es zwei verschiedene Formulierungen der Negativen Binomialverteilung, NB1 und NB2, deren Nummerierung auf den Exponenten im zweiten Term ihrer Varianzen zurückzuführen ist:</p>
+
+<div class="definition">
+<p><span id="def:defNB1NB2" class="definition"><strong>Definition 3.3  (NB1 und NB2)  </strong></span>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 126f):</p>
+<p>Die <strong>NB1</strong>, oder auch <em>lineare</em> Negative Binomialverteilung hat die Varianz</p>
+<p>…und die gängigere <strong>NB2</strong>, oder auch <em>quadratische</em> Negative Binomialverteilung hat (wie oben beschrieben) die Varianz</p>
+</div>
+
+<p>Beide Varianten können wie MLE geschätzt werden, wobei NB2 zusätzlich im Kontext des GLM via IRLS geschätzt werden kann.</p>
+<p>Als link wird <span class="math inline">\(\log \mu\)</span> verwendet, wobei der <em>canonical link</em> eigentlich <span class="math inline">\(\log\left(\frac{\alpha\mu}{1 + \alpha\mu}\right)\)</span> ist.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
+<p>Für ein gut angepasstes NB-Modell gilt analog eines Poisson-Modells, dass die Dispersionsstatistik approximativ 1 ist (siehe <a href="poisson-modell.html#def:def-pearsondisp">2.5</a>).</p>
+<p>Zur Anwendung in R gibt es zwei Möglichkeiten: <code>MASS::glm.nb</code> oder <code>msme::nbinomial</code>, wobei letztere mehrere Optionen zur Parametrisierung hat und zusätzlich die Dispersionsstatistik ausgibt:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">mod_nb &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">glm.nb</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age,</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">                       <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="kw">summary</span>(mod_nb)</a></code></pre></div>
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; MASS::glm.nb(formula = docvis ~ outwork + age, data = rwm1984, 
+#&gt;     init.theta = 0.4353451729, link = log)
+#&gt; 
+#&gt; Deviance Residuals: 
+#&gt;     Min       1Q   Median       3Q      Max  
+#&gt; -1.5316  -1.2816  -0.4895   0.1043   5.0468  
+#&gt; 
+#&gt; Coefficients:
+#&gt;              Estimate Std. Error z value Pr(&gt;|z|)    
+#&gt; (Intercept) -0.039550   0.106669  -0.371    0.711    
+#&gt; outwork      0.414662   0.055451   7.478 7.55e-14 ***
+#&gt; age          0.022146   0.002396   9.242  &lt; 2e-16 ***
+#&gt; ---
+#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+#&gt; 
+#&gt; (Dispersion parameter for Negative Binomial(0.4353) family taken to be 1)
+#&gt; 
+#&gt;     Null deviance: 4100.8  on 3873  degrees of freedom
+#&gt; Residual deviance: 3909.6  on 3871  degrees of freedom
+#&gt; AIC: 16674
+#&gt; 
+#&gt; Number of Fisher Scoring iterations: 1
+#&gt; 
+#&gt; 
+#&gt;               Theta:  0.4353 
+#&gt;           Std. Err.:  0.0135 
+#&gt; 
+#&gt;  2 x log-likelihood:  -16665.5250</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">mod_nb2 &lt;-<span class="st"> </span>msme<span class="op">::</span><span class="kw">nbinomial</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age,</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">                           <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="kw">summary</span>(mod_nb2)</a></code></pre></div>
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; ml_glm2(formula1 = formula1, formula2 = formula2, data = data, 
+#&gt;     family = family, mean.link = mean.link, scale.link = scale.link, 
+#&gt;     offset = offset, start = start, verbose = verbose)
+#&gt; 
+#&gt; Deviance Residuals:
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt; -1.5320 -1.2816 -0.4896 -0.4553  0.1035  5.0497 
+#&gt; 
+#&gt; Pearson Residuals:
+#&gt;      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+#&gt; -0.637147 -0.607737 -0.376257  0.000055  0.108975 21.659334 
+#&gt; 
+#&gt; Coefficients (all in linear predictor):
+#&gt;               Estimate      SE      Z         p     LCL    UCL
+#&gt; (Intercept)    -0.0443 0.10570 -0.419     0.675 -0.2514 0.1629
+#&gt; outwork         0.4141 0.05532  7.485  7.15e-14  0.3056 0.5225
+#&gt; age             0.0223 0.00237  9.401  5.42e-21  0.0176 0.0269
+#&gt; (Intercept)_s   2.2971 0.07098 32.364 8.85e-230  2.1580 2.4362
+#&gt; 
+#&gt; Null deviance: 4100.786  on  3872 d.f.
+#&gt; Residual deviance: 3909.522  on  3870 d.f.
+#&gt; Null Pearson: 5835.302  on  3872 d.f.
+#&gt; Residual Pearson: 5458.2  on  3870 d.f.
+#&gt; Dispersion: 1.410388
+#&gt; AIC:  16673.53
+#&gt; 
+#&gt; Number of optimizer iterations:  82</code></pre>
+</div>
+<div id="mod-pig" class="section level2">
+<h2><span class="header-section-number">3.2</span> Poisson Inverse Gaussian (PIG)</h2>
+<p>So wie die <em>NB</em> als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz betrachtet werden kann, ist die <em>Poisson Inverse Gaussian</em> (<em>PIG</em>) eine mixture aus Poisson-Verteilung mit <a href="https://en.wikipedia.org/wiki/Inverse_Gaussian_distribution">invers-normalverteilter</a> Varianz. Demnach kann man <em>PIG</em> als Alternative zur <em>NB</em> verwenden, insbesondere für den Fall sehr rechtsschiefer Daten.</p>
+<blockquote>
+<p>“Simply put, PIG models can better deal with highly overdispersed data that can negative binomial regression, particularly data clumped heavily at 1 and 2”</p>
+<p>– <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 163)</p>
+</blockquote>
+<ul>
+<li>Software:</li>
+<li>R: <code>gamlss</code> (CRAN)</li>
+<li>Stata: <code>pigreg</code></li>
+</ul>
+</div>
+<div id="mod-gp" class="section level2">
+<h2><span class="header-section-number">3.3</span> Generalized Poisson (GP)</h2>
+<ul>
+<li>Auch mit dispersion/scale Parameter <span class="math inline">\(\alpha\)</span></li>
+<li>Analog NB: <span class="math inline">\(\alpha = 0 \Rightarrow y \sim \mathrm{Pois}(\lambda)\)</span></li>
+<li>Selling feature: <span class="math inline">\(\alpha &lt; 0\)</span> ist möglich, im Gegensatz zu NB</li>
+<li><p>-&gt; Underdispersion modellierbar</p></li>
+<li>Software:</li>
+<li><a href="https://stats.stackexchange.com/a/237177/80056">Vgl. Stackexchange Kommentar von Joseph Hilbe</a></li>
+<li><p>R: <a href="https://rdrr.io/cran/VGAM/man/genpoisson.html"><code>VGAM</code></a></p></li>
+</ul>
+</div>
+<div id="mod-comp" class="section level2">
+<h2><span class="header-section-number">3.4</span> Conway-Maxwell Poisson (COMP)</h2>
+
+<div class="definition">
+<p><span id="def:unnamed-chunk-2" class="definition"><strong>Definition 3.4  (Conway-Maxwell-Poisson Modell (CMP))  </strong></span>Nach <span class="citation">Shmueli u. a. (<a href="#ref-shmueli2005UsefulDistribution">2005</a>)</span> (p. 129):</p>
+<p>Mit (im Unterschied zur Poisson) nichtlinearer Zerfallsrate <span class="math inline">\(\nu\)</span> <em>rate of decay</em>, so dass:</p>
+<p>Der Zusammenhang zwischen <span class="math inline">\(\nu\)</span> und <span class="math inline">\(\lambda\)</span> nach <span class="citation">Sellers und Shmueli (<a href="#ref-sellers2010FlexibleRegression">2010</a>)</span> (p. 946) legt Nahe, dass <span class="math inline">\(\nu\)</span> ähnlich <span class="math inline">\(\alpha\)</span> in NB-Modellen die Dispersion bestimmt:</p>
+Als link wird <span class="math inline">\(\log \lambda\)</span> verwendet, da so die links für Poisson- und logistische Regression Spezialfälle der COMP sind.
+</div>
+
+<p>Die Verteilung hat als Spezialfälle:</p>
+<ul>
+<li><span class="math inline">\(\nu = 1 \Longrightarrow Z(\lambda, \nu) = exp(\lambda)\)</span>: Poisson</li>
+<li><span class="math inline">\(\nu \to \infty \Longrightarrow Z(\lambda, \nu) \to 1 + \lambda\)</span>: Bernoulli mit <span class="math inline">\(P(X = 1) = \frac{\lambda}{1+\lambda}\)</span></li>
+<li><span class="math inline">\(\nu = 0,\ \lambda &lt; 1\)</span>: Geometrisch mit <span class="math inline">\(P(X = x) = \lambda^x (1 - \lambda)\)</span></li>
+</ul>
+<p><strong>Vorteile</strong>:</p>
+<ul>
+<li>“Brücke” zwischen logistischer und Poisson-Regression <span class="citation">(Sellers und Shmueli <a href="#ref-sellers2010FlexibleRegression">2010</a>)</span></li>
+</ul>
+<blockquote>
+<p>Although the logistic regression is a limiting case <span class="math inline">\((\nu \to \infty)\)</span>, in practice, fitting a COM-Poisson regression to binary data yields estimates and predictions that are practically identical to those from a logistic regression.</p>
+<p>— <span class="citation">Sellers und Shmueli (<a href="#ref-sellers2010FlexibleRegression">2010</a>)</span>, p. 945</p>
+</blockquote>
+<ul>
+<li>“Low cost”, i.e. “nur” ein zusätzlicher Parameter</li>
+<li>Einfach zu handhaben (wenn in GLM mit MLE statt MCMC estimation)</li>
+<li>Over- und underdispersion abbildbar</li>
+<li>Zero-inflation abbildbar</li>
+</ul>
+<p><strong>Software</strong>:</p>
+<ul>
+<li><code>CompGLM::glm.comp</code>: Funktioniert, aber crasht RStudio wenn <code>nuFormula</code> spezifiziert wird</li>
+<li><code>compoisson::com.fit</code>: Entweder generell nicht geeignet oder unfassbar langsam (und deshalb nicht geeignet)</li>
+<li><code>COMPoissonReg</code> (GitHub: <code>lotze/COMPoissonReg</code>): Scheint zu funktionieren</li>
+</ul>
+<p>Da die COMP-Wahrscheinlichkeitsfunktion eine unendliche Summe <span class="math inline">\(Z(\lambda, \nu)\)</span> enthält, kann es bei der Anwendung in Software durchaus dazu kommen, dass keine Konvergenz erreicht wird. Wie viele Iterationen für die Konvergenz der Summe benötigt werden hängt zum einen von <span class="math inline">\(\nu\)</span> ab: Je größer, desto schneller die Konvergenz. Das Gegenteil gilt für <span class="math inline">\(\lambda\)</span> – je größer, desto langsamer die Konvergenz <span class="citation">(High <a href="#ref-high2018AlternativeVariance">2018</a>, p. 4)</span>.</p>
+<p>Siehe auch</p>
+<ul>
+<li><span class="citation">Sellers und Shmueli (<a href="#ref-sellers2010FlexibleRegression">2010</a>)</span> für eine gute Übersicht</li>
+<li><span class="citation">Lord, Geedipally, und Guikema (<a href="#ref-lord2010ExtensionApplication">2010</a>)</span>, <span class="citation">Lord, Guikema, und Geedipally (<a href="#ref-lord2008ApplicationConwayMaxwellPoisson">2008</a>)</span> für eine Anwendung</li>
+<li><span class="citation">Shmueli u. a. (<a href="#ref-shmueli2005UsefulDistribution">2005</a>)</span></li>
+</ul>
+</div>
+</div>
+<h3>Literatur</h3>
+<div id="refs" class="references">
+<div id="ref-high2018AlternativeVariance">
+<p>High, Robin. 2018. „Alternative Variance Parameterizations in Count Data Models with the NLMIXED Procedure“. In. <a href="https://www.semanticscholar.org/paper/Alternative-Variance-Parameterizations-in-Count-the-High/1224075e77acdee9eef91643e0bbfe869406a35d" class="uri">https://www.semanticscholar.org/paper/Alternative-Variance-Parameterizations-in-Count-the-High/1224075e77acdee9eef91643e0bbfe869406a35d</a>.</p>
+</div>
+<div id="ref-hilbeModelingCountData2014">
+<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065" class="uri">https://doi.org/10.1017/CBO9781139236065</a>.</p>
+</div>
+<div id="ref-lord2010ExtensionApplication">
+<p>Lord, Dominique, Srinivas Reddy Geedipally, und Seth D. Guikema. 2010. „Extension of the Application of Conway-Maxwell-Poisson Models: Analyzing Traffic Crash Data Exhibiting Underdispersion“. <em>Risk Analysis</em> 30 (8): 1268–76. <a href="https://doi.org/10.1111/j.1539-6924.2010.01417.x" class="uri">https://doi.org/10.1111/j.1539-6924.2010.01417.x</a>.</p>
+</div>
+<div id="ref-lord2008ApplicationConwayMaxwellPoisson">
+<p>Lord, Dominique, Seth D. Guikema, und Srinivas Reddy Geedipally. 2008. „Application of the Conway-Maxwell-Poisson Generalized Linear Model for Analyzing Motor Vehicle Crashes“. <em>Accident Analysis &amp; Prevention</em> 40 (3): 1123–34. <a href="https://doi.org/10.1016/j.aap.2007.12.003" class="uri">https://doi.org/10.1016/j.aap.2007.12.003</a>.</p>
+</div>
+<div id="ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">
+<p>Perumean-Chaney, Suzanne E., Charity Morgan, David McDowall, und Inmaculada Aban. 2013. „Zero-Inflated and Overdispersed: What’s One to Do?“ <em>Journal of Statistical Computation and Simulation</em> 83 (9): 1671–83. <a href="https://doi.org/10.1080/00949655.2012.668550" class="uri">https://doi.org/10.1080/00949655.2012.668550</a>.</p>
+</div>
+<div id="ref-sellers2010FlexibleRegression">
+<p>Sellers, Kimberly F., und Galit Shmueli. 2010. „A Flexible Regression Model for Count Data“. <em>The Annals of Applied Statistics</em> 4 (2): 943–61. <a href="https://doi.org/10.1214/09-AOAS306" class="uri">https://doi.org/10.1214/09-AOAS306</a>.</p>
+</div>
+<div id="ref-shmueli2005UsefulDistribution">
+<p>Shmueli, Galit, Thomas P. Minka, Joseph B. Kadane, Sharad Borle, und Peter Boatwright. 2005. „A Useful Distribution for Fitting Discrete Data: Revival of the Conway-Maxwell-Poisson Distribution“. <em>Journal of the Royal Statistical Society: Series C (Applied Statistics)</em> 54 (1): 127–42. <a href="https://doi.org/10.1111/j.1467-9876.2005.00474.x" class="uri">https://doi.org/10.1111/j.1467-9876.2005.00474.x</a>.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="3">
+<li id="fn3"><p>Daher können Standardfehler nicht wie für canonical models überlich via OIM (<em>observed information matrix</em>), sondern via EIM (<em>expected information matrix</em>) geschätzt werden. Die EIM-Methode liefert weniger genaue Resultate für kleine Stichproben (n &lt; 30).<a href="multiparam.html#fnref3" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="poisson-modell.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="weitere-modelle.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["poisson-regression.pdf", "poisson-regression.tex"],
+"toc": {
+"collapse": "subsection",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
