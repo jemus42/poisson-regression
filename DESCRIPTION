@@ -1,0 +1,17 @@
+Package: poisson-regression
+Type: Book
+Title: Placeholder file for travis
+Version: 0.0.1
+Imports: 
+    bookdown,
+    ggplot2,
+    dplyr,
+    purrr,
+    broom,
+    kableExtra,
+    pander,
+    hrbrthemes,
+    DiagrammeR,
+    COUNT,
+    msme,
+    lmtest
