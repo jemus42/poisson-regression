@@ -19,6 +19,8 @@ before_install:
   - "Rscript -e \"tinytex::tlmgr_install('fira')\""
   - "Rscript -e \"tinytex::tlmgr_install('Asana-Math')\""
   - "Rscript -e \"tinytex::tlmgr_install('tex-gyre')\""
+  - "cp ~/.TinyTeX/texmf-var/fonts/conf/texlive-fontconfig.conf ~/.fonts.conf"
+  - "fc-cache -fv"
 
 
 before_script:
