@@ -1,5 +1,6 @@
 sudo: false
 language: r
+dist: bionic
 cache:
   packages: yes
   directories:
