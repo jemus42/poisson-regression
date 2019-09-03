@@ -126,11 +126,10 @@ summary(mod_nb2)
 
 ## Poisson Inverse Gaussian (PIG) {#mod-pig}
 
-So wie die *NB* als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz betrachtet werden kann, ist die *Poisson Inverse Gaussian* (*PIG*) eine mixture aus Poisson-Verteilung mit [invers-normalverteilter](https://en.wikipedia.org/wiki/Inverse_Gaussian_distribution) Varianz. Demnach kann man *PIG* als Alternative zur *NB* verwenden.
+So wie die *NB* als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz betrachtet werden kann, ist die *Poisson Inverse Gaussian* (*PIG*) eine mixture aus Poisson-Verteilung mit [invers-normalverteilter](https://en.wikipedia.org/wiki/Inverse_Gaussian_distribution) Varianz. Demnach kann man *PIG* als Alternative zur *NB* verwenden, insbesondere für den Fall sehr rechtsschiefer Daten.
 
 
-- Dispersionsparameter $\alpha$, Interpretation analog NBIN
-- Interpretation der exponentierten Koeffizienten: IRRs
+
 
 > "Simply put, PIG models can better deal with highly overdispersed data that can negative binomial regression, particularly data clumped heavily at 1 and 2"
 > 
