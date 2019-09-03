@@ -4,18 +4,19 @@ cache:
   packages: yes
   directories:
     - $HOME/bin
-    - $TRAVIS_BUILD_DIR/_bookdown_filespandoc_version: 1.19.2.1
+    - $TRAVIS_BUILD_DIR/_bookdown_files
+#pandoc_version: 1.19.2.1
 
 before_script:
   - "tlmgr install fira"
   - "tlmgr install Asana-Math"
   - "tlmgr install tex-gyre"
   - "[ -x \"$HOME/bin/phantomjs\" ] || Rscript -e \"webshot::install_phantomjs()\""
-  - chmod +x ./_build.travis.sh
   - chmod +x ./_deploy.sh
 
 
 script:
-  - ./_build.travis.sh
+  - "Rscript -e \"bookdown::render_book('index.Rmd', 'bookdown::gitbook')\""
+  - "Rscript -e \"bookdown::render_book('index.Rmd', 'bookdown::pdf_book')\""
   - ./_deploy.sh
 
