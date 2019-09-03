@@ -16,9 +16,9 @@ addons:
 
 before_install:
   - "Rscript -e \"tinytex::install_tinytex()\""
-#  - tlmgr install fira
-#  - tlmgr install Asana-Math
-#  - tlmgr install tex-gyre
+  - tlmgr install fira
+  - tlmgr install Asana-Math
+  - tlmgr install tex-gyre
 
 before_script:
   - "[ -x \"$HOME/bin/phantomjs\" ] || Rscript -e \"webshot::install_phantomjs()\""
