@@ -21,7 +21,7 @@ before_install:
   - "Rscript -e \"tinytex::tlmgr_install('tex-gyre')\""
   - "cp ~/.TinyTeX/texmf-var/fonts/conf/texlive-fontconfig.conf ~/.fonts.conf"
   - "mkdir ~/.fonts"
-  - "wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/pagella/qpl2_501otf.zip -O gyre.zip"
+  - "wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/pagella/qpl2_501otf.zip -O ~/gyre.zip"
   - "unzip ~/gyre.zip -d ~/.fonts/"
   - "fc-cache -fv; fc-list"
 
