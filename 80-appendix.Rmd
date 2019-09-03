@@ -187,6 +187,13 @@ sinfo$packages %>%
 
 Hier liegen temporär Opfer der Umstrukturierung, bis sie ein passendes zu Hause gefunden haben, oder auf die farm upstate umziehen.
 
+### General Advice
+
+- Starte mit einem Poisson-Modell und baue darauf auf
+- Benutze robuste Varianzschätzer (e.g. sandwich, Bootstrap-SEs sind meist den Aufwand nicht wert) – entweder sie helfen, oder sie schaden nicht.
+- Das gängigste Problem ist overdispersion, aber nicht jede overdispersion ist gleich.
+- Die erwartete Anzahl an Nullen (unter Poisson) ist $\exp(-\bar{x}) \cdot n$
+
 ### Beispiel nach @hilbeModelingCountData2014, p. 211ff
 
 (Eigentlich kompliziertes Beispiel, weil 0 counts nicht möglich sind, müsste man truncated drangehen)

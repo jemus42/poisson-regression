@@ -83,7 +83,7 @@ Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob $\alp
 > --- [@hilbeModelingCountData2014 (p. 11), eigene Hervorhebung]
 
 
-Weiterhin gibt es zwei verschiedene Formulierungen der Negativen Binomialverteilung, NB1 und NB2, deren Nummerierung auf den Exponent im zweiten Term ihrer Varianzen zurückzuführen ist:
+Weiterhin gibt es zwei verschiedene Formulierungen der Negativen Binomialverteilung, NB1 und NB2, deren Nummerierung auf den Exponenten im zweiten Term ihrer Varianzen zurückzuführen ist:
 
 ```{definition defNB1NB2, name = "NB1 und NB2"}
 Nach @hilbeModelingCountData2014 (p. 126f):
@@ -108,6 +108,21 @@ Als link wird $\log \mu$ verwendet, wobei der *canonical link* eigentlich $\log\
 
 [^nblink]: Daher können Standardfehler nicht wie für canonical models überlich via OIM (*observed information matrix*), sondern via EIM (*expected information matrix*) geschätzt werden. Die EIM-Methode liefert weniger genaue Resultate für kleine Stichproben (n < 30).
 
+Für ein gut angepasstes NB-Modell gilt analog eines Poisson-Modells, dass die Dispersionsstatistik approximativ 1 ist (siehe \@ref(def:def-pearsondisp)).
+
+Zur Anwendung in R gibt es zwei Möglichkeiten: `MASS::glm.nb` oder `msme::nbinomial`, wobei letztere mehrere Optionen zur Parametrisierung hat und zusätzlich die Dispersionsstatistik ausgibt:
+
+```{r nb_r, warning=FALSE}
+mod_nb <- MASS::glm.nb(docvis ~ outwork + age,
+                       data = rwm1984)
+summary(mod_nb)
+
+
+mod_nb2 <- msme::nbinomial(docvis ~ outwork + age,
+                           data = rwm1984)
+summary(mod_nb2)
+```
+
 
 ## Poisson Inverse Gaussian (PIG) {#mod-pig}
 
@@ -116,6 +131,10 @@ So wie die *NB* als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz 
 
 - Dispersionsparameter $\alpha$, Interpretation analog NBIN
 - Interpretation der exponentierten Koeffizienten: IRRs
+
+> "Simply put, PIG models can better deal with highly overdispersed data that can negative binomial regression, particularly data clumped heavily at 1 and 2"
+> 
+> -- @hilbeModelingCountData2014 (p. 163)
 
 - Software:
 - R: `gamlss` (CRAN)
@@ -189,6 +208,7 @@ Die Verteilung hat als Spezialfälle:
 - `compoisson::com.fit`: Entweder generell nicht geeignet oder unfassbar langsam (und deshalb nicht geeignet)
 - `COMPoissonReg` (GitHub: `lotze/COMPoissonReg`): Scheint zu funktionieren
 
+Da die COMP-Wahrscheinlichkeitsfunktion eine unendliche Summe $Z(\lambda, \nu)$ enthält, kann es bei der Anwendung in Software durchaus dazu kommen, dass keine Konvergenz erreicht wird.  Wie viele Iterationen für die Konvergenz der Summe benötigt werden hängt zum einen von $\nu$ ab: Je größer, desto schneller die Konvergenz. Das Gegenteil gilt für $\lambda$ – je größer, desto langsamer die Konvergenz [@high2018AlternativeVariance, p. 4]. 
 
 Siehe auch
 
@@ -201,26 +221,61 @@ Siehe auch
 
 ## Diagnostische Modelle
 
+
 ### Heterogenous Negative Binomial (NBH) {#mod-nbh}
 
 - Selling feature: Erlaubt Parametrisierung von $\alpha$
 - -> Ursache für under-/overdispersion modellierbar
 
+@hilbeModelingCountData2014 (p. 156)
+
+```{r nbh, warning=FALSE}
+data(nuts, package = "COUNT")
+nuts <- subset(nuts, dbh < 0.6)
+
+ggplot(data = nuts, aes(x = cones)) +
+  geom_histogram(binwidth = 1)
+
+# Poisson-Modell als Startpunkt
+m_pois <- glm(cones ~ sntrees + sheight + scover, family = poisson(), data = nuts) 
+dispersion(m_pois) # -> overdispersion 
+
+# NB-Modell
+m_nb <- msme::nbinomial(cones ~ sntrees + sheight + scover, data = nuts)
+summary(m_nb) # Dispersion < 1 -> NB-underdispersed
+
+# NB-H: Ursache der Dispersion?
+m_nbh <- msme::nbinomial(cones ~ sntrees + sheight + scover, 
+                         formula2 = cones ~ sntrees + sheight + scover,
+                         scale.link = "log_s",
+                         family = "negBinomial",
+                         data = nuts)
+summary(m_nbh)
+```
+
+Signifikanz der Dispersionsprädiktoren (Suffix `_s`) kann nun verwendet werden, um Ursachen der overdispersion zu identifizieren – auch wenn in diesem Beispiel keiner der Koeffizienten signifikant wird.
+
 ### Negative binomial-P (NB-P) {#mod-nbp}
 
-- NB: Varianz statisch für alle Beobachtungen
-- -> NB-P: Varianz kann für Beobachtungen variieren (Parameter $\rho$)
+Eine Erweiterung der NB1 und NB2, die den Exponenten im Varianzterm parametrisiert, womit die Dispersion nun nicht mehr statisch für alle Beobachtungen ist:
 
-- Primärer Anwendungsfall: Bestimmen, ob NB1 oder NB2 besser passt
-  - Wenn $\rho \approx 2$ -> NB2, sonst NB1 (@hilbeModelingCountData2014, p. 21)
+\begin{align*}
+\text{NB1: } \qquad \mathrm{Var}(Y) &= \mu + \alpha\mu \\
+\text{NB2: } \qquad \mathrm{Var}(Y) &= \mu + \alpha\mu^2 \\
+\text{NB-P: }\qquad \mathrm{Var}(Y) &= \mu + \alpha\mu^\rho
+\end{align*}
 
+Damit ist NB-P äquivalent zu NB2 für $\rho = 2$ bzw. NB1 für $\rho = 1$.  
+Um zu evaluieren, ob ein NB1 oder NB2 Modell einen besseren Fit liefert, kann man nun ein NB-P Modell zum Vergleich fitten und Likelihood Ratio Tests zum Vergleich heranziehen.
+
+Siehe auch @hilbeModelingCountData2014 (p. 155) – wo der Autor zwar den obigen Ansatz beschreibt, aber zur Entscheidung zwischen NB1/2 zusätzlich auf die sowieso etablierten Informationskriteren (AIC/BIC) zurückgreift. Dazu gehört auch, dass das NB-P kein rein diagnostisches Werkzeug sein muss: Wenn ein NB-P ein _deutlich_ kleineres AIC aufweist als NB1/2-Modelle, kann das NB-P auch als Modell der Wahl in Erwägung gezogen werden.
 
 ## Zero-Inflated Models (*mixture models*) {#mod-zi}
 
 - Logit/Probit Komponente für zeros
-   - Unterschied: Modelliert Nullen im Gegensatz zu Einsen
+   - Unterschied zu hurdle: Modelliert Nullen im Gegensatz zu Einsen
 - Binary zeros und count zeros werden durch beide Komponenten modelliert 
-   - -> Nicht getrennt interpretierbar
+   - -> Nicht getrennt interpretierbar wie bei hurdle models der Fall ist
 - -> Erzeugen eigene PDF, e.g. ZIP, die mixture aus beiden Komponenten darstellt
 
 
@@ -253,5 +308,5 @@ P(Y = y) &= (1 - \pi) \cdot \frac{\Gamma(\theta+y)}{\Gamma(\theta) \Gamma(y + 1)
 ```
 
 
-Die ZI-Modelle sind dabei **geschachtelt** mit ihren ursprünglichen Modellen, da sich letzteres für bestimmte $\pi$ aus dem ZI-Modell ergeben.  
+Die ZI-Modelle sind dabei **geschachtelt** mit ihren ursprünglichen Modellen, da sich letzteres für bestimmte $\pi$ (auch wenn nicht $\pi = 0$) aus dem ZI-Modell ergeben.  
 Dieser Umstand ist Teil der Kritik an der Verwendung des Vuong-Test (entworfen für den Vergleich von  _**un**geschachtelten_ Modellen) von @wilson2015MisuseVuong, der sich gegen die Verwendung des Tests ausspricht um die Modellanpassung von Modellen mit ihren ZI-Gegenstücken zu vergleichen (siehe z.B. @perumean-chaneyZeroinflatedOverdispersedWhat2013 für eine solche Anwendung des Vuong-Tests).

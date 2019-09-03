@@ -24,15 +24,15 @@ cli_ol()
 
 # Gitbook ----
 cli_it("Rendering HTML site")
-bookdown::render_book(
+suppressWarnings(bookdown::render_book(
   "index.Rmd", output_format = "bookdown::gitbook", envir = new.env(), quiet = TRUE
-) -> tmp
+)) -> tmp
 
 # PDF ----
 cli_it("Rendering PDF")
-bookdown::render_book(
+suppressWarnings(bookdown::render_book(
   "index.Rmd", output_format = "bookdown::pdf_book", envir = new.env(), quiet = TRUE
-) -> tmp
+)) -> tmp
 
 # EPUB ----
 # cli_it("Rendering epub")

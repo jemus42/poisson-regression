@@ -32,7 +32,7 @@ options(
 )
 
 knitr::opts_chunk$set(
-  cache = TRUE,
+  #cache = TRUE,
   fig.width = 8,
   fig.asp = 1/1.618,
   fig.align = "center",
@@ -116,6 +116,7 @@ tribble(
    "azprocedure", "COUNT", "Hilbe (2014)",
    "rwm5yr",      "COUNT", "Hilbe (2014)",
    "rwm1984",     "COUNT", "Hilbe (2014)",
+   "nuts",        "COUNT", "Hilbe (2014)",
    "fish",        "–",  "UCLA IDRE (https://stats.idre.ucla.edu)"
 ) %>%
   setNames(c("Dataset", "R Package", "Quelle")) %>%
@@ -167,6 +168,10 @@ if (!("broom" %in% installed.packages())) install.packages("broom")
 
 # Plots
 if (!("ggplot2" %in% installed.packages())) install.packages("ggplot2")
+
+# Modelling
+if (!("lmtest" %in% installed.packages())) install.packages("lmtest")
+if (!("msme" %in% installed.packages())) install.packages("msme#")
 
 # Data (and maybe modelling)
 if (!("COUNT" %in% installed.packages())) install.packages("COUNT")

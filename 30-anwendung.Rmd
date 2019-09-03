@@ -203,9 +203,9 @@ pander(mod_qp, caption = "Quasipoisson-Modell")
 
 In diesem Fall "lohnt" sich dieser Ansatz zwar eher nicht, da wir neben overdispersion noch ein Problem mit zero-inflation haben, aber in manchen Fällen kann Quasipoisson-Methode ausreichen.
 
-> Scaling is an easy, quick-and-dirty method of adjusting standard errors for overdispersion. However, when data are highly correlated or clustered, model slopes or coefficients usually need to be adjusted as well. Scaling does not accommodate that need, but simulations demonstrate that it is quite useful for models with little to moderate overdispersion.
+> "Scaling is an easy, quick-and-dirty method of adjusting standard errors for overdispersion. However, when data are highly correlated or clustered, model slopes or coefficients usually need to be adjusted as well. Scaling does not accommodate that need, but simulations demonstrate that it is quite useful for models with little to moderate overdispersion."
 >
-> --- @hilbeModelingCountData2014, p. 96
+> --- @hilbeModelingCountData2014 (p. 96)
 
 #### Robuste Varianzschätzer (Sandwich Estimators) {#sandwich}
 
@@ -217,8 +217,11 @@ Robuste Varianzschätzer können (und je nach Quelle: *sollten*) standardmäßig
 
 Bootstrapped SEs wiederum erfordern mehr Aufwand, ähneln aber den robusten SEs sowieso sehr stark, weshalb sich der Aufwand ggf. nicht wirklich lohnt.
 
-Siehe @hilbeModelingCountData2014 (p. 99f) für eine ausführlichere Beschreibung.
+Siehe @hilbeModelingCountData2014 (p. 99f) für eine ausführlichere Beschreibung. Zudem gibt der Autor explizit den Rat:
 
+> "Unless your Poisson or negative binomial model is well fitted and meets its respective distributional assumptions, use robust or empirical standard errors as a default"
+>
+> --- @hilbeModelingCountData2014 (p. 133)
 
 
 ## Zero-Inflation (ZI) {#zeros}
@@ -275,7 +278,7 @@ Zwar schlagen @perumean-chaneyZeroinflatedOverdispersedWhat2013 den Vuong Test (
 Für die Modellierung von zero-inflated Daten stehen primär zwei Möglichkeiten zur Verfügung (vgl. auch @hilbeModelingCountData2014, p. 19):
 
 1. *Hurdle models*: Getrennte Modellierung von Nullen und positiven counts in zwei separaten Modellen (siehe Abschnitt \@ref(mod-hurdle)).
-2. *Zero-inflated models*: Mixture models, die aus zwei Wahrscheinlichkeitsfunktionen eine neue Wahrscheinlichkeitsfunktion generieren, die nun sowohl Nullen als auch positive counts beschreibt (siehe Abschnitt \@ref(mod-zi)).
+2. *Zero-inflated models*: Mixture models, die aus zwei Wahrscheinlichkeitsfunktionen eine neue Wahrscheinlichkeitsfunktion generieren, die sowohl Nullen als auch positive counts beschreibt, allerdings nun auch einen *zero-inflation*-Parameter hat (siehe Abschnitt \@ref(mod-zi)).
 
 Ob hurdle model oder zero-inflated model die bessere Wahl ist hängt mitunter davon ab, welche Annahmen über die _Ursache der Nullen_ getroffen werden können.  
 Wenn es eine echte Trennung der Mechanismen (*"separation of mechanisms"*) gibt, die die Nullen und die positiven counts verursachen, dann wäre ein hurdle model eher angemessen.  

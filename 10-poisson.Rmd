@@ -25,7 +25,7 @@ Eine Poisson-verteilte Zufallsvariable $Y \sim \mathrm{Poi}(\lambda)$ [^poiparam
 \end{equation*}
 ```
 
-```{r poisson-dists, echo=FALSE, fig.cap="Poisson-Verteilungen mit ausgewählten Parametern."}
+```{r poissondists, echo=FALSE, fig.cap="Poisson-Verteilungen mit ausgewählten Parametern."}
 map_df(c(0.5, 1, 2, 5, 10, 15), ~{
   tibble(
     lambda = .x,
@@ -49,7 +49,7 @@ map_df(c(0.5, 1, 2, 5, 10, 15), ~{
     title = expression(Poi(lambda)),
     x = "y", y = expression(Poi(y, lambda)), fill = expression(lambda)
   ) +
-  theme(legend.position = c(.7, .9))
+  theme(legend.position = c(.7, 1))
 ```
 
 ```{definition poisson-modell, name = "Poisson-Modell"}
