@@ -22,7 +22,9 @@ before_install:
   - "cp ~/.TinyTeX/texmf-var/fonts/conf/texlive-fontconfig.conf ~/.fonts.conf"
   - "mkdir ~/.fonts"
   - "wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/pagella/qpl2_501otf.zip -O ~/gyre.zip"
+  - "wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip -O ~/gyreheros.zip"
   - "unzip ~/gyre.zip -d ~/.fonts/"
+  - "unzip ~/gyreheros.zip -d ~/.fonts/"
   - "fc-cache -fv; fc-list"
 
 
@@ -43,3 +45,6 @@ deploy:
   keep-history: true
   github_token: $GITHUB_PAT
   target_branch: gh-pages
+
+notifications:
+  email: false
