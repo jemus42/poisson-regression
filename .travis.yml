@@ -26,7 +26,7 @@ before_install:
   - "unzip ~/gyre.zip -d ~/.fonts/"
   - "unzip ~/gyreheros.zip -d ~/.fonts/"
   - "wget https://github.com/bBoxType/FiraSans/archive/master.zip -O ~/fira.zip"
-  - "unzip ~/fira.zip -d ~/.fonts/"
+  - "unzip ~/fira.zip '*.ttf' -d ~/.fonts/"
   - "fc-cache -fv; fc-list"
 
 
