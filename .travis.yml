@@ -23,10 +23,10 @@ before_install:
    if [ ! -d $HOME/.fonts ]; then
     mkdir $HOME/.fonts
 
-    wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/pagella/qpl2_501otf.zip -O $HOME/gyre.zip
+    wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/pagella/qpl2_501otf.zip -O $HOME/.fonts/gyre.zip
     unzip $HOME/.fonts/gyre.zip -d $HOME/.fonts/
 
-    wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip -O $HOME/gyreheros.zip
+    wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip -O $HOME/.fonts/gyreheros.zip
     unzip $HOME/.fonts/gyreheros.zip -d $HOME/.fonts/
 
     wget https://github.com/bBoxType/FiraSans/archive/master.zip -O $HOME/.fonts/fira.zip
