@@ -18,7 +18,7 @@ apt_packages:
 
 before_install:
   - |
-   Rscript -e \"tinytex::install_tinytex()\"
+   Rscript -e "tinytex::install_tinytex()"
 
    if [ ! -d $HOME/.fonts ]; then
     mkdir $HOME/.fonts
@@ -32,8 +32,10 @@ before_install:
     wget https://github.com/bBoxType/FiraSans/archive/master.zip -O $HOME/.fonts/fira.zip
     unzip ~/.fonts/fira.zip '*.ttf' -d $HOME/.fonts/
    fi
-  - "cp $HOME/.TinyTeX/texmf-var/fonts/conf/texlive-fontconfig.conf ~/.fonts.conf"
-  - "fc-cache -fv; fc-list"
+
+   cp $HOME/.TinyTeX/texmf-var/fonts/conf/texlive-fontconfig.conf ~/.fonts.conf
+   fc-cache -fv
+   fc-list
 
 
 before_script:
