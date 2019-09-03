@@ -14,7 +14,8 @@ addons:
       - tex-gyre
       - fonts-oflb-asana-math
 
-#before_install:
+before_install:
+  - "Rscript -e \"tinytex::install_tinytex()\""
 #  - tlmgr install fira
 #  - tlmgr install Asana-Math
 #  - tlmgr install tex-gyre
