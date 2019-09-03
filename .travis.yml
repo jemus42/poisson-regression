@@ -8,11 +8,11 @@ cache:
     - $TRAVIS_BUILD_DIR/_bookdown_files
 #pandoc_version: 1.19.2.1
 
-#addons:
-#  apt:
-#    packages:
+addons:
+  apt:
+    packages:
 #      - tex-gyre
-#      - fonts-oflb-asana-math
+      - fonts-oflb-asana-math
 
 before_install:
   - "Rscript -e \"tinytex::install_tinytex()\""
@@ -25,6 +25,8 @@ before_install:
   - "wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip -O ~/gyreheros.zip"
   - "unzip ~/gyre.zip -d ~/.fonts/"
   - "unzip ~/gyreheros.zip -d ~/.fonts/"
+  - "wget https://github.com/bBoxType/FiraSans/archive/master.zip -O ~/fira.zip"
+  - "unzip ~/fira.zip -d ~/.fonts/"
   - "fc-cache -fv; fc-list"
 
 
