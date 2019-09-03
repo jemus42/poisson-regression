@@ -8,17 +8,18 @@ cache:
     - $TRAVIS_BUILD_DIR/_bookdown_files
 #pandoc_version: 1.19.2.1
 
-addons:
-  apt:
-    packages:
-      - tex-gyre
-      - fonts-oflb-asana-math
+#addons:
+#  apt:
+#    packages:
+#      - tex-gyre
+#      - fonts-oflb-asana-math
 
 before_install:
   - "Rscript -e \"tinytex::install_tinytex()\""
-  - tlmgr install fira
-  - tlmgr install Asana-Math
-  - tlmgr install tex-gyre
+  - "Rscript -e \"tinytex::tlmgr_install('fira')\""
+  - "Rscript -e \"tinytex::tlmgr_install('Asana-Math')\""
+  - "Rscript -e \"tinytex::tlmgr_install('tex-gyre')\""
+
 
 before_script:
   - "[ -x \"$HOME/bin/phantomjs\" ] || Rscript -e \"webshot::install_phantomjs()\""
