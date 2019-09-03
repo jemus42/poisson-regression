@@ -13,7 +13,6 @@ addons:
     packages:
       - tex-gyre
       - fonts-oflb-asana-math
-      - fonts-firacode
 
 #before_install:
 #  - tlmgr install fira
