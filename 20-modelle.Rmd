@@ -331,14 +331,14 @@ Für zero-inflation setzt man $p$ als *rate of zero-inflation* $\pi$, $g_1$ als 
 
 Eine alternative Darstellung für eine *zero-inflated* Verteilung ([siehe](https://www.statistik.uni-dortmund.de/useR-2008/slides/Kleiber+Zeileis.pdf)):
 
-\begin{align*}
-f_\mathrm{zeroinfl} (y; x, \beta, \pi) &= \pi \cdot I_{\{0\}}(y) + (1 - \pi) \cdot f_{\mathrm{count}}(y; x, \beta)
-\end{align*}
+\begin{equation*}
+f_\mathrm{zeroinfl} (y; x, \beta, \pi) = \pi \cdot I_{\{0\}}(y) + (1 - \pi) \cdot f_{\mathrm{count}}(y; x, \beta)
+\end{equation*}
 
 Mit zu modellierendem Erwartungswert
 
 \begin{equation*}
-\mu_i &= \pi_i \cdot 0 + (1 - \pi_i) \cdot \exp(x_i^T\beta)
+\mu_i = \pi_i \cdot 0 + (1 - \pi_i) \cdot \exp(x_i^T\beta)
 \end{equation*}
 
 Wobei $\pi$ in der Regel binomial, bzw. über logistische Regression geschätzt wird.
