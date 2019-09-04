@@ -1,7 +1,7 @@
 --- 
 title: "Poisson-Regression und ihre Leiden"
 author: "Lukas Burk"
-date: "Stand: `r format(Sys.time(), '%d. %B %Y, %H:%M Uhr')`"
+date: "Stand: `r format(Sys.time(), '%d. %B %Y, %H:%M Uhr (%Z)')`"
 lang: de-DE
 site: bookdown::bookdown_site
 cover-image: "images/poiscovr-orly.png"
@@ -15,7 +15,7 @@ colorlinks: true
 description: "Because count data is hard"
 papersize: a4
 mainfont: "TeX Gyre Pagella"
-sansfont: "Fira Sans"
+sansfont: "TeX Gyre Heros"
 monofont: "Fira Mono"
 monofontoptions:
   - Mapping=tex-ansi
@@ -44,11 +44,9 @@ knitr::opts_chunk$set(
 )
 
 # Load packages ----
-# Data transformation & modelling
-library(dplyr)
-library(tidyr)
-library(broom)
-library(purrr)
+# Modelling
+library(VGAM)
+library(gamlss)
 
 # Tables
 library(kableExtra)
@@ -61,14 +59,21 @@ library(ggplot2)
 #    theme_minimal()
 # )
 
-extrafont::loadfonts()
+extrafont::loadfonts(quiet = TRUE)
 library(firasans) # Install via  remotes::install_github("hrbrmstr/firasans")
+
 theme_set(
    theme_ipsum_fsc()
 )
 
 # Graphs (GraphViz)
 library(DiagrammeR)
+
+# Load tidy stuff last because function name clashes 
+library(tidyr)
+library(broom)
+library(purrr)
+library(dplyr)
 
 # Read data ----
 fish <- readRDS("data/fish.rds")
@@ -82,10 +87,11 @@ data("medpar", package = "COUNT")
 # Einführung 
 
 Dieses Dokument soll einen Überblick zum Umgang mit Zähldaten (*count data*) liefern.  
-Zähldaten können im Allgemeinen mittels Poissonverteilung modelliert werden, wobei in der Praxis einige Komplikationen zu erwarten sind:
+Zähldaten können im Allgemeinen mittels Poissonverteilung im Rahmen des GLM modelliert werden, allerdings sind in der Praxis einige Komplikationen zu erwarten:
 
-- Over-/underdispersion (siehe Abschnitt \@ref(dispersion)): Die Poissonverteilung besitzt nur einen Parameter für sowohl Erwartungswert als auch Varianz und nimmt somit Gleichheit zwischen den beiden an (*equidispersion*) – diese Annahme ist meist in Form von overdispersion verletzt
-- Zero-Inflation (siehe Abschnitt \@ref(zeros)): Aus einem Modell lässt sich die erwartete Anzahl an Beobachtungen mit Anzahl $0$ bestimmen – wenn die beobachtete Anzahl (bzw. der Anteil) an Nullen deutlich größer ist, spricht man von *zero-inflation*
+**Over-/underdispersion** (siehe Abschnitt \@ref(dispersion)): Die Poissonverteilung besitzt nur einen Parameter für sowohl Erwartungswert als auch Varianz und nimmt somit Gleichheit zwischen den beiden an (*equidispersion*) – diese Annahme ist meist in Form von overdispersion verletzt
+
+**Zero-Inflation** (siehe Abschnitt \@ref(zeros)): Aus einem Modell lässt sich die erwartete Anzahl an Beobachtungen mit Anzahl $0$ bestimmen – wenn die beobachtete Anzahl (bzw. der Anteil) an Nullen deutlich größer ist, spricht man von *zero-inflation*. Verwandte Probleme sind die (seltenere) *zero-deflation*, oder das strukturelle Fehlen von Nullen
 
 Diese Umstände benötigen in der Regel Generalisierungen der einfach Poisson-Regression, entweder durch Erweiterung der Verteilung um zusätzliche Parameter (siehe z.B. *Negative Binomialverteilung* für overdispersion in Abschnitt \@ref(mod-nb), *Generalized Poisson* für underdispersion in Abschnitt \@ref(mod-gp)) oder die Konstruktion von *mixture models* oder *hurdle models* für zero-inflation (Abschnitte \@ref(mod-zi) und  \@ref(mod-hurdle)). 
 
@@ -173,7 +179,9 @@ if (!("ggplot2" %in% installed.packages())) install.packages("ggplot2")
 
 # Modelling
 if (!("lmtest" %in% installed.packages())) install.packages("lmtest")
-if (!("msme" %in% installed.packages())) install.packages("msme#")
+if (!("msme" %in% installed.packages())) install.packages("msme")
+if (!("VGAM" %in% installed.packages())) install.packages("VGAM")
+if (!("gamlss" %in% installed.packages())) install.packages("gamlss")
 
 # Data (and maybe modelling)
 if (!("COUNT" %in% installed.packages())) install.packages("COUNT")

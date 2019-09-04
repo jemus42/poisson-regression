@@ -9,6 +9,7 @@ Imports:
     COUNT,
     DiagrammeR,
     dplyr,
+    gamlss,
     ggplot2,
     hrbrthemes,
     kableExtra,
@@ -16,7 +17,8 @@ Imports:
     msme,
     pander,
     purrr,
-    sessioninfo
+    sessioninfo,
+    VGAM
 Remotes: 
     hrbrmstr/firasans
 Encoding: UTF-8

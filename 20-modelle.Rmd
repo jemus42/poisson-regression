@@ -34,7 +34,8 @@ tibble::tribble(
 
 ## Negativ Binomial (NB) {#mod-nb}
 
-Die Negative Binomialverteilung (*NB*) kann als zweiparametrische Erweiterung der *Poisson* betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird (*Poisson-Gamma Mischmodell*). Für eine ausführliche Beschreibung, siehe @hilbeModelingCountData2014 (p. 126ff).
+Die Negative Binomialverteilung (*NB*) kann als zweiparametrische Erweiterung der *Poisson* betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird (*Poisson-Gamma Mischmodell*).  
+Für eine ausführliche Beschreibung, siehe @hilbeModelingCountData2014 (p. 126ff).
 
 ```{definition defNB, name = "Negative Binomialverteilung"}
 Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675):
@@ -76,12 +77,14 @@ Siehe dazu auch @hilbeModelingCountData2014 (p. 131).
 
 ```
 
+Das GLM sieht keinen weiteren zu schätzenden Parameter vor, weshalb $\theta$ bzw. $\alpha$ in der Praxis separat geschätzt wird.  
 Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob $\alpha$ oder $\theta$ verwendet wird, ist sein Vorzeichen: Er ist _immer_ positiv, das heißt die Varianz der NB ist entweder _größer oder gleich_ der Poisson, oder mit anderen Worten:
 
 > "The negative binomial model adjusts for Poisson overdispersion; it **cannot be used to model underdispersed** Poisson data" 
 >
 > --- [@hilbeModelingCountData2014 (p. 11), eigene Hervorhebung]
 
+Je nach Software/Algorithmus ist es auch möglich, dass ein NB-fit nicht möglich ist, wenn $\alpha \approx 0$ (die Verteilung zu nah an Poisson) bzw. die Daten Poisson-underdispersed sind. 
 
 Weiterhin gibt es zwei verschiedene Formulierungen der Negativen Binomialverteilung, NB1 und NB2, deren Nummerierung auf den Exponenten im zweiten Term ihrer Varianzen zurückzuführen ist:
 
@@ -129,14 +132,13 @@ summary(mod_nb2)
 So wie die *NB* als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz betrachtet werden kann, ist die *Poisson Inverse Gaussian* (*PIG*) eine mixture aus Poisson-Verteilung mit [invers-normalverteilter](https://en.wikipedia.org/wiki/Inverse_Gaussian_distribution) Varianz. Demnach kann man *PIG* als Alternative zur *NB* verwenden, insbesondere für den Fall sehr rechtsschiefer Daten.
 
 
-
-
 > "Simply put, PIG models can better deal with highly overdispersed data that can negative binomial regression, particularly data clumped heavily at 1 and 2"
 > 
 > -- @hilbeModelingCountData2014 (p. 163)
 
-- Software:
+**Software**:
 - R: `gamlss` (CRAN)
+- SAS: Machbar via `NLMIXED`, aber unschön [siehe @high2018AlternativeVariance].
 - Stata: `pigreg`
 
 ## Generalized Poisson (GP) {#mod-gp}
@@ -146,9 +148,49 @@ So wie die *NB* als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz 
 - Selling feature: $\alpha < 0$ ist möglich, im Gegensatz zu NB
 - -> Underdispersion modellierbar
 
-- Software: 
-- [Vgl. Stackexchange Kommentar von Joseph Hilbe](https://stats.stackexchange.com/a/237177/80056)
-- R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html)
+Eine Verteilung, die sich sowohl für over- als auch underdispersion eignet, und dabei noch gut interpretierbar bleibt.
+
+```{definition def-genois, name = "Generalized Poisson"}
+Aus @hilbeModelingCountData2014 (p. 211), Parametrisierung nach Harris, Yang & Harding:
+
+Eine Variable $Y$ ist *generalized Poisson* verteilt mit der PMF:
+  
+\begin{equation*}
+P(Y = y_i) = \frac{\theta_i \left(\theta_i + \delta y_i\right)^{y_i - 1}}{y_i !} \exp(-\theta_i - \delta y_i), \quad y_i = 1, 2, 3, \ldots
+\end{equation*}
+
+Mit Dispersionsparameter $\Phi = \frac{1}{(1 - \theta)^2}$.
+
+Es gilt außerdem
+
+\begin{align*}
+\delta = 0 &\Longrightarrow \text{Equidispersion (Poisson)} \\
+\delta < 0 &\Longrightarrow \text{Underdispersion} \\
+\delta > 0 &\Longrightarrow \text{Overdispersion}
+\end{align*}
+
+Auch hier kann ein Likelihood-Ratio Test auf $\delta = 0$ durchgeführt werden, analog $\alpha = 0$ für die NB – wobei $\delta$ hier keine Restriktion hat (siehe BLR, Definition \@ref(def:BLR)).
+
+```
+
+
+Die Verteilung besitzt auch einen zusätzlichen Dispersionsparameter (analog NB, PIG), allerdings kann dieser hier auch negative Werte annehmen, womit die GP für alle Dispersionsarten (bzw. insbesondere underdispersion) geeignet ist.
+
+**Software**:  
+
+- R: `VGAM`: `vgam(..., family = genpoisson())`]
+    - Hier wird das obige $\delta$ als $\lambda$ bezeichnet (Verwechslungsgefahr mit Poisson-Parameter)
+    - Numerisch instabil für $\lambda$ nahe 0 oder 1
+    - Siehe [`?VGAM::genpoisson`](https://rdrr.io/cran/VGAM/man/genpoisson.html)
+- R: Alternativ via [gamlss](https://www.gamlss.com/): `gamlss(..., family = GPO)`
+
+In beiden R-Varianten habe ich bisher nicht geschafft $\theta$, den Dispersionsparameter, zu extrahieren – auch wenn die Koeffizientien aus dem Stata-Beispiel in [@hilbeModelingCountData2014, p. 213f] reproduzierbar sind.
+
+- SAS: `NLMIXED` oder `FMM`, siehe auch [SAS support document](http://support.sas.com/kb/56/549.html)
+
+Allgemein scheint die Parametrisierung (bzw. Notation der Parameter) sehr zu variieren.
+
+
 
 
 ## Conway-Maxwell Poisson (COMP) {#mod-comp}

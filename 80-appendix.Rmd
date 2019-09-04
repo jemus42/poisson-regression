@@ -202,7 +202,7 @@ Grundlage ist der Datensatz `azprocedure` (siehe Abschnitt \@ref(data)) zur Daue
 
 Zuerst werfen wir einen Blick auf die Daten und fitten ein reguläres Poissonmodell.
 
-```{r underdisp_azprocedure_over}
+```{r underdisp-azprocedure-over}
 data(azprocedure, package = "COUNT")
 
 describe_counts(azprocedure$los)
@@ -230,7 +230,7 @@ dispersion(model_azproc)
 Der Dispersionsindex lässt auf overdispersion schließen.  
 Betrachten wir ein Subset der Daten, indem wir nur Beobachtungen mit $\mathtt{LOS} \le 8$ betrachten, erhalten wir ein anderes Bild:
 
-```{r underdisp_azprocedure_under}
+```{r underdisp-azprocedure_under}
 azprocedure_subset <- subset(azprocedure, los <= 8)
 
 describe_counts(azprocedure_subset$los)
@@ -251,4 +251,19 @@ pander(model_azproc_u)
 dispersion(model_azproc_u)
 ```
 
-In diesem Fall haben wir es mit underdispersion zu tun.
+In diesem Fall haben wir es mit underdispersion zu tun, also versuchen wir es mal mit der GP:
+
+```{r underdisp-azprocedure-gpois}
+library(VGAM)
+library(gamlss)
+
+mod_gp_vgam <- vglm(los ~ procedure + sex + admit, data = azprocedure_subset, family = genpoisson())
+
+mod_gp_gamlss <- gamlss(los ~ procedure + sex + admit, data = azprocedure_subset, family = GPO())
+
+summary(mod_gp_vgam)
+summary(mod_gp_gamlss)
+```
+
+Beispiel aus Hilbe 2014. Eigentlich sollte $\delta \approx -0.1195$ und $\theta = \frac{1}{(1 - \delta)^2} \approx 0.799$
+

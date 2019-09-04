@@ -18,23 +18,23 @@ Grundlage zur Modellierung ist das GLM mit den dazugehörigen Voraussetzungen:
 
 
 ```{definition, name = "Poisson-Verteilung"}
-Eine Poisson-verteilte Zufallsvariable $Y \sim \mathrm{Poi}(\lambda)$ [^poiparam] hat die Dichte
+Eine Poisson-verteilte Zufallsvariable $Y \sim \mathrm{Poi}(\mu)$ [^poiparam] hat die Dichte
 
 \begin{equation*}
-\mathrm{P}(Y = y) = \frac{\lambda^y \exp(-\lambda)}{y!} \quad, y \in \mathbb{N}_0
+\mathrm{P}(Y = y) = \frac{\mu^y \exp(-\mu)}{y!} \quad, y \in \mathbb{N}_0
 \end{equation*}
 ```
 
 ```{r poissondists, echo=FALSE, fig.cap="Poisson-Verteilungen mit ausgewählten Parametern."}
 map_df(c(0.5, 1, 2, 5, 10, 15), ~{
   tibble(
-    lambda = .x,
+    mu = .x,
     x = 0:20,
-    poi = dpois(x, lambda)
+    poi = dpois(x, mu)
   )
 }) %>%
-  ggplot(aes(x = x, y = poi, color = factor(lambda), fill = factor(lambda))) +
-  geom_path(aes(group = lambda), linetype = "dotted") +
+  ggplot(aes(x = x, y = poi, color = factor(mu), fill = factor(mu))) +
+  geom_path(aes(group = mu), linetype = "dotted") +
   geom_point(shape = 21, color = "black", size = 2.5, stroke = .2) +
   #geom_segment(aes(x = x, xend = x, y = 0 , yend = poi)) +
   scale_color_viridis_d(direction = -1, guide = FALSE) +
@@ -46,8 +46,8 @@ map_df(c(0.5, 1, 2, 5, 10, 15), ~{
       )
   ) +
   labs(
-    title = expression(Poi(lambda)),
-    x = "y", y = expression(Poi(y, lambda)), fill = expression(lambda)
+    title = expression(Poi(mu)),
+    x = "y", y = expression(Poi(y, mu)), fill = expression(mu)
   ) +
   theme(legend.position = c(.7, 1))
 ```
@@ -55,13 +55,13 @@ map_df(c(0.5, 1, 2, 5, 10, 15), ~{
 ```{definition poisson-modell, name = "Poisson-Modell"}
 Die Zielvariablen $y_i \in \mathbb{N}_0$ sind (bedingt) unabhängig gegeben der Kovariablen $x_i1, x_i2, \ldots, x_ik$.
 
-Die Rate $\lambda_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)$ der Poissonverteilung wird in der Regel log-linear modelliert als
+Die Rate $\mu_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)$ der Poissonverteilung wird in der Regel log-linear modelliert als
 
 \begin{align*}
-  \log(\lambda_i) &= \eta_i 
+  \log(\mu_i) &= \eta_i 
     = \mathbf{x}_i^\prime \boldsymbol{\beta} 
     = \beta_0 + \beta_1 x_1 + \ldots + \beta_k x_{ik} \\
-  \lambda_i &= \exp(\eta_i) 
+  \mu_i &= \exp(\eta_i) 
     = \exp(\beta_0) \cdot \exp(\beta_1 x_1) \cdot \ldots \cdot \exp(\beta_k x_k)
 \end{align*}
 
@@ -85,9 +85,9 @@ Damit entspricht $t \mu$ der Inzidenzrate des Outcomes adjustiert auf e.g. die g
 Für als Offset wird in der Regel $\log(t)$ verwendet, womit gelten:
 
 \begin{align*}
-\hat{\lambda} &= \exp{x \boldsymbol{\beta} + \log(t)} \\
-\Leftrightarrow \exp(x \boldsymbol{\beta}) &= \frac{\hat{\lambda}}{t} \\
-\Leftrightarrow \hat{\lambda} &= t \exp(x \boldsymbol{\beta})
+\hat{\mu} &= \exp{x \boldsymbol{\beta} + \log(t)} \\
+\Leftrightarrow \exp(x \boldsymbol{\beta}) &= \frac{\hat{\mu}}{t} \\
+\Leftrightarrow \hat{\mu} &= t \exp(x \boldsymbol{\beta})
 \end{align*}
 
 Ein offset kann z.B. in `R` via `+ offset(log(variable))` in der model `formula` oder über das Argument `offset = log(variable)` in `glm` und verwandten Funktionen angegeben werden.
@@ -95,7 +95,7 @@ Ein offset kann z.B. in `R` via `+ offset(log(variable))` in der model `formula`
 
 ## Annahmen
 
-1. Die Abhängige / Zielvariable $Y$ muss eine Zählung sein, i.e. die Verteilung ist diskret mit einem einzelnen Parameter $\lambda$ der Poisson-Verteilung für Erwartungswert und Varianz.
+1. Die Abhängige / Zielvariable $Y$ muss eine Zählung sein, i.e. die Verteilung ist diskret mit einem einzelnen Parameter $\mu$ der Poisson-Verteilung für Erwartungswert und Varianz.
 2. $y \in \mathbb{N}_0$, insbesondere: $Y$ muss 0 enthalten *können* (siehe auch \@ref(trunc-cens) [Truncation und Censoring](#trunc-cens))
 3. Beobachtungen sind *unabhängig*, i.e. weder longitudinal noch gepoolt.
    - Möglicher Test durch Vergleich der Modell-SE und der SE adjustiert durch robuste sandwich-estimators (siehe \@ref(sandwich)): Große Unterschiede implizieren korrelierte Daten
@@ -107,8 +107,8 @@ Ein offset kann z.B. in `R` via `+ offset(log(variable))` in der model `formula`
 
 Alternative Formulierung nach @winkelmannEconometricAnalysisCount2010 (p. 64):
 
-1. $f(y\ |\ \lambda) = \frac{e^{-\lambda} \lambda^y}{y!} \quad \lambda > 0, y = 0, 1, 2, \ldots$.
-2. $\lambda = \exp(\mathbf{x}' \boldsymbol{\beta})$.
+1. $f(y\ |\ \mu) = \frac{e^{-\mu} \mu^y}{y!} \quad \mu > 0, y = 0, 1, 2, \ldots$.
+2. $\mu = \exp(\mathbf{x}' \boldsymbol{\beta})$.
 3. Beobachtungspaare $(y_i, x_i)$ sind unabhängig verteilt.
 
 ## Dispersion {#dispersion}
@@ -130,8 +130,8 @@ Für Zählvariablen $y_i \in \mathbb{N}_0$ und erklärenden Variablen $\mathbf{x
 Innerhalb eines Poisson-Modells (vgl. Abschnitt \@ref(poisson-modell)) mit der Annahme
 
 \begin{align*}
-y_i\ |\ \mathbf{x}_i &\sim \mathrm{Poi}(\lambda_i) \\[1.5em]
-\lambda_i &= \mathbb{E}(y_i\ |\ \mathbf{x}_i) = \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \quad \text{(Equidispersion)}
+y_i\ |\ \mathbf{x}_i &\sim \mathrm{Poi}(\mu_i) \\[1.5em]
+\mu &= \mathbb{E}(y_i\ |\ \mathbf{x}_i) = \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \quad \text{(Equidispersion)}
 \end{align*}
 
 spricht man von **Poisson-Overdispersion** wenn die Varianz der Beobachtungen die erwartete Varianz des Poisson-Modells übersteigt:
@@ -143,7 +143,7 @@ spricht man von **Poisson-Overdispersion** wenn die Varianz der Beobachtungen di
 in einem Modell mit overdispersion gilt die Annahme:
 
 \begin{equation*}
-  \mathrm{Var}(y_i\ |\ \mathbf{x}_i) = \theta \cdot \lambda_i
+  \mathrm{Var}(y_i\ |\ \mathbf{x}_i) = \theta \cdot \mu_i
 \end{equation*}
 
 Mit *Dispersionsparameter* $\theta$ [vgl. @fahrmeirRegressionModelleMethoden2009, p. 210]
@@ -236,8 +236,8 @@ sim <- tibble(
   x2 = rbinary(n, .2),
   x3 = rbinary(n, .3),
   eta = 0.5 + 1 * x1 + 2 * x2 + 0.5 * x3,
-  lambda = exp(eta),
-  py = rpois(n, lambda)
+  mu = exp(eta),
+  py = rpois(n, mu)
 )
 
 # Korrektes modell:
@@ -251,10 +251,10 @@ dispersion(mod2)
 
 ### Underdispersion
 
-Underdispersion ist der Fall, wenn vorliegende Daten eine geringere Varianz aufweisen, als auf Basis eines Poisson-Modells erwartet würde.
-Bei nichtberücksichtigter underdispersion werden die Standardfehler des Modells überschätzt [@hilbeModelingCountData2014, p. 210].
+Underdispersion ist der Fall, wenn vorliegende Daten eine geringere Varianz aufweisen, als auf Basis eines Poisson-Modells erwartet würde, das heißt die Daten sind "enger zusammengeklumpt".
+Bei underdispersion werden die Standardfehler des Modells *über*schätzt, im Gegensatz zur overdispersion, bei der Standardfehler *unter*schätzt werden [@hilbeModelingCountData2014, p. 210].
 
-Im Allgemeinen wird [generalized Poisson empfohlen](https://stats.stackexchange.com/a/237177/80056) (R: [`VGAM`](https://rdrr.io/cran/VGAM/man/genpoisson.html) [@hilbeModelingCountData2014], da diese Erweiterung der Poisson-Verteilung nicht nur einen zusätzlichen Parameter für die Varianz hat (analog NB, PIG), sondern dieser Parameter auch negativ sein kann.
+Im Allgemeinen wird für diese Situation die [generalized Poisson empfohlen](https://stats.stackexchange.com/a/237177/80056)  [@hilbeModelingCountData2014], da diese Erweiterung der Poisson-Verteilung nicht nur einen zusätzlichen Parameter für die Varianz hat (analog NB, PIG), sondern dieser Parameter auch negativ sein kann.
 
 
 
