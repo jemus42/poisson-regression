@@ -18,11 +18,10 @@ apt_packages:
 
 before_install:
   - |
-   Rscript -e "install.packages('tinytex')"
-   Rscript -e "tinytex::install_tinytex()"
+    Rscript -e "install.packages('tinytex')"
+    Rscript -e "tinytex::install_tinytex()"
 
-   if [ ! -d $HOME/.fonts ]; then
-    mkdir $HOME/.fonts
+    mkdir -p $HOME/.fonts
 
     if [ ! -e $HOME/.fonts/gyre.zip ]; then
      wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/pagella/qpl2_501otf.zip -O $HOME/.fonts/gyre.zip
@@ -38,11 +37,10 @@ before_install:
       wget https://github.com/bBoxType/FiraSans/archive/master.zip -O $HOME/.fonts/fira.zip
       unzip ~/.fonts/fira.zip '*.ttf' -d $HOME/.fonts/
     fi
-   fi
 
-   cp $HOME/.TinyTeX/texmf-var/fonts/conf/texlive-fontconfig.conf ~/.fonts.conf
-   fc-cache -fv
-   fc-list
+    cp $HOME/.TinyTeX/texmf-var/fonts/conf/texlive-fontconfig.conf ~/.fonts.conf
+    fc-cache -fv
+    fc-list
 
 
 before_script:
