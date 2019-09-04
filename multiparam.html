@@ -317,7 +317,8 @@ Generalized Poisson (GP)
 </table>
 <div id="mod-nb" class="section level2">
 <h2><span class="header-section-number">3.1</span> Negativ Binomial (NB)</h2>
-<p>Die Negative Binomialverteilung (<em>NB</em>) kann als zweiparametrische Erweiterung der <em>Poisson</em> betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird (<em>Poisson-Gamma Mischmodell</em>). Für eine ausführliche Beschreibung, siehe <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 126ff).</p>
+<p>Die Negative Binomialverteilung (<em>NB</em>) kann als zweiparametrische Erweiterung der <em>Poisson</em> betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird (<em>Poisson-Gamma Mischmodell</em>).<br />
+Für eine ausführliche Beschreibung, siehe <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 126ff).</p>
 
 <div class="definition">
 <p><span id="def:defNB" class="definition"><strong>Definition 3.1  (Negative Binomialverteilung)  </strong></span>Nach <span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">2013</a>)</span> (p. 1675):</p>
@@ -337,11 +338,13 @@ Meist wird der Parameter als <span class="math inline">\(\alpha\)</span> bezeich
 <p>Siehe dazu auch <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 131).</p>
 </div>
 
-<p>Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob <span class="math inline">\(\alpha\)</span> oder <span class="math inline">\(\theta\)</span> verwendet wird, ist sein Vorzeichen: Er ist <em>immer</em> positiv, das heißt die Varianz der NB ist entweder <em>größer oder gleich</em> der Poisson, oder mit anderen Worten:</p>
+<p>Das GLM sieht keinen weiteren zu schätzenden Parameter vor, weshalb <span class="math inline">\(\theta\)</span> bzw. <span class="math inline">\(\alpha\)</span> in der Praxis separat geschätzt wird.<br />
+Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob <span class="math inline">\(\alpha\)</span> oder <span class="math inline">\(\theta\)</span> verwendet wird, ist sein Vorzeichen: Er ist <em>immer</em> positiv, das heißt die Varianz der NB ist entweder <em>größer oder gleich</em> der Poisson, oder mit anderen Worten:</p>
 <blockquote>
 <p>“The negative binomial model adjusts for Poisson overdispersion; it <strong>cannot be used to model underdispersed</strong> Poisson data”</p>
 <p>— <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a> (p. 11), eigene Hervorhebung)</span></p>
 </blockquote>
+<p>Je nach Software/Algorithmus ist es auch möglich, dass ein NB-fit nicht möglich ist, wenn <span class="math inline">\(\alpha \approx 0\)</span> (die Verteilung zu nah an Poisson) bzw. die Daten Poisson-underdispersed sind.</p>
 <p>Weiterhin gibt es zwei verschiedene Formulierungen der Negativen Binomialverteilung, NB1 und NB2, deren Nummerierung auf den Exponenten im zweiten Term ihrer Varianzen zurückzuführen ist:</p>
 
 <div class="definition">
@@ -427,11 +430,10 @@ Meist wird der Parameter als <span class="math inline">\(\alpha\)</span> bezeich
 <p>“Simply put, PIG models can better deal with highly overdispersed data that can negative binomial regression, particularly data clumped heavily at 1 and 2”</p>
 <p>– <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 163)</p>
 </blockquote>
-<ul>
-<li>Software:</li>
-<li>R: <code>gamlss</code> (CRAN)</li>
-<li>Stata: <code>pigreg</code></li>
-</ul>
+<p><strong>Software</strong>:
+- R: <code>gamlss</code> (CRAN)
+- SAS: Machbar via <code>NLMIXED</code>, aber unschön <span class="citation">(siehe High <a href="#ref-high2018AlternativeVariance">2018</a>)</span>.
+- Stata: <code>pigreg</code></p>
 </div>
 <div id="mod-gp" class="section level2">
 <h2><span class="header-section-number">3.3</span> Generalized Poisson (GP)</h2>
@@ -439,17 +441,40 @@ Meist wird der Parameter als <span class="math inline">\(\alpha\)</span> bezeich
 <li>Auch mit dispersion/scale Parameter <span class="math inline">\(\alpha\)</span></li>
 <li>Analog NB: <span class="math inline">\(\alpha = 0 \Rightarrow y \sim \mathrm{Pois}(\lambda)\)</span></li>
 <li>Selling feature: <span class="math inline">\(\alpha &lt; 0\)</span> ist möglich, im Gegensatz zu NB</li>
-<li><p>-&gt; Underdispersion modellierbar</p></li>
-<li>Software:</li>
-<li><a href="https://stats.stackexchange.com/a/237177/80056">Vgl. Stackexchange Kommentar von Joseph Hilbe</a></li>
-<li><p>R: <a href="https://rdrr.io/cran/VGAM/man/genpoisson.html"><code>VGAM</code></a></p></li>
+<li>-&gt; Underdispersion modellierbar</li>
 </ul>
+<p>Eine Verteilung, die sich sowohl für over- als auch underdispersion eignet, und dabei noch gut interpretierbar bleibt.</p>
+
+<div class="definition">
+<p><span id="def:def-genois" class="definition"><strong>Definition 3.4  (Generalized Poisson)  </strong></span>Aus <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 211), Parametrisierung nach Harris, Yang &amp; Harding:</p>
+<p>Eine Variable <span class="math inline">\(Y\)</span> ist <em>generalized Poisson</em> verteilt mit der PMF:</p>
+<p>Mit Dispersionsparameter <span class="math inline">\(\Phi = \frac{1}{(1 - \theta)^2}\)</span>.</p>
+<p>Es gilt außerdem</p>
+<p>Auch hier kann ein Likelihood-Ratio Test auf <span class="math inline">\(\delta = 0\)</span> durchgeführt werden, analog <span class="math inline">\(\alpha = 0\)</span> für die NB – wobei <span class="math inline">\(\delta\)</span> hier keine Restriktion hat (siehe BLR, Definition <a href="anwendung.html#def:BLR">5.4</a>).</p>
+</div>
+
+<p>Die Verteilung besitzt auch einen zusätzlichen Dispersionsparameter (analog NB, PIG), allerdings kann dieser hier auch negative Werte annehmen, womit die GP für alle Dispersionsarten (bzw. insbesondere underdispersion) geeignet ist.</p>
+<p><strong>Software</strong>:</p>
+<ul>
+<li>R: <code>VGAM</code>: <code>vgam(..., family = genpoisson())</code>]
+<ul>
+<li>Hier wird das obige <span class="math inline">\(\delta\)</span> als <span class="math inline">\(\lambda\)</span> bezeichnet (Verwechslungsgefahr mit Poisson-Parameter)</li>
+<li>Numerisch instabil für <span class="math inline">\(\lambda\)</span> nahe 0 oder 1</li>
+<li>Siehe <a href="https://rdrr.io/cran/VGAM/man/genpoisson.html"><code>?VGAM::genpoisson</code></a></li>
+</ul></li>
+<li>R: Alternativ via <a href="https://www.gamlss.com/">gamlss</a>: <code>gamlss(..., family = GPO)</code></li>
+</ul>
+<p>In beiden R-Varianten habe ich bisher nicht geschafft <span class="math inline">\(\theta\)</span>, den Dispersionsparameter, zu extrahieren – auch wenn die Koeffizientien aus dem Stata-Beispiel in <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>, p. 213f)</span> reproduzierbar sind.</p>
+<ul>
+<li>SAS: <code>NLMIXED</code> oder <code>FMM</code>, siehe auch <a href="http://support.sas.com/kb/56/549.html">SAS support document</a></li>
+</ul>
+<p>Allgemein scheint die Parametrisierung (bzw. Notation der Parameter) sehr zu variieren.</p>
 </div>
 <div id="mod-comp" class="section level2">
 <h2><span class="header-section-number">3.4</span> Conway-Maxwell Poisson (COMP)</h2>
 
 <div class="definition">
-<p><span id="def:unnamed-chunk-2" class="definition"><strong>Definition 3.4  (Conway-Maxwell-Poisson Modell (CMP))  </strong></span>Nach <span class="citation">Shmueli u. a. (<a href="#ref-shmueli2005UsefulDistribution">2005</a>)</span> (p. 129):</p>
+<p><span id="def:unnamed-chunk-2" class="definition"><strong>Definition 3.5  (Conway-Maxwell-Poisson Modell (CMP))  </strong></span>Nach <span class="citation">Shmueli u. a. (<a href="#ref-shmueli2005UsefulDistribution">2005</a>)</span> (p. 129):</p>
 <p>Mit (im Unterschied zur Poisson) nichtlinearer Zerfallsrate <span class="math inline">\(\nu\)</span> <em>rate of decay</em>, so dass:</p>
 <p>Der Zusammenhang zwischen <span class="math inline">\(\nu\)</span> und <span class="math inline">\(\lambda\)</span> nach <span class="citation">Sellers und Shmueli (<a href="#ref-sellers2010FlexibleRegression">2010</a>)</span> (p. 946) legt Nahe, dass <span class="math inline">\(\nu\)</span> ähnlich <span class="math inline">\(\alpha\)</span> in NB-Modellen die Dispersion bestimmt:</p>
 Als link wird <span class="math inline">\(\log \lambda\)</span> verwendet, da so die links für Poisson- und logistische Regression Spezialfälle der COMP sind.

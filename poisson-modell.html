@@ -229,9 +229,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 
 <div class="definition">
-<p><span id="def:unnamed-chunk-1" class="definition"><strong>Definition 2.1  (Poisson-Verteilung)  </strong></span>Eine Poisson-verteilte Zufallsvariable <span class="math inline">\(Y \sim \mathrm{Poi}(\lambda)\)</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> hat die Dichte</p>
+<p><span id="def:unnamed-chunk-1" class="definition"><strong>Definition 2.1  (Poisson-Verteilung)  </strong></span>Eine Poisson-verteilte Zufallsvariable <span class="math inline">\(Y \sim \mathrm{Poi}(\mu)\)</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> hat die Dichte</p>
 <span class="math display">\[\begin{equation*}
-\mathrm{P}(Y = y) = \frac{\lambda^y \exp(-\lambda)}{y!} \quad, y \in \mathbb{N}_0
+\mathrm{P}(Y = y) = \frac{\mu^y \exp(-\mu)}{y!} \quad, y \in \mathbb{N}_0
 \end{equation*}\]</span>
 </div>
 
@@ -244,7 +244,7 @@ Abbildung 2.1: Poisson-Verteilungen mit ausgewählten Parametern.
 
 <div class="definition">
 <p><span id="def:poisson-modell" class="definition"><strong>Definition 2.2  (Poisson-Modell)  </strong></span>Die Zielvariablen <span class="math inline">\(y_i \in \mathbb{N}_0\)</span> sind (bedingt) unabhängig gegeben der Kovariablen <span class="math inline">\(x_i1, x_i2, \ldots, x_ik\)</span>.</p>
-<p>Die Rate <span class="math inline">\(\lambda_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)\)</span> der Poissonverteilung wird in der Regel log-linear modelliert als</p>
+<p>Die Rate <span class="math inline">\(\mu_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)\)</span> der Poissonverteilung wird in der Regel log-linear modelliert als</p>
 </div>
 
 <p>Vgl. <span class="citation">Fahrmeir, Kneib, und Lang (<a href="#ref-fahrmeirRegressionModelleMethoden2009">2009</a>)</span></p>
@@ -258,7 +258,7 @@ Für als Offset wird in der Regel <span class="math inline">\(\log(t)\)</span> v
 <div id="annahmen" class="section level2">
 <h2><span class="header-section-number">2.1</span> Annahmen</h2>
 <ol style="list-style-type: decimal">
-<li>Die Abhängige / Zielvariable <span class="math inline">\(Y\)</span> muss eine Zählung sein, i.e. die Verteilung ist diskret mit einem einzelnen Parameter <span class="math inline">\(\lambda\)</span> der Poisson-Verteilung für Erwartungswert und Varianz.</li>
+<li>Die Abhängige / Zielvariable <span class="math inline">\(Y\)</span> muss eine Zählung sein, i.e. die Verteilung ist diskret mit einem einzelnen Parameter <span class="math inline">\(\mu\)</span> der Poisson-Verteilung für Erwartungswert und Varianz.</li>
 <li><span class="math inline">\(y \in \mathbb{N}_0\)</span>, insbesondere: <span class="math inline">\(Y\)</span> muss 0 enthalten <em>können</em> (siehe auch <a href="erganzungen.html#trunc-cens">A.2</a> <a href="erganzungen.html#trunc-cens">Truncation und Censoring</a>)</li>
 <li>Beobachtungen sind <em>unabhängig</em>, i.e. weder longitudinal noch gepoolt.
 <ul>
@@ -271,8 +271,8 @@ Für als Offset wird in der Regel <span class="math inline">\(\log(t)\)</span> v
 <p>(Nach Tabelle in <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, braucht noch Deduplizierung)</p>
 <p>Alternative Formulierung nach <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>)</span> (p. 64):</p>
 <ol style="list-style-type: decimal">
-<li><span class="math inline">\(f(y\ |\ \lambda) = \frac{e^{-\lambda} \lambda^y}{y!} \quad \lambda &gt; 0, y = 0, 1, 2, \ldots\)</span>.</li>
-<li><span class="math inline">\(\lambda = \exp(\mathbf{x}&#39; \boldsymbol{\beta})\)</span>.</li>
+<li><span class="math inline">\(f(y\ |\ \mu) = \frac{e^{-\mu} \mu^y}{y!} \quad \mu &gt; 0, y = 0, 1, 2, \ldots\)</span>.</li>
+<li><span class="math inline">\(\mu = \exp(\mathbf{x}&#39; \boldsymbol{\beta})\)</span>.</li>
 <li>Beobachtungspaare <span class="math inline">\((y_i, x_i)\)</span> sind unabhängig verteilt.</li>
 </ol>
 </div>
@@ -342,8 +342,8 @@ Für als Offset wird in der Regel <span class="math inline">\(\log(t)\)</span> v
 <a class="sourceLine" id="cb8-11" data-line-number="11">  <span class="dt">x2 =</span> <span class="kw">rbinary</span>(n, <span class="fl">.2</span>),</a>
 <a class="sourceLine" id="cb8-12" data-line-number="12">  <span class="dt">x3 =</span> <span class="kw">rbinary</span>(n, <span class="fl">.3</span>),</a>
 <a class="sourceLine" id="cb8-13" data-line-number="13">  <span class="dt">eta =</span> <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span> <span class="op">*</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>x3,</a>
-<a class="sourceLine" id="cb8-14" data-line-number="14">  <span class="dt">lambda =</span> <span class="kw">exp</span>(eta),</a>
-<a class="sourceLine" id="cb8-15" data-line-number="15">  <span class="dt">py =</span> <span class="kw">rpois</span>(n, lambda)</a>
+<a class="sourceLine" id="cb8-14" data-line-number="14">  <span class="dt">mu =</span> <span class="kw">exp</span>(eta),</a>
+<a class="sourceLine" id="cb8-15" data-line-number="15">  <span class="dt">py =</span> <span class="kw">rpois</span>(n, mu)</a>
 <a class="sourceLine" id="cb8-16" data-line-number="16">)</a>
 <a class="sourceLine" id="cb8-17" data-line-number="17"></a>
 <a class="sourceLine" id="cb8-18" data-line-number="18"><span class="co"># Korrektes modell:</span></a>
@@ -359,9 +359,9 @@ Für als Offset wird in der Regel <span class="math inline">\(\log(t)\)</span> v
 </div>
 <div id="underdispersion" class="section level3">
 <h3><span class="header-section-number">2.2.2</span> Underdispersion</h3>
-<p>Underdispersion ist der Fall, wenn vorliegende Daten eine geringere Varianz aufweisen, als auf Basis eines Poisson-Modells erwartet würde.
-Bei nichtberücksichtigter underdispersion werden die Standardfehler des Modells überschätzt <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>, p. 210)</span>.</p>
-<p>Im Allgemeinen wird <a href="https://stats.stackexchange.com/a/237177/80056">generalized Poisson empfohlen</a> (R: <a href="https://rdrr.io/cran/VGAM/man/genpoisson.html"><code>VGAM</code></a> <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, da diese Erweiterung der Poisson-Verteilung nicht nur einen zusätzlichen Parameter für die Varianz hat (analog NB, PIG), sondern dieser Parameter auch negativ sein kann.</p>
+<p>Underdispersion ist der Fall, wenn vorliegende Daten eine geringere Varianz aufweisen, als auf Basis eines Poisson-Modells erwartet würde, das heißt die Daten sind “enger zusammengeklumpt”.
+Bei underdispersion werden die Standardfehler des Modells <em>über</em>schätzt, im Gegensatz zur overdispersion, bei der Standardfehler <em>unter</em>schätzt werden <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>, p. 210)</span>.</p>
+<p>Im Allgemeinen wird für diese Situation die <a href="https://stats.stackexchange.com/a/237177/80056">generalized Poisson empfohlen</a> <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, da diese Erweiterung der Poisson-Verteilung nicht nur einen zusätzlichen Parameter für die Varianz hat (analog NB, PIG), sondern dieser Parameter auch negativ sein kann.</p>
 <p>Weiterhin taucht im Kontext von hurdle models (siehe <a href="erganzungen.html#mod-hurdle">A.3</a>) folgende Bemerkung auf:</p>
 <blockquote>
 <p>[…] that underdispersion occurs if <strong>zeros are less frequent than the parent distribution would predict</strong>.

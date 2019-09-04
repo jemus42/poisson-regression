@@ -14,7 +14,7 @@
   \fi
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
     \setmainfont[]{TeX Gyre Pagella}
-    \setsansfont[]{Fira Sans}
+    \setsansfont[]{TeX Gyre Heros}
     \setmonofont[Mapping=tex-ansi,Mapping=tex-ansi,Scale=0.8]{Fira Mono}
     \setmathfont(Digits,Latin,Greek)[]{Asana Math}
 \fi
@@ -140,7 +140,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{Stand: 04. September 2019, 11:29 Uhr}
+    \date{Stand: 04. September 2019, 14:41 Uhr (UTC)}
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -197,15 +197,11 @@
 \section{Einführung}\label{einfuhrung}}
 
 Dieses Dokument soll einen Überblick zum Umgang mit Zähldaten (\emph{count data}) liefern.\\
-Zähldaten können im Allgemeinen mittels Poissonverteilung modelliert werden, wobei in der Praxis einige Komplikationen zu erwarten sind:
+Zähldaten können im Allgemeinen mittels Poissonverteilung im Rahmen des GLM modelliert werden, allerdings sind in der Praxis einige Komplikationen zu erwarten:
 
-\begin{itemize}
-\tightlist
-\item
-  Over-/underdispersion (siehe Abschnitt \ref{dispersion}): Die Poissonverteilung besitzt nur einen Parameter für sowohl Erwartungswert als auch Varianz und nimmt somit Gleichheit zwischen den beiden an (\emph{equidispersion}) -- diese Annahme ist meist in Form von overdispersion verletzt
-\item
-  Zero-Inflation (siehe Abschnitt \ref{zeros}): Aus einem Modell lässt sich die erwartete Anzahl an Beobachtungen mit Anzahl \(0\) bestimmen -- wenn die beobachtete Anzahl (bzw. der Anteil) an Nullen deutlich größer ist, spricht man von \emph{zero-inflation}
-\end{itemize}
+\textbf{Over-/underdispersion} (siehe Abschnitt \ref{dispersion}): Die Poissonverteilung besitzt nur einen Parameter für sowohl Erwartungswert als auch Varianz und nimmt somit Gleichheit zwischen den beiden an (\emph{equidispersion}) -- diese Annahme ist meist in Form von overdispersion verletzt
+
+\textbf{Zero-Inflation} (siehe Abschnitt \ref{zeros}): Aus einem Modell lässt sich die erwartete Anzahl an Beobachtungen mit Anzahl \(0\) bestimmen -- wenn die beobachtete Anzahl (bzw. der Anteil) an Nullen deutlich größer ist, spricht man von \emph{zero-inflation}. Verwandte Probleme sind die (seltenere) \emph{zero-deflation}, oder das strukturelle Fehlen von Nullen
 
 Diese Umstände benötigen in der Regel Generalisierungen der einfach Poisson-Regression, entweder durch Erweiterung der Verteilung um zusätzliche Parameter (siehe z.B. \emph{Negative Binomialverteilung} für overdispersion in Abschnitt \ref{mod-nb}, \emph{Generalized Poisson} für underdispersion in Abschnitt \ref{mod-gp}) oder die Konstruktion von \emph{mixture models} oder \emph{hurdle models} für zero-inflation (Abschnitte \ref{mod-zi} und \ref{mod-hurdle}).
 
@@ -345,7 +341,9 @@ Zur Reproduktion der Beispiele sind insbesondere die folgenden \texttt{R} packag
 
 \CommentTok{# Modelling}
 \ControlFlowTok{if}\NormalTok{ (}\OperatorTok{!}\NormalTok{(}\StringTok{"lmtest"} \OperatorTok{%in%}\StringTok{ }\KeywordTok{installed.packages}\NormalTok{())) }\KeywordTok{install.packages}\NormalTok{(}\StringTok{"lmtest"}\NormalTok{)}
-\ControlFlowTok{if}\NormalTok{ (}\OperatorTok{!}\NormalTok{(}\StringTok{"msme"} \OperatorTok{%in%}\StringTok{ }\KeywordTok{installed.packages}\NormalTok{())) }\KeywordTok{install.packages}\NormalTok{(}\StringTok{"msme#"}\NormalTok{)}
+\ControlFlowTok{if}\NormalTok{ (}\OperatorTok{!}\NormalTok{(}\StringTok{"msme"} \OperatorTok{%in%}\StringTok{ }\KeywordTok{installed.packages}\NormalTok{())) }\KeywordTok{install.packages}\NormalTok{(}\StringTok{"msme"}\NormalTok{)}
+\ControlFlowTok{if}\NormalTok{ (}\OperatorTok{!}\NormalTok{(}\StringTok{"VGAM"} \OperatorTok{%in%}\StringTok{ }\KeywordTok{installed.packages}\NormalTok{())) }\KeywordTok{install.packages}\NormalTok{(}\StringTok{"VGAM"}\NormalTok{)}
+\ControlFlowTok{if}\NormalTok{ (}\OperatorTok{!}\NormalTok{(}\StringTok{"gamlss"} \OperatorTok{%in%}\StringTok{ }\KeywordTok{installed.packages}\NormalTok{())) }\KeywordTok{install.packages}\NormalTok{(}\StringTok{"gamlss"}\NormalTok{)}
 
 \CommentTok{# Data (and maybe modelling)}
 \ControlFlowTok{if}\NormalTok{ (}\OperatorTok{!}\NormalTok{(}\StringTok{"COUNT"} \OperatorTok{%in%}\StringTok{ }\KeywordTok{installed.packages}\NormalTok{())) }\KeywordTok{install.packages}\NormalTok{(}\StringTok{"COUNT"}\NormalTok{)}
@@ -401,7 +399,7 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die pr
 \toprule
 N & Missing & Mittelwert & Varianz & Range\\
 \midrule
-100 & 10 & 4.93 & 4.62 & [0, 11]\\
+100 & 10 & 5 & 4.97 & [0, 11]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -476,10 +474,10 @@ Grundlage zur Modellierung ist das GLM mit den dazugehörigen Voraussetzungen:
 \end{itemize}
 
 \BeginKnitrBlock{definition}[Poisson-Verteilung]
-\protect\hypertarget{def:unnamed-chunk-1}{}{\label{def:unnamed-chunk-1} \iffalse (Poisson-Verteilung) \fi{} }Eine Poisson-verteilte Zufallsvariable \(Y \sim \mathrm{Poi}(\lambda)\) \footnote{Der Poisson-Parameter wird von unterschiedlichen Autoren als \(\lambda\) oder \(\mu\) bezeichnet, und ich habe mich noch nicht für eine Variante entschieden).} hat die Dichte
+\protect\hypertarget{def:unnamed-chunk-1}{}{\label{def:unnamed-chunk-1} \iffalse (Poisson-Verteilung) \fi{} }Eine Poisson-verteilte Zufallsvariable \(Y \sim \mathrm{Poi}(\mu)\) \footnote{Der Poisson-Parameter wird von unterschiedlichen Autoren als \(\lambda\) oder \(\mu\) bezeichnet, und ich habe mich noch nicht für eine Variante entschieden).} hat die Dichte
 
 \begin{equation*}
-\mathrm{P}(Y = y) = \frac{\lambda^y \exp(-\lambda)}{y!} \quad, y \in \mathbb{N}_0
+\mathrm{P}(Y = y) = \frac{\mu^y \exp(-\mu)}{y!} \quad, y \in \mathbb{N}_0
 \end{equation*}
 \EndKnitrBlock{definition}
 
@@ -495,13 +493,13 @@ Grundlage zur Modellierung ist das GLM mit den dazugehörigen Voraussetzungen:
 \BeginKnitrBlock{definition}[Poisson-Modell]
 \protect\hypertarget{def:poisson-modell}{}{\label{def:poisson-modell} \iffalse (Poisson-Modell) \fi{} }Die Zielvariablen \(y_i \in \mathbb{N}_0\) sind (bedingt) unabhängig gegeben der Kovariablen \(x_i1, x_i2, \ldots, x_ik\).
 
-Die Rate \(\lambda_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)\) der Poissonverteilung wird in der Regel log-linear modelliert als
+Die Rate \(\mu_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)\) der Poissonverteilung wird in der Regel log-linear modelliert als
 
 \begin{align*}
-  \log(\lambda_i) &= \eta_i 
+  \log(\mu_i) &= \eta_i 
     = \mathbf{x}_i^\prime \boldsymbol{\beta} 
     = \beta_0 + \beta_1 x_1 + \ldots + \beta_k x_{ik} \\
-  \lambda_i &= \exp(\eta_i) 
+  \mu_i &= \exp(\eta_i) 
     = \exp(\beta_0) \cdot \exp(\beta_1 x_1) \cdot \ldots \cdot \exp(\beta_k x_k)
 \end{align*}
 \EndKnitrBlock{definition}
@@ -520,9 +518,9 @@ Damit entspricht \(t \mu\) der Inzidenzrate des Outcomes adjustiert auf e.g.~die
 Für als Offset wird in der Regel \(\log(t)\) verwendet, womit gelten:
 
 \begin{align*}
-\hat{\lambda} &= \exp{x \boldsymbol{\beta} + \log(t)} \\
-\Leftrightarrow \exp(x \boldsymbol{\beta}) &= \frac{\hat{\lambda}}{t} \\
-\Leftrightarrow \hat{\lambda} &= t \exp(x \boldsymbol{\beta})
+\hat{\mu} &= \exp{x \boldsymbol{\beta} + \log(t)} \\
+\Leftrightarrow \exp(x \boldsymbol{\beta}) &= \frac{\hat{\mu}}{t} \\
+\Leftrightarrow \hat{\mu} &= t \exp(x \boldsymbol{\beta})
 \end{align*}
 
 Ein offset kann z.B. in \texttt{R} via \texttt{+\ offset(log(variable))} in der model \texttt{formula} oder über das Argument \texttt{offset\ =\ log(variable)} in \texttt{glm} und verwandten Funktionen angegeben werden.
@@ -534,7 +532,7 @@ Ein offset kann z.B. in \texttt{R} via \texttt{+\ offset(log(variable))} in der 
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Die Abhängige / Zielvariable \(Y\) muss eine Zählung sein, i.e.~die Verteilung ist diskret mit einem einzelnen Parameter \(\lambda\) der Poisson-Verteilung für Erwartungswert und Varianz.
+  Die Abhängige / Zielvariable \(Y\) muss eine Zählung sein, i.e.~die Verteilung ist diskret mit einem einzelnen Parameter \(\mu\) der Poisson-Verteilung für Erwartungswert und Varianz.
 \item
   \(y \in \mathbb{N}_0\), insbesondere: \(Y\) muss 0 enthalten \emph{können} (siehe auch \ref{trunc-cens} \protect\hyperlink{trunc-cens}{Truncation und Censoring})
 \item
@@ -561,9 +559,9 @@ Alternative Formulierung nach \citet{winkelmannEconometricAnalysisCount2010} (p.
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  \(f(y\ |\ \lambda) = \frac{e^{-\lambda} \lambda^y}{y!} \quad \lambda > 0, y = 0, 1, 2, \ldots\).
+  \(f(y\ |\ \mu) = \frac{e^{-\mu} \mu^y}{y!} \quad \mu > 0, y = 0, 1, 2, \ldots\).
 \item
-  \(\lambda = \exp(\mathbf{x}' \boldsymbol{\beta})\).
+  \(\mu = \exp(\mathbf{x}' \boldsymbol{\beta})\).
 \item
   Beobachtungspaare \((y_i, x_i)\) sind unabhängig verteilt.
 \end{enumerate}
@@ -586,8 +584,8 @@ Alternative Formulierung nach \citet{winkelmannEconometricAnalysisCount2010} (p.
 \protect\hypertarget{def:def-pois-overdispersion}{}{\label{def:def-pois-overdispersion} \iffalse (Poisson-Overdispersion) \fi{} }Innerhalb eines Poisson-Modells (vgl. Abschnitt \ref{poisson-modell}) mit der Annahme
 
 \begin{align*}
-y_i\ |\ \mathbf{x}_i &\sim \mathrm{Poi}(\lambda_i) \\[1.5em]
-\lambda_i &= \mathbb{E}(y_i\ |\ \mathbf{x}_i) = \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \quad \text{(Equidispersion)}
+y_i\ |\ \mathbf{x}_i &\sim \mathrm{Poi}(\mu_i) \\[1.5em]
+\mu &= \mathbb{E}(y_i\ |\ \mathbf{x}_i) = \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \quad \text{(Equidispersion)}
 \end{align*}
 
 spricht man von \textbf{Poisson-Overdispersion} wenn die Varianz der Beobachtungen die erwartete Varianz des Poisson-Modells übersteigt:
@@ -599,7 +597,7 @@ spricht man von \textbf{Poisson-Overdispersion} wenn die Varianz der Beobachtung
 in einem Modell mit overdispersion gilt die Annahme:
 
 \begin{equation*}
-  \mathrm{Var}(y_i\ |\ \mathbf{x}_i) = \theta \cdot \lambda_i
+  \mathrm{Var}(y_i\ |\ \mathbf{x}_i) = \theta \cdot \mu_i
 \end{equation*}
 
 Mit \emph{Dispersionsparameter} \(\theta\) \citep[vgl.][p.~210]{fahrmeirRegressionModelleMethoden2009}
@@ -706,8 +704,8 @@ Ein einfaches simuliertes Beispiel zur Auswirkung von fehlenden Prädiktoren:
   \DataTypeTok{x2 =} \KeywordTok{rbinary}\NormalTok{(n, }\FloatTok{.2}\NormalTok{),}
   \DataTypeTok{x3 =} \KeywordTok{rbinary}\NormalTok{(n, }\FloatTok{.3}\NormalTok{),}
   \DataTypeTok{eta =} \FloatTok{0.5} \OperatorTok{+}\StringTok{ }\DecValTok{1} \OperatorTok{*}\StringTok{ }\NormalTok{x1 }\OperatorTok{+}\StringTok{ }\DecValTok{2} \OperatorTok{*}\StringTok{ }\NormalTok{x2 }\OperatorTok{+}\StringTok{ }\FloatTok{0.5} \OperatorTok{*}\StringTok{ }\NormalTok{x3,}
-  \DataTypeTok{lambda =} \KeywordTok{exp}\NormalTok{(eta),}
-  \DataTypeTok{py =} \KeywordTok{rpois}\NormalTok{(n, lambda)}
+  \DataTypeTok{mu =} \KeywordTok{exp}\NormalTok{(eta),}
+  \DataTypeTok{py =} \KeywordTok{rpois}\NormalTok{(n, mu)}
 \NormalTok{)}
 
 \CommentTok{# Korrektes modell:}
@@ -737,10 +735,10 @@ Ein einfaches simuliertes Beispiel zur Auswirkung von fehlenden Prädiktoren:
 \hypertarget{underdispersion}{%
 \subsubsection{Underdispersion}\label{underdispersion}}
 
-Underdispersion ist der Fall, wenn vorliegende Daten eine geringere Varianz aufweisen, als auf Basis eines Poisson-Modells erwartet würde.
-Bei nichtberücksichtigter underdispersion werden die Standardfehler des Modells überschätzt \citep[p.~210]{hilbeModelingCountData2014}.
+Underdispersion ist der Fall, wenn vorliegende Daten eine geringere Varianz aufweisen, als auf Basis eines Poisson-Modells erwartet würde, das heißt die Daten sind \enquote{enger zusammengeklumpt}.
+Bei underdispersion werden die Standardfehler des Modells \emph{über}schätzt, im Gegensatz zur overdispersion, bei der Standardfehler \emph{unter}schätzt werden \citep[p.~210]{hilbeModelingCountData2014}.
 
-Im Allgemeinen wird \href{https://stats.stackexchange.com/a/237177/80056}{generalized Poisson empfohlen} (R: \href{https://rdrr.io/cran/VGAM/man/genpoisson.html}{\texttt{VGAM}} \citep{hilbeModelingCountData2014}, da diese Erweiterung der Poisson-Verteilung nicht nur einen zusätzlichen Parameter für die Varianz hat (analog NB, PIG), sondern dieser Parameter auch negativ sein kann.
+Im Allgemeinen wird für diese Situation die \href{https://stats.stackexchange.com/a/237177/80056}{generalized Poisson empfohlen} \citep{hilbeModelingCountData2014}, da diese Erweiterung der Poisson-Verteilung nicht nur einen zusätzlichen Parameter für die Varianz hat (analog NB, PIG), sondern dieser Parameter auch negativ sein kann.
 
 Weiterhin taucht im Kontext von hurdle models (siehe \ref{mod-hurdle}) folgende Bemerkung auf:
 
@@ -790,7 +788,8 @@ Generalized Poisson (GP) & $\mu$ & $\mu (1 + \alpha\mu)^2 = \mu + 2\alpha\mu^3 +
 \hypertarget{mod-nb}{%
 \subsection{Negativ Binomial (NB)}\label{mod-nb}}
 
-Die Negative Binomialverteilung (\emph{NB}) kann als zweiparametrische Erweiterung der \emph{Poisson} betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird (\emph{Poisson-Gamma Mischmodell}). Für eine ausführliche Beschreibung, siehe \citet{hilbeModelingCountData2014} (p.~126ff).
+Die Negative Binomialverteilung (\emph{NB}) kann als zweiparametrische Erweiterung der \emph{Poisson} betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird (\emph{Poisson-Gamma Mischmodell}).\\
+Für eine ausführliche Beschreibung, siehe \citet{hilbeModelingCountData2014} (p.~126ff).
 
 \BeginKnitrBlock{definition}[Negative Binomialverteilung]
 \protect\hypertarget{def:defNB}{}{\label{def:defNB} \iffalse (Negative Binomialverteilung) \fi{} }Nach \citet{perumean-chaneyZeroinflatedOverdispersedWhat2013} (p.~1675):
@@ -831,6 +830,7 @@ Je nach Quelle (und unter Anderem in R (z.B. \texttt{MASS::glm.nb})) wird die in
 Siehe dazu auch \citet{hilbeModelingCountData2014} (p.~131).
 \EndKnitrBlock{definition}
 
+Das GLM sieht keinen weiteren zu schätzenden Parameter vor, weshalb \(\theta\) bzw. \(\alpha\) in der Praxis separat geschätzt wird.\\
 Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob \(\alpha\) oder \(\theta\) verwendet wird, ist sein Vorzeichen: Er ist \emph{immer} positiv, das heißt die Varianz der NB ist entweder \emph{größer oder gleich} der Poisson, oder mit anderen Worten:
 
 \begin{quote}
@@ -838,6 +838,8 @@ Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob \(\al
 
 --- \citep[ (p.~11), eigene Hervorhebung]{hilbeModelingCountData2014}
 \end{quote}
+
+Je nach Software/Algorithmus ist es auch möglich, dass ein NB-fit nicht möglich ist, wenn \(\alpha \approx 0\) (die Verteilung zu nah an Poisson) bzw. die Daten Poisson-underdispersed sind.
 
 Weiterhin gibt es zwei verschiedene Formulierungen der Negativen Binomialverteilung, NB1 und NB2, deren Nummerierung auf den Exponenten im zweiten Term ihrer Varianzen zurückzuführen ist:
 
@@ -957,20 +959,16 @@ So wie die \emph{NB} als mixture aus Poisson-Verteilung mit Gamma-verteilter Var
 -- \citet{hilbeModelingCountData2014} (p.~163)
 \end{quote}
 
-\begin{itemize}
-\tightlist
-\item
-  Software:
-\item
-  R: \texttt{gamlss} (CRAN)
-\item
-  Stata: \texttt{pigreg}
-\end{itemize}
+\textbf{Software}:
+- R: \texttt{gamlss} (CRAN)
+- SAS: Machbar via \texttt{NLMIXED}, aber unschön \citep[siehe][]{high2018AlternativeVariance}.
+- Stata: \texttt{pigreg}
 
 \hypertarget{mod-gp}{%
 \subsection{Generalized Poisson (GP)}\label{mod-gp}}
 
 \begin{itemize}
+\tightlist
 \item
   Auch mit dispersion/scale Parameter \(\alpha\)
 \item
@@ -979,13 +977,63 @@ So wie die \emph{NB} als mixture aus Poisson-Verteilung mit Gamma-verteilter Var
   Selling feature: \(\alpha < 0\) ist möglich, im Gegensatz zu NB
 \item
   -\textgreater{} Underdispersion modellierbar
-\item
-  Software:
-\item
-  \href{https://stats.stackexchange.com/a/237177/80056}{Vgl. Stackexchange Kommentar von Joseph Hilbe}
-\item
-  R: \href{https://rdrr.io/cran/VGAM/man/genpoisson.html}{\texttt{VGAM}}
 \end{itemize}
+
+Eine Verteilung, die sich sowohl für over- als auch underdispersion eignet, und dabei noch gut interpretierbar bleibt.
+
+\BeginKnitrBlock{definition}[Generalized Poisson]
+\protect\hypertarget{def:def-genois}{}{\label{def:def-genois} \iffalse (Generalized Poisson) \fi{} }Aus \citet{hilbeModelingCountData2014} (p.~211), Parametrisierung nach Harris, Yang \& Harding:
+
+Eine Variable \(Y\) ist \emph{generalized Poisson} verteilt mit der PMF:
+
+\begin{equation*}
+P(Y = y_i) = \frac{\theta_i \left(\theta_i + \delta y_i\right)^{y_i - 1}}{y_i !} \exp(-\theta_i - \delta y_i), \quad y_i = 1, 2, 3, \ldots
+\end{equation*}
+
+Mit Dispersionsparameter \(\Phi = \frac{1}{(1 - \theta)^2}\).
+
+Es gilt außerdem
+
+\begin{align*}
+\delta = 0 &\Longrightarrow \text{Equidispersion (Poisson)} \\
+\delta < 0 &\Longrightarrow \text{Underdispersion} \\
+\delta > 0 &\Longrightarrow \text{Overdispersion}
+\end{align*}
+
+Auch hier kann ein Likelihood-Ratio Test auf \(\delta = 0\) durchgeführt werden, analog \(\alpha = 0\) für die NB -- wobei \(\delta\) hier keine Restriktion hat (siehe BLR, Definition \ref{def:BLR}).
+\EndKnitrBlock{definition}
+
+Die Verteilung besitzt auch einen zusätzlichen Dispersionsparameter (analog NB, PIG), allerdings kann dieser hier auch negative Werte annehmen, womit die GP für alle Dispersionsarten (bzw. insbesondere underdispersion) geeignet ist.
+
+\textbf{Software}:
+
+\begin{itemize}
+\tightlist
+\item
+  R: \texttt{VGAM}: \texttt{vgam(...,\ family\ =\ genpoisson())}{]}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Hier wird das obige \(\delta\) als \(\lambda\) bezeichnet (Verwechslungsgefahr mit Poisson-Parameter)
+  \item
+    Numerisch instabil für \(\lambda\) nahe 0 oder 1
+  \item
+    Siehe \href{https://rdrr.io/cran/VGAM/man/genpoisson.html}{\texttt{?VGAM::genpoisson}}
+  \end{itemize}
+\item
+  R: Alternativ via \href{https://www.gamlss.com/}{gamlss}: \texttt{gamlss(...,\ family\ =\ GPO)}
+\end{itemize}
+
+In beiden R-Varianten habe ich bisher nicht geschafft \(\theta\), den Dispersionsparameter, zu extrahieren -- auch wenn die Koeffizientien aus dem Stata-Beispiel in \citep[p.~213f]{hilbeModelingCountData2014} reproduzierbar sind.
+
+\begin{itemize}
+\tightlist
+\item
+  SAS: \texttt{NLMIXED} oder \texttt{FMM}, siehe auch \href{http://support.sas.com/kb/56/549.html}{SAS support document}
+\end{itemize}
+
+Allgemein scheint die Parametrisierung (bzw. Notation der Parameter) sehr zu variieren.
 
 \hypertarget{mod-comp}{%
 \subsection{Conway-Maxwell Poisson (COMP)}\label{mod-comp}}
@@ -2280,12 +2328,18 @@ broom & 0.5.2 & CRAN (R 3.6.1)\\
 DiagrammeR & 1.0.1 & CRAN (R 3.6.1)\\
 dplyr & 0.8.3 & CRAN (R 3.6.1)\\
 firasans & 0.1.0 & Github (hrbrmstr/firasans@52f83c8)\\
+gamlss & 5.1-4 & CRAN (R 3.6.1)\\
+gamlss.data & 5.1-4 & CRAN (R 3.6.1)\\
+gamlss.dist & 5.1-4 & CRAN (R 3.6.1)\\
 ggplot2 & 3.2.1 & CRAN (R 3.6.1)\\
 hrbrthemes & 0.6.0 & CRAN (R 3.6.1)\\
 kableExtra & 1.1.0 & CRAN (R 3.6.1)\\
+MASS & 7.3-51.4 & CRAN (R 3.6.1)\\
+nlme & 3.1-140 & CRAN (R 3.6.1)\\
 pander & 0.6.3 & CRAN (R 3.6.1)\\
 purrr & 0.3.2 & CRAN (R 3.6.1)\\
 tidyr & 0.8.3 & CRAN (R 3.6.1)\\
+VGAM & 1.1-1 & CRAN (R 3.6.1)\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2351,7 +2405,7 @@ N & Missing & Mittelwert & Varianz & Range\\
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{poisson-regression_files/figure-latex/underdisp_azprocedure_over-1} \end{center}
+\begin{center}\includegraphics{poisson-regression_files/figure-latex/underdisp-azprocedure-over-1} \end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2488,7 +2542,7 @@ N & Missing & Mittelwert & Varianz & Range\\
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{poisson-regression_files/figure-latex/underdisp_azprocedure_under-1} \end{center}
+\begin{center}\includegraphics{poisson-regression_files/figure-latex/underdisp-azprocedure_under-1} \end{center}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2587,7 +2641,110 @@ Pr(\textgreater{}\textbar{}z\textbar{})\strut
 #> Pearson Dispersion = 0.790
 \end{verbatim}
 
-In diesem Fall haben wir es mit underdispersion zu tun.
+In diesem Fall haben wir es mit underdispersion zu tun, also versuchen wir es mal mit der GP:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(VGAM)}
+\KeywordTok{library}\NormalTok{(gamlss)}
+
+\NormalTok{mod_gp_vgam <-}\StringTok{ }\KeywordTok{vglm}\NormalTok{(los }\OperatorTok{~}\StringTok{ }\NormalTok{procedure }\OperatorTok{+}\StringTok{ }\NormalTok{sex }\OperatorTok{+}\StringTok{ }\NormalTok{admit, }\DataTypeTok{data =}\NormalTok{ azprocedure_subset, }\DataTypeTok{family =} \KeywordTok{genpoisson}\NormalTok{())}
+
+\NormalTok{mod_gp_gamlss <-}\StringTok{ }\KeywordTok{gamlss}\NormalTok{(los }\OperatorTok{~}\StringTok{ }\NormalTok{procedure }\OperatorTok{+}\StringTok{ }\NormalTok{sex }\OperatorTok{+}\StringTok{ }\NormalTok{admit, }\DataTypeTok{data =}\NormalTok{ azprocedure_subset, }\DataTypeTok{family =} \KeywordTok{GPO}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+#> GAMLSS-RS iteration 1: Global Deviance = 7969.342 
+#> GAMLSS-RS iteration 2: Global Deviance = 7961.567 
+#> GAMLSS-RS iteration 3: Global Deviance = 7961.567
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(mod_gp_vgam)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+#> 
+#> Call:
+#> vglm(formula = los ~ procedure + sex + admit, family = genpoisson(), 
+#>     data = azprocedure_subset)
+#> 
+#> Pearson residuals:
+#>                        Min      1Q   Median     3Q   Max
+#> rhobitlink(lambda) -0.6573 -0.5912 -0.28788 0.2773 6.782
+#> loglink(theta)     -2.3158 -0.6304  0.07304 0.8734 1.627
+#> 
+#> Coefficients: 
+#>               Estimate Std. Error z value Pr(>|z|)    
+#> (Intercept):1 -0.24021    0.03523  -6.819 9.16e-12 ***
+#> (Intercept):2  1.30125    0.02766  47.042  < 2e-16 ***
+#> procedure      0.71846    0.02143  33.521  < 2e-16 ***
+#> sex           -0.06760    0.02043  -3.308 0.000939 ***
+#> admit          0.31193    0.01993  15.652  < 2e-16 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Names of linear predictors: rhobitlink(lambda), loglink(theta)
+#> 
+#> Log-likelihood: -3956.379 on 3959 degrees of freedom
+#> 
+#> Number of Fisher scoring iterations: 6 
+#> 
+#> No Hauck-Donner effect found in any of the estimates
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(mod_gp_gamlss)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+#> Warning in summary.gamlss(mod_gp_gamlss): summary: vcov has failed, option qr is used instead
+\end{verbatim}
+
+\begin{verbatim}
+#> ******************************************************************
+#> Family:  c("GPO", "Generalised Poisson") 
+#> 
+#> Call:  gamlss(formula = los ~ procedure + sex + admit, family = GPO(),  
+#>     data = azprocedure_subset) 
+#> 
+#> Fitting method: RS() 
+#> 
+#> ------------------------------------------------------------------
+#> Mu link function:  log
+#> Mu Coefficients:
+#>             Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept)  1.18687    0.02980  39.824   <2e-16 ***
+#> procedure    0.73075    0.03959  18.456   <2e-16 ***
+#> sex         -0.06892    0.02643  -2.607   0.0092 ** 
+#> admit        0.30974    0.02750  11.264   <2e-16 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> ------------------------------------------------------------------
+#> Sigma link function:  log
+#> Sigma Coefficients:
+#>             Estimate Std. Error t value Pr(>|t|)
+#> (Intercept)   -36.04    2246.20  -0.016    0.987
+#> 
+#> ------------------------------------------------------------------
+#> No. of observations in the fit:  1982 
+#> Degrees of Freedom for the fit:  5
+#>       Residual Deg. of Freedom:  1977 
+#>                       at cycle:  3 
+#>  
+#> Global Deviance:     7961.567 
+#>             AIC:     7971.567 
+#>             SBC:     7999.527 
+#> ******************************************************************
+\end{verbatim}
+
+Beispiel aus Hilbe 2014. Eigentlich sollte \(\delta \approx -0.1195\) und \(\theta = \frac{1}{(1 - \delta)^2} \approx 0.799\)
 
 \bibliography{Poisson.bib,references.bib}
 
