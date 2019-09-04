@@ -12,8 +12,8 @@ node [shape = oval,
 edge [fontname = "Roboto"]
 
 node [fillcolor = white]
-start [label = "Start with a Poisson model",
-       shape = plaintext,
+start [label = "Start with Poisson",
+       shape = rectangle,
        fillcolor = "lightblue"]
 
 ################################
@@ -23,7 +23,7 @@ node [fillcolor = white]
 checkdisp [label = "Check Pearson-Dispersion"]
 
 ud [label = "Underdispersion", fillcolor = "yellow"]
-unicorn [label = "You have found a unicorn!\nUse Poisson", fillcolor = pink]
+unicorn [label = "You found a unicorn!\nUse Poisson", fillcolor = pink]
 od [label = "Overdispersion", fillcolor = "red"]
 
 node [fillcolor = orange]
