@@ -15,7 +15,7 @@ colorlinks: true
 description: "Because count data is hard"
 papersize: a4
 mainfont: "TeX Gyre Pagella"
-sansfont: "TeX Gyre Heros"
+sansfont: "Fira Sans"
 monofont: "Fira Mono"
 monofontoptions:
   - Mapping=tex-ansi
@@ -57,14 +57,15 @@ library(pander)
 # Plotting
 library(ggplot2)
 
-theme_set(
-   theme_minimal()
-)
-
-# library(firasans) # Install via  remotes::install_github("hrbrmstr/firasans")
 # theme_set(
-#    theme_ipsum_fsc()
+#    theme_minimal()
 # )
+
+extrafont::loadfonts()
+library(firasans) # Install via  remotes::install_github("hrbrmstr/firasans")
+theme_set(
+   theme_ipsum_fsc()
+)
 
 # Graphs (GraphViz)
 library(DiagrammeR)

@@ -16,3 +16,5 @@ Imports:
     msme,
     lmtest,
     sessioninfo
+Remotes: hrbrmstr/firasans
+License: MIT + file LICENSE
