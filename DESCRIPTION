@@ -1,20 +1,22 @@
-Package: poisson-regression
 Type: Book
+Package: poisson-regression
 Title: Placeholder file for travis
 Version: 0.0.1
+License: MIT + file LICENSE
 Imports: 
     bookdown,
-    ggplot2,
-    dplyr,
-    purrr,
     broom,
-    kableExtra,
-    pander,
-    hrbrthemes,
-    DiagrammeR,
     COUNT,
-    msme,
+    DiagrammeR,
+    dplyr,
+    ggplot2,
+    hrbrthemes,
+    kableExtra,
     lmtest,
+    msme,
+    pander,
+    purrr,
     sessioninfo
-Remotes: hrbrmstr/firasans
-License: MIT + file LICENSE
+Remotes: 
+    hrbrmstr/firasans
+Encoding: UTF-8
