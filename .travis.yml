@@ -63,7 +63,7 @@ deploy:
   provider: pages
   local_dir: poisson-regression
   skip_cleanup: true
-  keep-history: true
+  keep_history: true
   github_token: $GITHUB_PAT
   target_branch: gh-pages
 
