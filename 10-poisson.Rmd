@@ -46,8 +46,8 @@ map_df(c(0.5, 1, 2, 5, 10, 15), ~{
       )
   ) +
   labs(
-    title = expression(Poi(mu)),
-    x = "y", y = expression(Poi(y, mu)), fill = expression(mu)
+    title = "Poi(\u00b5)",
+    x = "y", y = "Poi(y, \u00b5)", fill = "\u00b5"
   ) +
   theme(legend.position = c(.7, 1))
 ```
