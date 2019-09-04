@@ -140,7 +140,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{Stand: 04. September 2019, 14:41 Uhr (UTC)}
+    \date{Stand: 04. September 2019, 16:17 Uhr (UTC)}
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -399,7 +399,7 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die pr
 \toprule
 N & Missing & Mittelwert & Varianz & Range\\
 \midrule
-100 & 10 & 5 & 4.97 & [0, 11]\\
+100 & 10 & 4.68 & 4.98 & [0, 11]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -491,7 +491,7 @@ Grundlage zur Modellierung ist das GLM mit den dazugehörigen Voraussetzungen:
 \end{figure}
 
 \BeginKnitrBlock{definition}[Poisson-Modell]
-\protect\hypertarget{def:poisson-modell}{}{\label{def:poisson-modell} \iffalse (Poisson-Modell) \fi{} }Die Zielvariablen \(y_i \in \mathbb{N}_0\) sind (bedingt) unabhängig gegeben der Kovariablen \(x_i1, x_i2, \ldots, x_ik\).
+\protect\hypertarget{def:poisson-modell}{}{\label{def:poisson-modell} \iffalse (Poisson-Modell) \fi{} }Die Zielvariablen \(y_i \in \mathbb{N}_0\) sind (bedingt) unabhängig gegeben der Kovariablen \(x_{i1}, x_{i2}, \ldots, x_{ik}\).
 
 Die Rate \(\mu_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)\) der Poissonverteilung wird in der Regel log-linear modelliert als
 
@@ -967,22 +967,10 @@ So wie die \emph{NB} als mixture aus Poisson-Verteilung mit Gamma-verteilter Var
 \hypertarget{mod-gp}{%
 \subsection{Generalized Poisson (GP)}\label{mod-gp}}
 
-\begin{itemize}
-\tightlist
-\item
-  Auch mit dispersion/scale Parameter \(\alpha\)
-\item
-  Analog NB: \(\alpha = 0 \Rightarrow y \sim \mathrm{Pois}(\lambda)\)
-\item
-  Selling feature: \(\alpha < 0\) ist möglich, im Gegensatz zu NB
-\item
-  -\textgreater{} Underdispersion modellierbar
-\end{itemize}
-
-Eine Verteilung, die sich sowohl für over- als auch underdispersion eignet, und dabei noch gut interpretierbar bleibt.
+Die Verteilung besitzt auch einen zusätzlichen Dispersionsparameter (analog NB, PIG), allerdings kann dieser hier auch negative Werte annehmen, womit die GP für alle Dispersionsarten (bzw. insbesondere underdispersion) geeignet ist.
 
 \BeginKnitrBlock{definition}[Generalized Poisson]
-\protect\hypertarget{def:def-genois}{}{\label{def:def-genois} \iffalse (Generalized Poisson) \fi{} }Aus \citet{hilbeModelingCountData2014} (p.~211), Parametrisierung nach Harris, Yang \& Harding:
+\protect\hypertarget{def:def-genois}{}{\label{def:def-genois} \iffalse (Generalized Poisson) \fi{} }Aus \citet{hilbeModelingCountData2014} (p.~211) und \citet{harris2012ModelingUnderdispersed}:
 
 Eine Variable \(Y\) ist \emph{generalized Poisson} verteilt mit der PMF:
 
@@ -990,7 +978,15 @@ Eine Variable \(Y\) ist \emph{generalized Poisson} verteilt mit der PMF:
 P(Y = y_i) = \frac{\theta_i \left(\theta_i + \delta y_i\right)^{y_i - 1}}{y_i !} \exp(-\theta_i - \delta y_i), \quad y_i = 1, 2, 3, \ldots
 \end{equation*}
 
-Mit Dispersionsparameter \(\Phi = \frac{1}{(1 - \theta)^2}\).
+\begin{align*}
+\theta_i > 0, \quad \max(-1, \frac{-\theta_i}{4}) < \delta < 1 \\[2em]
+\mu_i = \mathbb{E}(Y_i) &= \frac{\theta_i}{1 - \delta} \\
+\mathrm{Var}(Y_i) &= \frac{\theta}{(1 - \delta)^3} 
+                   = \frac{1}{(1 - \delta)^2} \mathbb{E}(Y_i)
+                   = \Phi \mathbb{E}(Y_i)
+\end{align*}
+
+Wobei \(\Phi = \frac{1}{(1 - \theta)^2}\) als Dispersionsparameter dient.
 
 Es gilt außerdem
 
@@ -1002,8 +998,6 @@ Es gilt außerdem
 
 Auch hier kann ein Likelihood-Ratio Test auf \(\delta = 0\) durchgeführt werden, analog \(\alpha = 0\) für die NB -- wobei \(\delta\) hier keine Restriktion hat (siehe BLR, Definition \ref{def:BLR}).
 \EndKnitrBlock{definition}
-
-Die Verteilung besitzt auch einen zusätzlichen Dispersionsparameter (analog NB, PIG), allerdings kann dieser hier auch negative Werte annehmen, womit die GP für alle Dispersionsarten (bzw. insbesondere underdispersion) geeignet ist.
 
 \textbf{Software}:
 
@@ -1033,7 +1027,7 @@ In beiden R-Varianten habe ich bisher nicht geschafft \(\theta\), den Dispersion
   SAS: \texttt{NLMIXED} oder \texttt{FMM}, siehe auch \href{http://support.sas.com/kb/56/549.html}{SAS support document}
 \end{itemize}
 
-Allgemein scheint die Parametrisierung (bzw. Notation der Parameter) sehr zu variieren.
+Allgemein scheint die Parametrisierung (und Notation der Parameter) zu variieren.
 
 \hypertarget{mod-comp}{%
 \subsection{Conway-Maxwell Poisson (COMP)}\label{mod-comp}}
@@ -1314,7 +1308,21 @@ ZIP und ZINB wurde hergeleitet als zweiteilige mixture distributions. Die allgem
 
 mit \(p\) als \emph{mixture proportion} und \(g_1, g_2\) als Dichte-/Massefunktionen der beiden Komponenten.
 
-In dieser Darstellung entspricht \(p\) der \emph{rate of zero-inflation} \(\pi\), \(g_1\) einer degenerierten 0-Verteilung und \(g_2\) einer Poisson-PMF.
+Für zero-inflation setzt man \(p\) als \emph{rate of zero-inflation} \(\pi\), \(g_1\) als degenerierten 0-Verteilung und \(g_2\) als Poisson-PMF oder ähnliche Zähl-Verteilung wie NB, PIG, etc.
+
+Eine alternative Darstellung für eine \emph{zero-inflated} Verteilung (\href{https://www.statistik.uni-dortmund.de/useR-2008/slides/Kleiber+Zeileis.pdf}{siehe}):
+
+\begin{equation*}
+f_\mathrm{zeroinfl} (y; x, \beta, \pi) = \pi \cdot I_{\{0\}}(y) + (1 - \pi) \cdot f_{\mathrm{count}}(y; x, \beta)
+\end{equation*}
+
+Mit zu modellierendem Erwartungswert
+
+\begin{equation*}
+\mu_i = \pi_i \cdot 0 + (1 - \pi_i) \cdot \exp(x_i^T\beta)
+\end{equation*}
+
+Wobei \(\pi\) in der Regel binomial, bzw. über logistische Regression geschätzt wird.
 
 \BeginKnitrBlock{definition}[Zero-Inflated Poisson Verteilung (ZIP)]
 \protect\hypertarget{def:defzip}{}{\label{def:defzip} \iffalse (Zero-Inflated Poisson Verteilung (ZIP)) \fi{} }Nach \citet{perumean-chaneyZeroinflatedOverdispersedWhat2013} (p.~1675)

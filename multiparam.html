@@ -437,23 +437,16 @@ Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob <span
 </div>
 <div id="mod-gp" class="section level2">
 <h2><span class="header-section-number">3.3</span> Generalized Poisson (GP)</h2>
-<ul>
-<li>Auch mit dispersion/scale Parameter <span class="math inline">\(\alpha\)</span></li>
-<li>Analog NB: <span class="math inline">\(\alpha = 0 \Rightarrow y \sim \mathrm{Pois}(\lambda)\)</span></li>
-<li>Selling feature: <span class="math inline">\(\alpha &lt; 0\)</span> ist möglich, im Gegensatz zu NB</li>
-<li>-&gt; Underdispersion modellierbar</li>
-</ul>
-<p>Eine Verteilung, die sich sowohl für over- als auch underdispersion eignet, und dabei noch gut interpretierbar bleibt.</p>
+<p>Die Verteilung besitzt auch einen zusätzlichen Dispersionsparameter (analog NB, PIG), allerdings kann dieser hier auch negative Werte annehmen, womit die GP für alle Dispersionsarten (bzw. insbesondere underdispersion) geeignet ist.</p>
 
 <div class="definition">
-<p><span id="def:def-genois" class="definition"><strong>Definition 3.4  (Generalized Poisson)  </strong></span>Aus <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 211), Parametrisierung nach Harris, Yang &amp; Harding:</p>
+<p><span id="def:def-genois" class="definition"><strong>Definition 3.4  (Generalized Poisson)  </strong></span>Aus <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 211) und <span class="citation">Harris, Yang, und Hardin (<a href="#ref-harris2012ModelingUnderdispersed">2012</a>)</span>:</p>
 <p>Eine Variable <span class="math inline">\(Y\)</span> ist <em>generalized Poisson</em> verteilt mit der PMF:</p>
-<p>Mit Dispersionsparameter <span class="math inline">\(\Phi = \frac{1}{(1 - \theta)^2}\)</span>.</p>
+<p>Wobei <span class="math inline">\(\Phi = \frac{1}{(1 - \theta)^2}\)</span> als Dispersionsparameter dient.</p>
 <p>Es gilt außerdem</p>
 <p>Auch hier kann ein Likelihood-Ratio Test auf <span class="math inline">\(\delta = 0\)</span> durchgeführt werden, analog <span class="math inline">\(\alpha = 0\)</span> für die NB – wobei <span class="math inline">\(\delta\)</span> hier keine Restriktion hat (siehe BLR, Definition <a href="anwendung.html#def:BLR">5.4</a>).</p>
 </div>
 
-<p>Die Verteilung besitzt auch einen zusätzlichen Dispersionsparameter (analog NB, PIG), allerdings kann dieser hier auch negative Werte annehmen, womit die GP für alle Dispersionsarten (bzw. insbesondere underdispersion) geeignet ist.</p>
 <p><strong>Software</strong>:</p>
 <ul>
 <li>R: <code>VGAM</code>: <code>vgam(..., family = genpoisson())</code>]
@@ -468,7 +461,7 @@ Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob <span
 <ul>
 <li>SAS: <code>NLMIXED</code> oder <code>FMM</code>, siehe auch <a href="http://support.sas.com/kb/56/549.html">SAS support document</a></li>
 </ul>
-<p>Allgemein scheint die Parametrisierung (bzw. Notation der Parameter) sehr zu variieren.</p>
+<p>Allgemein scheint die Parametrisierung (und Notation der Parameter) zu variieren.</p>
 </div>
 <div id="mod-comp" class="section level2">
 <h2><span class="header-section-number">3.4</span> Conway-Maxwell Poisson (COMP)</h2>
@@ -517,6 +510,9 @@ Als link wird <span class="math inline">\(\log \lambda\)</span> verwendet, da so
 </div>
 <h3>Literatur</h3>
 <div id="refs" class="references">
+<div id="ref-harris2012ModelingUnderdispersed">
+<p>Harris, Tammy, Zhao Yang, und James W. Hardin. 2012. „Modeling Underdispersed Count Data with Generalized Poisson Regression“. <em>The Stata Journal</em> 12 (4): 736–47. <a href="https://doi.org/10.1177/1536867X1201200412" class="uri">https://doi.org/10.1177/1536867X1201200412</a>.</p>
+</div>
 <div id="ref-high2018AlternativeVariance">
 <p>High, Robin. 2018. „Alternative Variance Parameterizations in Count Data Models with the NLMIXED Procedure“. In. <a href="https://www.semanticscholar.org/paper/Alternative-Variance-Parameterizations-in-Count-the-High/1224075e77acdee9eef91643e0bbfe869406a35d" class="uri">https://www.semanticscholar.org/paper/Alternative-Variance-Parameterizations-in-Count-the-High/1224075e77acdee9eef91643e0bbfe869406a35d</a>.</p>
 </div>

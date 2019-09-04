@@ -339,7 +339,12 @@ Um zu evaluieren, ob ein NB1 oder NB2 Modell einen besseren Fit liefert, kann ma
 <p>ZIP und ZINB wurde hergeleitet als zweiteilige mixture distributions. Die allgemeine Form für mixture distributions ist</p>
 
 <p>mit <span class="math inline">\(p\)</span> als <em>mixture proportion</em> und <span class="math inline">\(g_1, g_2\)</span> als Dichte-/Massefunktionen der beiden Komponenten.</p>
-<p>In dieser Darstellung entspricht <span class="math inline">\(p\)</span> der <em>rate of zero-inflation</em> <span class="math inline">\(\pi\)</span>, <span class="math inline">\(g_1\)</span> einer degenerierten 0-Verteilung und <span class="math inline">\(g_2\)</span> einer Poisson-PMF.</p>
+<p>Für zero-inflation setzt man <span class="math inline">\(p\)</span> als <em>rate of zero-inflation</em> <span class="math inline">\(\pi\)</span>, <span class="math inline">\(g_1\)</span> als degenerierten 0-Verteilung und <span class="math inline">\(g_2\)</span> als Poisson-PMF oder ähnliche Zähl-Verteilung wie NB, PIG, etc.</p>
+<p>Eine alternative Darstellung für eine <em>zero-inflated</em> Verteilung (<a href="https://www.statistik.uni-dortmund.de/useR-2008/slides/Kleiber+Zeileis.pdf">siehe</a>):</p>
+
+<p>Mit zu modellierendem Erwartungswert</p>
+
+<p>Wobei <span class="math inline">\(\pi\)</span> in der Regel binomial, bzw. über logistische Regression geschätzt wird.</p>
 
 <div class="definition">
 <p><span id="def:defzip" class="definition"><strong>Definition 4.1  (Zero-Inflated Poisson Verteilung (ZIP))  </strong></span>Nach <span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">2013</a>)</span> (p. 1675)</p>
