@@ -53,7 +53,7 @@ map_df(c(0.5, 1, 2, 5, 10, 15), ~{
 ```
 
 ```{definition poisson-modell, name = "Poisson-Modell"}
-Die Zielvariablen $y_i \in \mathbb{N}_0$ sind (bedingt) unabhängig gegeben der Kovariablen $x_i1, x_i2, \ldots, x_ik$.
+Die Zielvariablen $y_i \in \mathbb{N}_0$ sind (bedingt) unabhängig gegeben der Kovariablen $x_{i1}, x_{i2}, \ldots, x_{ik}$.
 
 Die Rate $\mu_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)$ der Poissonverteilung wird in der Regel log-linear modelliert als
 

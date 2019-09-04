@@ -143,15 +143,10 @@ So wie die *NB* als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz 
 
 ## Generalized Poisson (GP) {#mod-gp}
 
-- Auch mit dispersion/scale Parameter $\alpha$
-- Analog NB: $\alpha = 0 \Rightarrow y \sim \mathrm{Pois}(\lambda)$
-- Selling feature: $\alpha < 0$ ist möglich, im Gegensatz zu NB
-- -> Underdispersion modellierbar
-
-Eine Verteilung, die sich sowohl für over- als auch underdispersion eignet, und dabei noch gut interpretierbar bleibt.
+Die Verteilung besitzt auch einen zusätzlichen Dispersionsparameter (analog NB, PIG), allerdings kann dieser hier auch negative Werte annehmen, womit die GP für alle Dispersionsarten (bzw. insbesondere underdispersion) geeignet ist.
 
 ```{definition def-genois, name = "Generalized Poisson"}
-Aus @hilbeModelingCountData2014 (p. 211), Parametrisierung nach Harris, Yang & Harding:
+Aus @hilbeModelingCountData2014 (p. 211) und @harris2012ModelingUnderdispersed:
 
 Eine Variable $Y$ ist *generalized Poisson* verteilt mit der PMF:
   
@@ -159,7 +154,15 @@ Eine Variable $Y$ ist *generalized Poisson* verteilt mit der PMF:
 P(Y = y_i) = \frac{\theta_i \left(\theta_i + \delta y_i\right)^{y_i - 1}}{y_i !} \exp(-\theta_i - \delta y_i), \quad y_i = 1, 2, 3, \ldots
 \end{equation*}
 
-Mit Dispersionsparameter $\Phi = \frac{1}{(1 - \theta)^2}$.
+\begin{align*}
+\theta_i > 0, \quad \max(-1, \frac{-\theta_i}{4}) < \delta < 1 \\[2em]
+\mu_i = \mathbb{E}(Y_i) &= \frac{\theta_i}{1 - \delta} \\
+\mathrm{Var}(Y_i) &= \frac{\theta}{(1 - \delta)^3} 
+                   = \frac{1}{(1 - \delta)^2} \mathbb{E}(Y_i)
+                   = \Phi \mathbb{E}(Y_i)
+\end{align*}
+
+Wobei $\Phi = \frac{1}{(1 - \theta)^2}$ als Dispersionsparameter dient.
 
 Es gilt außerdem
 
@@ -174,8 +177,6 @@ Auch hier kann ein Likelihood-Ratio Test auf $\delta = 0$ durchgeführt werden, 
 ```
 
 
-Die Verteilung besitzt auch einen zusätzlichen Dispersionsparameter (analog NB, PIG), allerdings kann dieser hier auch negative Werte annehmen, womit die GP für alle Dispersionsarten (bzw. insbesondere underdispersion) geeignet ist.
-
 **Software**:  
 
 - R: `VGAM`: `vgam(..., family = genpoisson())`]
@@ -188,9 +189,7 @@ In beiden R-Varianten habe ich bisher nicht geschafft $\theta$, den Dispersionsp
 
 - SAS: `NLMIXED` oder `FMM`, siehe auch [SAS support document](http://support.sas.com/kb/56/549.html)
 
-Allgemein scheint die Parametrisierung (bzw. Notation der Parameter) sehr zu variieren.
-
-
+Allgemein scheint die Parametrisierung (und Notation der Parameter) zu variieren.
 
 
 ## Conway-Maxwell Poisson (COMP) {#mod-comp}
@@ -328,7 +327,21 @@ ZIP und ZINB wurde hergeleitet als zweiteilige mixture distributions. Die allgem
 
 mit $p$ als *mixture proportion* und $g_1, g_2$ als Dichte-/Massefunktionen der beiden Komponenten.
 
-In dieser Darstellung entspricht $p$ der *rate of zero-inflation* $\pi$, $g_1$ einer degenerierten 0-Verteilung und $g_2$ einer Poisson-PMF.
+Für zero-inflation setzt man $p$ als *rate of zero-inflation* $\pi$, $g_1$ als degenerierten 0-Verteilung und $g_2$ als Poisson-PMF oder ähnliche Zähl-Verteilung wie NB, PIG, etc.  
+
+Eine alternative Darstellung für eine *zero-inflated* Verteilung ([siehe](https://www.statistik.uni-dortmund.de/useR-2008/slides/Kleiber+Zeileis.pdf)):
+
+\begin{align*}
+f_\mathrm{zeroinfl} (y; x, \beta, \pi) &= \pi \cdot I_{\{0\}}(y) + (1 - \pi) \cdot f_{\mathrm{count}}(y; x, \beta)
+\end{align*}
+
+Mit zu modellierendem Erwartungswert
+
+\begin{equation*}
+\mu_i &= \pi_i \cdot 0 + (1 - \pi_i) \cdot \exp(x_i^T\beta)
+\end{equation*}
+
+Wobei $\pi$ in der Regel binomial, bzw. über logistische Regression geschätzt wird.
 
 ```{definition defzip, name = "Zero-Inflated Poisson Verteilung (ZIP)"}
 Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675)
