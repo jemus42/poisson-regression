@@ -18,19 +18,26 @@ apt_packages:
 
 before_install:
   - |
+   Rscript -e "install.packages('tinytex')"
    Rscript -e "tinytex::install_tinytex()"
 
    if [ ! -d $HOME/.fonts ]; then
     mkdir $HOME/.fonts
 
-    wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/pagella/qpl2_501otf.zip -O $HOME/.fonts/gyre.zip
-    unzip $HOME/.fonts/gyre.zip -d $HOME/.fonts/
+    if [ ! -e $HOME/.fonts/gyre.zip ]; then
+     wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/pagella/qpl2_501otf.zip -O $HOME/.fonts/gyre.zip
+     unzip $HOME/.fonts/gyre.zip -d $HOME/.fonts/
+    fi
 
-    wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip -O $HOME/.fonts/gyreheros.zip
-    unzip $HOME/.fonts/gyreheros.zip -d $HOME/.fonts/
+    if [ ! -e $HOME/.fonts/gyreheros.zip ]; then
+     wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip -O $HOME/.fonts/gyreheros.zip
+     unzip $HOME/.fonts/gyreheros.zip -d $HOME/.fonts/
+    fi
 
-    wget https://github.com/bBoxType/FiraSans/archive/master.zip -O $HOME/.fonts/fira.zip
-    unzip ~/.fonts/fira.zip '*.ttf' -d $HOME/.fonts/
+    if [ ! -e $HOME/.fonts/fira.zip ]; then
+      wget https://github.com/bBoxType/FiraSans/archive/master.zip -O $HOME/.fonts/fira.zip
+      unzip ~/.fonts/fira.zip '*.ttf' -d $HOME/.fonts/
+    fi
    fi
 
    cp $HOME/.TinyTeX/texmf-var/fonts/conf/texlive-fontconfig.conf ~/.fonts.conf
