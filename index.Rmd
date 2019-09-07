@@ -1,7 +1,7 @@
 --- 
 title: "Poisson-Regression und ihre Leiden"
 author: "Lukas Burk"
-date: "Stand: `r format(Sys.time(), '%d. %B %Y, %H:%M Uhr (%Z)')`"
+date: "Stand: `r format(Sys.time(), '%d. %B %Y %H:%M Uhr (%Z)', tz = 'Europe/Berlin')`"
 lang: de-DE
 site: bookdown::bookdown_site
 cover-image: "images/poiscovr-orly.png"
