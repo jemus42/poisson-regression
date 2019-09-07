@@ -1,5 +1,23 @@
 # (APPENDIX) Appendix {-} 
 
+# Verfügbarkeit
+
+Sowohl der Quelltext als auch das Output (sprich, dieses Dokument in mehreren Formaten) sind öffentlich an mehreren Orten zu finden:
+
+```{r availibility, echo=FALSE}
+tibble::tribble(
+  ~" ", ~Host, ~URL,
+  "Code", "Gitea (self-hosted)", "https://git.tadaa-data.de/lukas/poisson-regression",
+  "Code", "GitHub", "https://github.com/jemus42/poisson-regression",
+  "Result", "GitHub Pages", "https://jemus42.github.io/poisson-regression",
+  "Result", "Self-Hosted", "https://lukas.tadaa-data.de/poisson/"
+) %>%
+  kable(booktabs = TRUE) %>%
+  kable_styling(position = "center", bootstrap_options = c("hover")) %>%
+  collapse_rows(columns = 1)
+```
+
+
 # Ergänzungen
 
 Hier finden sich Erläuterungen zu Themen, die nur tangentiell in Verbindung mit dem eigentlichen Thema stehen, aber unter Umständen dennoch von Interesse sein könnten.
