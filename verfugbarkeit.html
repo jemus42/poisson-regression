@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Kapitel 6 Entscheidungshilfen | Poisson-Regression und ihre Leiden</title>
+  <title>A Verfügbarkeit | Poisson-Regression und ihre Leiden</title>
   <meta name="description" content="Because count data is hard" />
   <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Kapitel 6 Entscheidungshilfen | Poisson-Regression und ihre Leiden" />
+  <meta property="og:title" content="A Verfügbarkeit | Poisson-Regression und ihre Leiden" />
   <meta property="og:type" content="book" />
   
   <meta property="og:image" content="images/poiscovr-orly.png" />
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="jemus42/poisson-regression" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Kapitel 6 Entscheidungshilfen | Poisson-Regression und ihre Leiden" />
+  <meta name="twitter:title" content="A Verfügbarkeit | Poisson-Regression und ihre Leiden" />
   
   <meta name="twitter:description" content="Because count data is hard" />
   <meta name="twitter:image" content="images/poiscovr-orly.png" />
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="anwendung.html"/>
-<link rel="next" href="verfugbarkeit.html"/>
+<link rel="prev" href="entscheidungshilfen.html"/>
+<link rel="next" href="erganzungen.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -218,35 +218,71 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="entscheidungshilfen" class="section level1">
-<h1><span class="header-section-number">Kapitel 6</span> Entscheidungshilfen</h1>
-<p><span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">2013</a>)</span> schlagen folgendes Vorgehen vor um Overdispersion und Zero-Inflation zu erkennen:</p>
-<div id="htmlwidget-f000dc53229bcb346b9d" style="width:768px;height:474.660074165637px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-f000dc53229bcb346b9d">{"x":{"diagram":"digraph PerumeanChaney {\n\ngraph [layout = dot]\n\n################################\n#### Global node attributes ####\n################################\nnode [shape = plaintext,\n      color = black,\n      fontname = \"Roboto\"]\nedge [fontname = \"Roboto\"]\n\nnode [fillcolor = white]\nstart [label = \"Test for Overdispersion\\n(Poisson vs. NB)\"]\ntest_zi_poi [label = \"Test for Zero-Inflation\\n(Poisson vs. ZIP)\"]\ntest_zi_nb [label = \"Test for Zero-Inflation\\n(NB vs. ZINB)\"]\nPoisson\nZIP\nNB\nZINB\n\nedge []\nstart -> test_zi_poi [label = \"N.S.\"]\nstart -> test_zi_nb  [label = \"S\"]\ntest_zi_poi -> Poisson [label = \"N.S.\"]\ntest_zi_poi -> ZIP [label = \"S\"]\ntest_zi_nb -> NB [label = \"N.S.\"]\ntest_zi_nb -> ZINB [label = \"S\"]\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
-<p>Wobei im ersten Schritt sowohl Poisson als auch NB-Modelle gefittet werden, und dann nach Goodness-of-Fit (via LRT) (NB &gt; Poisson?) entschieden wird.<br />
-Im zweiten Schritt werden die jeweiligen Modelle (entweder Poisson oder NB) mit ihren ZI-Counterparts verglichen (model fit, Vuong-Test), analog Schritt 1.<br />
-“LRT-Vuong Method”.</p>
-<p>Eine allgemeinere Darstellung zur Veranschaulichung der sich ergebenden Möglichkeiten:</p>
-<div id="htmlwidget-c13b84c8cc28b813c085" style="width:768px;height:474.660074165637px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-c13b84c8cc28b813c085">{"x":{"diagram":"digraph decisiontree {\n\ngraph [layout = dot]\n\n################################\n#### Global node attributes ####\n################################\nnode [shape = oval,\n      style = filled,\n      color = grey,\n      fontname = \"Roboto\"]\nedge [fontname = \"Roboto\"]\n\nnode [fillcolor = white]\nstart [label = \"Start with Poisson\",\n       shape = rectangle,\n       fillcolor = \"lightblue\"]\n\n################################\n#### First step             ####\n################################\nnode [fillcolor = white]\ncheckdisp [label = \"Check Pearson-Dispersion\"]\n\nud [label = \"Underdispersion\", fillcolor = \"yellow\"]\nunicorn [label = \"You found a unicorn!\\nUse Poisson\", fillcolor = pink]\nod [label = \"Overdispersion\", fillcolor = \"red\"]\n\nnode [fillcolor = orange]\n\nedge [color = grey]\nstart -> checkdisp [label = \"\"]\ncheckdisp -> ud [label = \"D < 1\"]\ncheckdisp -> unicorn [label = \"D ≈ 1\"]\ncheckdisp -> od [label = \"D > 1\"]\n#unicorn -> start [label = \"Use actual Poisson regression\"]\n\nnode []\nse_adjust [label = \"Adjust SE\", color = lightblue]\nnbin [label = \"NB\", fillcolor = red]\npig [label = \"PIG\", fillcolor = red]\ncmp [label = \"COMP\", fillcolor = orange]\ngpois [label = \"GP\", fillcolor = yellow]\n\nedge [color = red]\nod -> {nbin pig se_adjust}\n#edge [color = yellow]\n#ud -> gpois\nedge [color = orange]\nod, ud -> {cmp, gpois}\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
-
-</div>
-
-
-
-<h3>Literatur</h3>
-<div id="refs" class="references">
-<div id="ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">
-<p>Perumean-Chaney, Suzanne E., Charity Morgan, David McDowall, und Inmaculada Aban. 2013. „Zero-Inflated and Overdispersed: What’s One to Do?“ <em>Journal of Statistical Computation and Simulation</em> 83 (9): 1671–83. <a href="https://doi.org/10.1080/00949655.2012.668550" class="uri">https://doi.org/10.1080/00949655.2012.668550</a>.</p>
-</div>
+<div id="verfugbarkeit" class="section level1">
+<h1><span class="header-section-number">A</span> Verfügbarkeit</h1>
+<p>Sowohl der Quelltext als auch das Output (sprich, dieses Dokument in mehreren Formaten) sind öffentlich an mehreren Orten zu finden:</p>
+<table class="table table-hover" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Host
+</th>
+<th style="text-align:left;">
+URL
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+Code
+</td>
+<td style="text-align:left;">
+Gitea (self-hosted)
+</td>
+<td style="text-align:left;">
+<a href="https://git.tadaa-data.de/lukas/poisson-regression" class="uri">https://git.tadaa-data.de/lukas/poisson-regression</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GitHub
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/jemus42/poisson-regression" class="uri">https://github.com/jemus42/poisson-regression</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;vertical-align: middle !important;" rowspan="2">
+Result
+</td>
+<td style="text-align:left;">
+GitHub Pages
+</td>
+<td style="text-align:left;">
+<a href="https://jemus42.github.io/poisson-regression" class="uri">https://jemus42.github.io/poisson-regression</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Self-Hosted
+</td>
+<td style="text-align:left;">
+<a href="https://lukas.tadaa-data.de/poisson/" class="uri">https://lukas.tadaa-data.de/poisson/</a>
+</td>
+</tr>
+</tbody>
+</table>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="anwendung.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="verfugbarkeit.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="entscheidungshilfen.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="erganzungen.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

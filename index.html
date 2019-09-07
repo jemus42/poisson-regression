@@ -182,17 +182,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6" data-path="entscheidungshilfen.html"><a href="entscheidungshilfen.html"><i class="fa fa-check"></i><b>6</b> Entscheidungshilfen</a></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
-<li class="chapter" data-level="A" data-path="erganzungen.html"><a href="erganzungen.html"><i class="fa fa-check"></i><b>A</b> Ergänzungen</a><ul>
-<li class="chapter" data-level="A.1" data-path="erganzungen.html"><a href="erganzungen.html#appendix-missingness"><i class="fa fa-check"></i><b>A.1</b> Missing values und missingness patterns</a></li>
-<li class="chapter" data-level="A.2" data-path="erganzungen.html"><a href="erganzungen.html#trunc-cens"><i class="fa fa-check"></i><b>A.2</b> Truncation und Censoring</a></li>
-<li class="chapter" data-level="A.3" data-path="erganzungen.html"><a href="erganzungen.html#mod-hurdle"><i class="fa fa-check"></i><b>A.3</b> Hurdle models</a></li>
+<li class="chapter" data-level="A" data-path="verfugbarkeit.html"><a href="verfugbarkeit.html"><i class="fa fa-check"></i><b>A</b> Verfügbarkeit</a></li>
+<li class="chapter" data-level="B" data-path="erganzungen.html"><a href="erganzungen.html"><i class="fa fa-check"></i><b>B</b> Ergänzungen</a><ul>
+<li class="chapter" data-level="B.1" data-path="erganzungen.html"><a href="erganzungen.html#appendix-missingness"><i class="fa fa-check"></i><b>B.1</b> Missing values und missingness patterns</a></li>
+<li class="chapter" data-level="B.2" data-path="erganzungen.html"><a href="erganzungen.html#trunc-cens"><i class="fa fa-check"></i><b>B.2</b> Truncation und Censoring</a></li>
+<li class="chapter" data-level="B.3" data-path="erganzungen.html"><a href="erganzungen.html#mod-hurdle"><i class="fa fa-check"></i><b>B.3</b> Hurdle models</a></li>
 </ul></li>
-<li class="chapter" data-level="B" data-path="repro.html"><a href="repro.html"><i class="fa fa-check"></i><b>B</b> Reproduzierbarkeit</a><ul>
-<li class="chapter" data-level="B.1" data-path="repro.html"><a href="repro.html#r-code"><i class="fa fa-check"></i><b>B.1</b> R-Code</a></li>
-<li class="chapter" data-level="B.2" data-path="repro.html"><a href="repro.html#session-info"><i class="fa fa-check"></i><b>B.2</b> Session Info</a></li>
-<li class="chapter" data-level="B.3" data-path="repro.html"><a href="repro.html#unsorted"><i class="fa fa-check"></i><b>B.3</b> Unsorted</a><ul>
-<li class="chapter" data-level="B.3.1" data-path="repro.html"><a href="repro.html#general-advice"><i class="fa fa-check"></i><b>B.3.1</b> General Advice</a></li>
-<li class="chapter" data-level="B.3.2" data-path="repro.html"><a href="repro.html#beispiel-nach-hilbemodelingcountdata2014-p.211ff"><i class="fa fa-check"></i><b>B.3.2</b> Beispiel nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 211ff</a></li>
+<li class="chapter" data-level="C" data-path="repro.html"><a href="repro.html"><i class="fa fa-check"></i><b>C</b> Reproduzierbarkeit</a><ul>
+<li class="chapter" data-level="C.1" data-path="repro.html"><a href="repro.html#r-code"><i class="fa fa-check"></i><b>C.1</b> R-Code</a></li>
+<li class="chapter" data-level="C.2" data-path="repro.html"><a href="repro.html#session-info"><i class="fa fa-check"></i><b>C.2</b> Session Info</a></li>
+<li class="chapter" data-level="C.3" data-path="repro.html"><a href="repro.html#unsorted"><i class="fa fa-check"></i><b>C.3</b> Unsorted</a><ul>
+<li class="chapter" data-level="C.3.1" data-path="repro.html"><a href="repro.html#general-advice"><i class="fa fa-check"></i><b>C.3.1</b> General Advice</a></li>
+<li class="chapter" data-level="C.3.2" data-path="repro.html"><a href="repro.html#beispiel-nach-hilbemodelingcountdata2014-p.211ff"><i class="fa fa-check"></i><b>C.3.2</b> Beispiel nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 211ff</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="literatur.html"><a href="literatur.html"><i class="fa fa-check"></i>Literatur</a></li>
@@ -220,7 +221,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">Poisson-Regression und ihre Leiden</h1>
 <p class="author"><em>Lukas Burk</em></p>
-<p class="date"><em>Stand: 04. September 2019, 16:17 Uhr (UTC)</em></p>
+<p class="date"><em>Stand: 07. September 2019 23:19 Uhr (CEST)</em></p>
 </div>
 <div id="einfuhrung" class="section level1">
 <h1><span class="header-section-number">Kapitel 1</span> Einführung</h1>
@@ -228,7 +229,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 Zähldaten können im Allgemeinen mittels Poissonverteilung im Rahmen des GLM modelliert werden, allerdings sind in der Praxis einige Komplikationen zu erwarten:</p>
 <p><strong>Over-/underdispersion</strong> (siehe Abschnitt <a href="poisson-modell.html#dispersion">2.2</a>): Die Poissonverteilung besitzt nur einen Parameter für sowohl Erwartungswert als auch Varianz und nimmt somit Gleichheit zwischen den beiden an (<em>equidispersion</em>) – diese Annahme ist meist in Form von overdispersion verletzt</p>
 <p><strong>Zero-Inflation</strong> (siehe Abschnitt <a href="anwendung.html#zeros">5.2</a>): Aus einem Modell lässt sich die erwartete Anzahl an Beobachtungen mit Anzahl <span class="math inline">\(0\)</span> bestimmen – wenn die beobachtete Anzahl (bzw. der Anteil) an Nullen deutlich größer ist, spricht man von <em>zero-inflation</em>. Verwandte Probleme sind die (seltenere) <em>zero-deflation</em>, oder das strukturelle Fehlen von Nullen</p>
-<p>Diese Umstände benötigen in der Regel Generalisierungen der einfach Poisson-Regression, entweder durch Erweiterung der Verteilung um zusätzliche Parameter (siehe z.B. <em>Negative Binomialverteilung</em> für overdispersion in Abschnitt <a href="multiparam.html#mod-nb">3.1</a>, <em>Generalized Poisson</em> für underdispersion in Abschnitt <a href="multiparam.html#mod-gp">3.3</a>) oder die Konstruktion von <em>mixture models</em> oder <em>hurdle models</em> für zero-inflation (Abschnitte <a href="weitere-modelle.html#mod-zi">4.2</a> und <a href="erganzungen.html#mod-hurdle">A.3</a>).</p>
+<p>Diese Umstände benötigen in der Regel Generalisierungen der einfach Poisson-Regression, entweder durch Erweiterung der Verteilung um zusätzliche Parameter (siehe z.B. <em>Negative Binomialverteilung</em> für overdispersion in Abschnitt <a href="multiparam.html#mod-nb">3.1</a>, <em>Generalized Poisson</em> für underdispersion in Abschnitt <a href="multiparam.html#mod-gp">3.3</a>) oder die Konstruktion von <em>mixture models</em> oder <em>hurdle models</em> für zero-inflation (Abschnitte <a href="weitere-modelle.html#mod-zi">4.2</a> und <a href="erganzungen.html#mod-hurdle">B.3</a>).</p>
 <div id="data" class="section level2">
 <h2><span class="header-section-number">1.1</span> Beispieldaten</h2>
 <p>Als Anwendungsbeispiele werden einige Datensätze verwendet, die verschiedene Probleme illustrieren:</p>
@@ -357,7 +358,7 @@ UCLA IDRE (<a href="https://stats.idre.ucla.edu" class="uri">https://stats.idre.
 <div id="software-funs" class="section level2">
 <h2><span class="header-section-number">1.2</span> Verwendete Software</h2>
 <p>Um Code-Beispiele (und Output) übersichtlich zu halten werden einige R-Packages und Hilfsfunktionen verwendet, die hier kurz beschrieben werden um Code in späteren Abschnitten nachvollziehbar zu halten.<br />
-Siehe dazu auch Anhang <a href="repro.html#repro">B</a>.</p>
+Siehe dazu auch Anhang <a href="repro.html#repro">C</a>.</p>
 <div id="r-packages" class="section level3">
 <h3><span class="header-section-number">1.2.1</span> R-Packages</h3>
 <p>Zur Reproduktion der Beispiele sind insbesondere die folgenden <code>R</code> packages notwendig, die durch den angegebenen Code installiert werden, sofern sie nicht bereits verfügbar sind:</p>
@@ -381,7 +382,7 @@ Siehe dazu auch Anhang <a href="repro.html#repro">B</a>.</p>
 <a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co"># Output formatting (for RMarkdown/pandoc markdown documents)</span></a>
 <a class="sourceLine" id="cb3-19" data-line-number="19"><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;pander&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) <span class="kw">install.packages</span>(<span class="st">&quot;pander&quot;</span>)</a>
 <a class="sourceLine" id="cb3-20" data-line-number="20"><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;kableExtra&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) <span class="kw">install.packages</span>(<span class="st">&quot;kableExtra&quot;</span>)</a></code></pre></div>
-<p>Siehe auch Anhang <a href="repro.html#repro">B</a> zu verwendeten Packages.</p>
+<p>Siehe auch Anhang <a href="repro.html#repro">C</a> zu verwendeten Packages.</p>
 </div>
 <div id="helperfuns" class="section level3">
 <h3><span class="header-section-number">1.2.2</span> Funktionen</h3>
@@ -442,13 +443,13 @@ Range
 10
 </td>
 <td style="text-align:right;">
-4.67
+4.88
 </td>
 <td style="text-align:right;">
-5.51
+5.86
 </td>
 <td style="text-align:left;">
-[1, 11]
+[0, 13]
 </td>
 </tr>
 </tbody>

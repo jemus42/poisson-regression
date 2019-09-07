@@ -140,14 +140,17 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{Stand: 04. September 2019, 16:17 Uhr (UTC)}
+    \date{Stand: 07. September 2019 23:19 Uhr (CEST)}
 
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{float}
 \usepackage{csquotes}
-%\usepackage{tabularx}
-%\usepackage{tabu}
+\usepackage{tabularx}
+\usepackage{tabu}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
 
 % unicode-math seems to be the preferred superset of mathspec (and fontspec?)
 % ISO means bold math is set italics, =TeX would make bold math upright
@@ -399,7 +402,7 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die pr
 \toprule
 N & Missing & Mittelwert & Varianz & Range\\
 \midrule
-100 & 10 & 4.68 & 4.98 & [0, 11]\\
+100 & 10 & 4.72 & 4.09 & [0, 13]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2113,6 +2116,28 @@ Eine allgemeinere Darstellung zur Veranschaulichung der sich ergebenden Möglich
 \appendix \addcontentsline{toc}{section}{\appendixname}}
 
 
+\hypertarget{verfugbarkeit}{%
+\section{Verfügbarkeit}\label{verfugbarkeit}}
+
+Sowohl der Quelltext als auch das Output (sprich, dieses Dokument in mehreren Formaten) sind öffentlich an mehreren Orten zu finden:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lll}
+\toprule
+  & Host & URL\\
+\midrule
+ & Gitea (self-hosted) & https://git.tadaa-data.de/lukas/poisson-regression\\
+\cmidrule{2-3}
+\multirow{-2}{*}{\raggedright\arraybackslash Code} & GitHub & https://github.com/jemus42/poisson-regression\\
+\cmidrule{1-3}
+ & GitHub Pages & https://jemus42.github.io/poisson-regression\\
+\cmidrule{2-3}
+\multirow{-2}{*}{\raggedright\arraybackslash Result} & Self-Hosted & https://lukas.tadaa-data.de/poisson/\\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \hypertarget{erganzungen}{%
 \section{Ergänzungen}\label{erganzungen}}
 
@@ -2321,7 +2346,7 @@ language & en\_US.UTF-8\\
 collate & en\_US.UTF-8\\
 ctype & en\_US.UTF-8\\
 tz & UTC\\
-date & 2019-09-04\\
+date & 2019-09-07\\
 \bottomrule
 \end{tabular}
 \end{table}

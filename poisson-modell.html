@@ -182,17 +182,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6" data-path="entscheidungshilfen.html"><a href="entscheidungshilfen.html"><i class="fa fa-check"></i><b>6</b> Entscheidungshilfen</a></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
-<li class="chapter" data-level="A" data-path="erganzungen.html"><a href="erganzungen.html"><i class="fa fa-check"></i><b>A</b> Ergänzungen</a><ul>
-<li class="chapter" data-level="A.1" data-path="erganzungen.html"><a href="erganzungen.html#appendix-missingness"><i class="fa fa-check"></i><b>A.1</b> Missing values und missingness patterns</a></li>
-<li class="chapter" data-level="A.2" data-path="erganzungen.html"><a href="erganzungen.html#trunc-cens"><i class="fa fa-check"></i><b>A.2</b> Truncation und Censoring</a></li>
-<li class="chapter" data-level="A.3" data-path="erganzungen.html"><a href="erganzungen.html#mod-hurdle"><i class="fa fa-check"></i><b>A.3</b> Hurdle models</a></li>
+<li class="chapter" data-level="A" data-path="verfugbarkeit.html"><a href="verfugbarkeit.html"><i class="fa fa-check"></i><b>A</b> Verfügbarkeit</a></li>
+<li class="chapter" data-level="B" data-path="erganzungen.html"><a href="erganzungen.html"><i class="fa fa-check"></i><b>B</b> Ergänzungen</a><ul>
+<li class="chapter" data-level="B.1" data-path="erganzungen.html"><a href="erganzungen.html#appendix-missingness"><i class="fa fa-check"></i><b>B.1</b> Missing values und missingness patterns</a></li>
+<li class="chapter" data-level="B.2" data-path="erganzungen.html"><a href="erganzungen.html#trunc-cens"><i class="fa fa-check"></i><b>B.2</b> Truncation und Censoring</a></li>
+<li class="chapter" data-level="B.3" data-path="erganzungen.html"><a href="erganzungen.html#mod-hurdle"><i class="fa fa-check"></i><b>B.3</b> Hurdle models</a></li>
 </ul></li>
-<li class="chapter" data-level="B" data-path="repro.html"><a href="repro.html"><i class="fa fa-check"></i><b>B</b> Reproduzierbarkeit</a><ul>
-<li class="chapter" data-level="B.1" data-path="repro.html"><a href="repro.html#r-code"><i class="fa fa-check"></i><b>B.1</b> R-Code</a></li>
-<li class="chapter" data-level="B.2" data-path="repro.html"><a href="repro.html#session-info"><i class="fa fa-check"></i><b>B.2</b> Session Info</a></li>
-<li class="chapter" data-level="B.3" data-path="repro.html"><a href="repro.html#unsorted"><i class="fa fa-check"></i><b>B.3</b> Unsorted</a><ul>
-<li class="chapter" data-level="B.3.1" data-path="repro.html"><a href="repro.html#general-advice"><i class="fa fa-check"></i><b>B.3.1</b> General Advice</a></li>
-<li class="chapter" data-level="B.3.2" data-path="repro.html"><a href="repro.html#beispiel-nach-hilbemodelingcountdata2014-p.211ff"><i class="fa fa-check"></i><b>B.3.2</b> Beispiel nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 211ff</a></li>
+<li class="chapter" data-level="C" data-path="repro.html"><a href="repro.html"><i class="fa fa-check"></i><b>C</b> Reproduzierbarkeit</a><ul>
+<li class="chapter" data-level="C.1" data-path="repro.html"><a href="repro.html#r-code"><i class="fa fa-check"></i><b>C.1</b> R-Code</a></li>
+<li class="chapter" data-level="C.2" data-path="repro.html"><a href="repro.html#session-info"><i class="fa fa-check"></i><b>C.2</b> Session Info</a></li>
+<li class="chapter" data-level="C.3" data-path="repro.html"><a href="repro.html#unsorted"><i class="fa fa-check"></i><b>C.3</b> Unsorted</a><ul>
+<li class="chapter" data-level="C.3.1" data-path="repro.html"><a href="repro.html#general-advice"><i class="fa fa-check"></i><b>C.3.1</b> General Advice</a></li>
+<li class="chapter" data-level="C.3.2" data-path="repro.html"><a href="repro.html#beispiel-nach-hilbemodelingcountdata2014-p.211ff"><i class="fa fa-check"></i><b>C.3.2</b> Beispiel nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 211ff</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="literatur.html"><a href="literatur.html"><i class="fa fa-check"></i>Literatur</a></li>
@@ -259,7 +260,7 @@ Für als Offset wird in der Regel <span class="math inline">\(\log(t)\)</span> v
 <h2><span class="header-section-number">2.1</span> Annahmen</h2>
 <ol style="list-style-type: decimal">
 <li>Die Abhängige / Zielvariable <span class="math inline">\(Y\)</span> muss eine Zählung sein, i.e. die Verteilung ist diskret mit einem einzelnen Parameter <span class="math inline">\(\mu\)</span> der Poisson-Verteilung für Erwartungswert und Varianz.</li>
-<li><span class="math inline">\(y \in \mathbb{N}_0\)</span>, insbesondere: <span class="math inline">\(Y\)</span> muss 0 enthalten <em>können</em> (siehe auch <a href="erganzungen.html#trunc-cens">A.2</a> <a href="erganzungen.html#trunc-cens">Truncation und Censoring</a>)</li>
+<li><span class="math inline">\(y \in \mathbb{N}_0\)</span>, insbesondere: <span class="math inline">\(Y\)</span> muss 0 enthalten <em>können</em> (siehe auch <a href="erganzungen.html#trunc-cens">B.2</a> <a href="erganzungen.html#trunc-cens">Truncation und Censoring</a>)</li>
 <li>Beobachtungen sind <em>unabhängig</em>, i.e. weder longitudinal noch gepoolt.
 <ul>
 <li>Möglicher Test durch Vergleich der Modell-SE und der SE adjustiert durch robuste sandwich-estimators (siehe <a href="anwendung.html#sandwich">5.1.2.1</a>): Große Unterschiede implizieren korrelierte Daten</li>
@@ -326,7 +327,7 @@ Für als Offset wird in der Regel <span class="math inline">\(\log(t)\)</span> v
 <li>Fehlende Interaktionsterme</li>
 <li>Ein Prädiktor muss transformiert werden</li>
 <li>Die Daten sind zu dünn besetzt (<em>sparse</em>)</li>
-<li>Fehlende Werte, die nicht zufällig sind (missing not at random, <em>MNAR</em> – siehe auch Anhang <a href="erganzungen.html#appendix-missingness">A.1</a></li>
+<li>Fehlende Werte, die nicht zufällig sind (missing not at random, <em>MNAR</em> – siehe auch Anhang <a href="erganzungen.html#appendix-missingness">B.1</a></li>
 </ol>
 <p>Ein einfaches simuliertes Beispiel zur Auswirkung von fehlenden Prädiktoren:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co"># Generate binary variable in [0, 1] with a given proportion of 1&#39;s</span></a>
@@ -362,7 +363,7 @@ Für als Offset wird in der Regel <span class="math inline">\(\log(t)\)</span> v
 <p>Underdispersion ist der Fall, wenn vorliegende Daten eine geringere Varianz aufweisen, als auf Basis eines Poisson-Modells erwartet würde, das heißt die Daten sind “enger zusammengeklumpt”.
 Bei underdispersion werden die Standardfehler des Modells <em>über</em>schätzt, im Gegensatz zur overdispersion, bei der Standardfehler <em>unter</em>schätzt werden <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>, p. 210)</span>.</p>
 <p>Im Allgemeinen wird für diese Situation die <a href="https://stats.stackexchange.com/a/237177/80056">generalized Poisson empfohlen</a> <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, da diese Erweiterung der Poisson-Verteilung nicht nur einen zusätzlichen Parameter für die Varianz hat (analog NB, PIG), sondern dieser Parameter auch negativ sein kann.</p>
-<p>Weiterhin taucht im Kontext von hurdle models (siehe <a href="erganzungen.html#mod-hurdle">A.3</a>) folgende Bemerkung auf:</p>
+<p>Weiterhin taucht im Kontext von hurdle models (siehe <a href="erganzungen.html#mod-hurdle">B.3</a>) folgende Bemerkung auf:</p>
 <blockquote>
 <p>[…] that underdispersion occurs if <strong>zeros are less frequent than the parent distribution would predict</strong>.
 The higher the expected value of the Poisson distribution, the lower the predicted probability of zero outcome and the lower the scope for underdispersion.
