@@ -312,14 +312,9 @@ Siehe auch @hilbeModelingCountData2014 (p. 155) – wo der Autor zwar den obigen
 
 ## Zero-Inflated Models (*mixture models*) {#mod-zi}
 
-- Logit/Probit Komponente für zeros
-   - Unterschied zu hurdle: Modelliert Nullen im Gegensatz zu Einsen
-- Binary zeros und count zeros werden durch beide Komponenten modelliert 
-   - -> Nicht getrennt interpretierbar wie bei hurdle models der Fall ist
-- -> Erzeugen eigene PDF, e.g. ZIP, die mixture aus beiden Komponenten darstellt
+Zero-inflated Modelle sind *mixtures*, das heißt, sie entstehen durch Mischung zweier Wahrscheinlichkeitsfunktionen. In der Regel wird eine Nullverteilung mit einer regulären Zählverteilung (Poisson, NB, PIG, ...) "gemischt", abhängig von einem *mixture parameter* $\pi \in [0,1]$, der z.B. logistisch modelliert wird. Die Nullen im Modell werden dementsprechend durch beide Verteilungen (Nullverteilung, Zählverteilung) beschrieben – im Gegensatz zu *hurdle models* (vgl. \@ref(mod-hurdle)), die Nullen logistisch und die positiven counts über eine *truncated* distribution modellieren würden.  
 
-
-ZIP und ZINB wurde hergeleitet als zweiteilige mixture distributions. Die allgemeine Form für mixture distributions ist
+Zero-inflated distributions wie ZIP und ZINB wurden hergeleitet als zweiteilige mixture distributions. Die allgemeine Form für mixture distributions ist
 
 \begin{equation*}
   P(Y = y) = p \cdot g_1(y) + (1-p) \cdot g_2(y)
@@ -341,7 +336,7 @@ Mit zu modellierendem Erwartungswert
 \mu_i = \pi_i \cdot 0 + (1 - \pi_i) \cdot \exp(x_i^T\beta)
 \end{equation*}
 
-Wobei $\pi$ in der Regel binomial, bzw. über logistische Regression geschätzt wird.
+Wobei $\pi$ in der Regel binomial, bzw. mittels logistischer Regression geschätzt wird.
 
 ```{definition defzip, name = "Zero-Inflated Poisson Verteilung (ZIP)"}
 Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675)
@@ -360,7 +355,3 @@ P(Y = 0) &= \pi + (1 - \pi) \cdot \frac{\theta^\theta}{(\theta + \mu)^\theta}  \
 P(Y = y) &= (1 - \pi) \cdot \frac{\Gamma(\theta+y)}{\Gamma(\theta) \Gamma(y + 1)} \frac{\theta^\theta \mu^y}{(\theta + \mu)^{(\theta + y)}}, \quad y = 1, 2, 3, \ldots
 \end{align*}
 ```
-
-
-Die ZI-Modelle sind dabei **geschachtelt** mit ihren ursprünglichen Modellen, da sich letzteres für bestimmte $\pi$ (auch wenn nicht $\pi = 0$) aus dem ZI-Modell ergeben.  
-Dieser Umstand ist Teil der Kritik an der Verwendung des Vuong-Test (entworfen für den Vergleich von  _**un**geschachtelten_ Modellen) von @wilson2015MisuseVuong, der sich gegen die Verwendung des Tests ausspricht um die Modellanpassung von Modellen mit ihren ZI-Gegenstücken zu vergleichen (siehe z.B. @perumean-chaneyZeroinflatedOverdispersedWhat2013 für eine solche Anwendung des Vuong-Tests).

@@ -262,29 +262,30 @@ tibble(
 ```
 
 
-### Tests auf Zero-Inflation {-}
+### Vergleich von Zero-Inflated models {-}
 
-Zwar schlagen @perumean-chaneyZeroinflatedOverdispersedWhat2013 den Vuong Test (siehe @vuongLikelihoodRatioTests1989 und insbesondere @desmarais2013TestingZero zur Anwendung) vor, um reguläre Modelle mit ihren zero-inflated Gegenstücken zu vergleichen (e.g Poisson vs. ZIP oder NB vs. ZINB), allerdings spricht sich @wilson2015MisuseVuong explizit *gegen* den Vuong-Test aus, da die Vorraussetzungen für den Test (ungeschachtelte Modelle) verletzt seien:
+Zum Vergleich zwischen Zählmodellen und ihren zero-inflated Gegenstücken (e.g. Poisson vs. ZIP oder NB vs. ZINB) wird in der Literatur häufig der Vuong-Test [@vuongLikelihoodRatioTests1989; @desmarais2013TestingZero] verwendet. Dieser Test ist explizit für den Vergleich von **un**geschachtelten Modellen entworfen (im Gegensatz zu z.B. dem Likelihood Ratio test). @wilson2015MisuseVuong kritisiert dieses Vorgehen mit der Begründung (und Demonstration), dass zero-inflated Modelle _nicht_ ungeschachtelt mit ihren ursprünglichen Zähmodellen sind. Auch @perumean-chaneyZeroinflatedOverdispersedWhat2013 und @hilbeModelingCountData2014, die in diesem Dokument mehrfach zitiert werden, verwenden den Vuong-Test auf diese Weise. 
+
+Das Paper (@wilson2015MisuseVuong) ist recht kurz und definitiv einen Blick Wert, insbesondere da ich (Lukas) mir bisher nicht zutraue zu beurteilen, wer in dieser Frage "Recht" hat.
 
 > The misuse of the test stems from misunderstanding of what is meant by the terms "non-nested model" and "nested model". As is the case with many frequently used terms their meanings are approximately understood by many, but precisely understood by few.
 >
 > --- @wilson2015MisuseVuong, p. 52
 
 
-(Hausman Test: Vergleich der Koeffizienten zweier Modelle, taucht in Hilbe (2014) aber eher im Kontext von Validation samples auf)
-
 ### Modellierung {-}
 
 Für die Modellierung von zero-inflated Daten stehen primär zwei Möglichkeiten zur Verfügung (vgl. auch @hilbeModelingCountData2014, p. 19):
 
-1. *Hurdle models*: Getrennte Modellierung von Nullen und positiven counts in zwei separaten Modellen (siehe Abschnitt \@ref(mod-hurdle)).
-2. *Zero-inflated models*: Mixture models, die aus zwei Wahrscheinlichkeitsfunktionen eine neue Wahrscheinlichkeitsfunktion generieren, die sowohl Nullen als auch positive counts beschreibt, allerdings nun auch einen *zero-inflation*-Parameter hat (siehe Abschnitt \@ref(mod-zi)).
+
+1. *Zero-inflated models*: Mixture models, die aus zwei Wahrscheinlichkeitsfunktionen eine neue Wahrscheinlichkeitsfunktion generieren, die sowohl Nullen als auch positive counts beschreibt, allerdings nun auch einen *zero-inflation*-Parameter hat (siehe Abschnitt \@ref(mod-zi)).
+2. *Hurdle models*: Getrennte Modellierung von Nullen und positiven counts in zwei separaten Modellen (siehe Abschnitt \@ref(mod-hurdle)).
 
 Ob hurdle model oder zero-inflated model die bessere Wahl ist hängt mitunter davon ab, welche Annahmen über die _Ursache der Nullen_ getroffen werden können.  
 Wenn es eine echte Trennung der Mechanismen (*"separation of mechanisms"*) gibt, die die Nullen und die positiven counts verursachen, dann wäre ein hurdle model eher angemessen.  
 Wenn sich die Nullen überlappen, es also keine getrennten Prozesse zu geben scheint, dann wären zero-inflated models angemessen [@hilbeModelingCountData2014, p. 209].
 
-Als Veranschaulichung dieser getrennten Mechanismen können wir das *fish*-Beispiel auf [dieser UCLA-Tutorialseite verwenden](https://stats.idre.ucla.edu/sas/output/zero-inflated-poisson-regression/). Hier ist die Anzahl der gefangenen Fische an einem Wochenende in einem Park die Zählvariable.
+Als Veranschaulichung für zwei sich überlappende Mechanismen können wir das *fish*-Beispiel auf [dieser UCLA-Tutorialseite verwenden](https://stats.idre.ucla.edu/sas/output/zero-inflated-poisson-regression/). Hier ist die Anzahl der gefangenen Fische an einem Wochenende in einem Park die Zählvariable.
 
 ```{r fishing_zeros}
 # Mittelwert & Varianz von 'count'
@@ -303,5 +304,6 @@ fish %>%
   )
 ```
 
-Die Anzahl der Nullen scheint hier auffallend groß zu sein, allerdings beobachten wir hier auch zwei unterschiedliche Mechanismen: Eine Gruppe kann das ganze Wochenende geangelt haben, während eine andere Gruppe gar nicht geangelt hat – beide Gruppen werden jedoch am Ende nach der Anzahl ihrer gefangenen Fische befragt.  
+Die Anzahl der Nullen ist hier auffallend groß – allerdings beobachten wir hier auch zwei unterschiedliche Mechanismen, die sich überlappen: Eine Gruppe kann das ganze Wochenende geangelt haben, während eine andere Gruppe gar nicht geangelt hat – beide Gruppen werden jedoch am Ende nach der Anzahl ihrer gefangenen Fische befragt, weshalb wir in den Daten Nullen mit unterschiedlichem "Ursprung" erhalten 
 
+Da es hier nicht angemessen wäre, die Nullen und die positiven counts getrennt zu Modellieren, würden wir hier ein *zero-inflated* Modell (z.B ZIP, ZINB, ...) verwenden.
