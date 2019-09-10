@@ -17,9 +17,11 @@ apt_packages:
 
 before_install:
   - |
-    # 1. Install TinyTex manually
-    Rscript -e "install.packages('tinytex')"
-    Rscript -e "tinytex::install_tinytex()"
+    # 1. Install TinyTex manually if not already in cache
+    # Travis creates $HOME/.TinyTex if nonexistent, so we check bin subdir
+    if [ ! - $HOME/.TinyTex/bin ]; then
+      Rscript -e "tinytex::install_tinytex()"
+    fi
 
     mkdir -p $HOME/.fonts
 
@@ -67,5 +69,8 @@ deploy:
   github_token: $GITHUB_PAT
   target_branch: gh-pages
 
+# notifications only when things change
 notifications:
-  email: false
+  email:
+    on_success: change
+    on_failure: change
