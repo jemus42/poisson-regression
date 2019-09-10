@@ -140,7 +140,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{Stand: 10. September 2019 12:27 Uhr (CEST)}
+    \date{Stand: 10. September 2019 17:13 Uhr (CEST)}
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -402,7 +402,7 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die pr
 \toprule
 N & Missing & Mittelwert & Varianz & Range\\
 \midrule
-100 & 10 & 4.73 & 4.6 & [0, 11]\\
+100 & 10 & 5.26 & 4.98 & [0, 11]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1281,29 +1281,9 @@ Siehe auch \citet{hilbeModelingCountData2014} (p.~155) -- wo der Autor zwar den 
 \hypertarget{mod-zi}{%
 \subsection{\texorpdfstring{Zero-Inflated Models (\emph{mixture models})}{Zero-Inflated Models (mixture models)}}\label{mod-zi}}
 
-\begin{itemize}
-\tightlist
-\item
-  Logit/Probit Komponente für zeros
+Zero-inflated Modelle sind \emph{mixtures}, das heißt, sie entstehen durch Mischung zweier Wahrscheinlichkeitsfunktionen. In der Regel wird eine Nullverteilung mit einer regulären Zählverteilung (Poisson, NB, PIG, \ldots{}) \enquote{gemischt}, abhängig von einem \emph{mixture parameter} \(\pi \in [0,1]\), der z.B. logistisch modelliert wird. Die Nullen im Modell werden dementsprechend durch beide Verteilungen (Nullverteilung, Zählverteilung) beschrieben -- im Gegensatz zu \emph{hurdle models} (vgl. \ref{mod-hurdle}), die Nullen logistisch und die positiven counts über eine \emph{truncated} distribution modellieren würden.
 
-  \begin{itemize}
-  \tightlist
-  \item
-    Unterschied zu hurdle: Modelliert Nullen im Gegensatz zu Einsen
-  \end{itemize}
-\item
-  Binary zeros und count zeros werden durch beide Komponenten modelliert
-
-  \begin{itemize}
-  \tightlist
-  \item
-    -\textgreater{} Nicht getrennt interpretierbar wie bei hurdle models der Fall ist
-  \end{itemize}
-\item
-  -\textgreater{} Erzeugen eigene PDF, e.g.~ZIP, die mixture aus beiden Komponenten darstellt
-\end{itemize}
-
-ZIP und ZINB wurde hergeleitet als zweiteilige mixture distributions. Die allgemeine Form für mixture distributions ist
+Zero-inflated distributions wie ZIP und ZINB wurden hergeleitet als zweiteilige mixture distributions. Die allgemeine Form für mixture distributions ist
 
 \begin{equation*}
   P(Y = y) = p \cdot g_1(y) + (1-p) \cdot g_2(y)
@@ -1325,7 +1305,7 @@ Mit zu modellierendem Erwartungswert
 \mu_i = \pi_i \cdot 0 + (1 - \pi_i) \cdot \exp(x_i^T\beta)
 \end{equation*}
 
-Wobei \(\pi\) in der Regel binomial, bzw. über logistische Regression geschätzt wird.
+Wobei \(\pi\) in der Regel binomial, bzw. mittels logistischer Regression geschätzt wird.
 
 \BeginKnitrBlock{definition}[Zero-Inflated Poisson Verteilung (ZIP)]
 \protect\hypertarget{def:defzip}{}{\label{def:defzip} \iffalse (Zero-Inflated Poisson Verteilung (ZIP)) \fi{} }Nach \citet{perumean-chaneyZeroinflatedOverdispersedWhat2013} (p.~1675)
@@ -1344,9 +1324,6 @@ P(Y = 0) &= \pi + (1 - \pi) \cdot \frac{\theta^\theta}{(\theta + \mu)^\theta}  \
 P(Y = y) &= (1 - \pi) \cdot \frac{\Gamma(\theta+y)}{\Gamma(\theta) \Gamma(y + 1)} \frac{\theta^\theta \mu^y}{(\theta + \mu)^{(\theta + y)}}, \quad y = 1, 2, 3, \ldots
 \end{align*}
 \EndKnitrBlock{definition}
-
-Die ZI-Modelle sind dabei \textbf{geschachtelt} mit ihren ursprünglichen Modellen, da sich letzteres für bestimmte \(\pi\) (auch wenn nicht \(\pi = 0\)) aus dem ZI-Modell ergeben.\\
-Dieser Umstand ist Teil der Kritik an der Verwendung des Vuong-Test (entworfen für den Vergleich von \emph{\textbf{un}geschachtelten} Modellen) von \citet{wilson2015MisuseVuong}, der sich gegen die Verwendung des Tests ausspricht um die Modellanpassung von Modellen mit ihren ZI-Gegenstücken zu vergleichen (siehe z.B. \citet{perumean-chaneyZeroinflatedOverdispersedWhat2013} für eine solche Anwendung des Vuong-Tests).
 
 \hypertarget{anwendung}{%
 \section{Anwendung}\label{anwendung}}
@@ -2024,19 +2001,19 @@ Zero-inflation hängt eng mit overdispersion zusammen. Sie \emph{kann} Ursache f
 
 \begin{center}\includegraphics{poisson-regression_files/figure-latex/excess_zeros_viz-1} \end{center}
 
-\hypertarget{tests-auf-zero-inflation}{%
-\subsubsection*{Tests auf Zero-Inflation}\label{tests-auf-zero-inflation}}
-\addcontentsline{toc}{subsubsection}{Tests auf Zero-Inflation}
+\hypertarget{vergleich-von-zero-inflated-models}{%
+\subsubsection*{Vergleich von Zero-Inflated models}\label{vergleich-von-zero-inflated-models}}
+\addcontentsline{toc}{subsubsection}{Vergleich von Zero-Inflated models}
 
-Zwar schlagen \citet{perumean-chaneyZeroinflatedOverdispersedWhat2013} den Vuong Test (siehe \citet{vuongLikelihoodRatioTests1989} und insbesondere \citet{desmarais2013TestingZero} zur Anwendung) vor, um reguläre Modelle mit ihren zero-inflated Gegenstücken zu vergleichen (e.g Poisson vs.~ZIP oder NB vs.~ZINB), allerdings spricht sich \citet{wilson2015MisuseVuong} explizit \emph{gegen} den Vuong-Test aus, da die Vorraussetzungen für den Test (ungeschachtelte Modelle) verletzt seien:
+Zum Vergleich zwischen Zählmodellen und ihren zero-inflated Gegenstücken (e.g.~Poisson vs.~ZIP oder NB vs.~ZINB) wird in der Literatur häufig der Vuong-Test \citep{vuongLikelihoodRatioTests1989, desmarais2013TestingZero} verwendet. Dieser Test ist explizit für den Vergleich von \textbf{un}geschachtelten Modellen entworfen (im Gegensatz zu z.B. dem Likelihood Ratio test). \citet{wilson2015MisuseVuong} kritisiert dieses Vorgehen mit der Begründung (und Demonstration), dass zero-inflated Modelle \emph{nicht} ungeschachtelt mit ihren ursprünglichen Zähmodellen sind. Auch \citet{perumean-chaneyZeroinflatedOverdispersedWhat2013} und \citet{hilbeModelingCountData2014}, die in diesem Dokument mehrfach zitiert werden, verwenden den Vuong-Test auf diese Weise.
+
+Das Paper (\citet{wilson2015MisuseVuong}) ist recht kurz und definitiv einen Blick Wert, insbesondere da ich (Lukas) mir bisher nicht zutraue zu beurteilen, wer in dieser Frage \enquote{Recht} hat.
 
 \begin{quote}
 The misuse of the test stems from misunderstanding of what is meant by the terms \enquote{non-nested model} and \enquote{nested model}. As is the case with many frequently used terms their meanings are approximately understood by many, but precisely understood by few.
 
 --- \citet{wilson2015MisuseVuong}, p.~52
 \end{quote}
-
-(Hausman Test: Vergleich der Koeffizienten zweier Modelle, taucht in Hilbe (2014) aber eher im Kontext von Validation samples auf)
 
 \hypertarget{modellierung}{%
 \subsubsection*{Modellierung}\label{modellierung}}
@@ -2048,16 +2025,16 @@ Für die Modellierung von zero-inflated Daten stehen primär zwei Möglichkeiten
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  \emph{Hurdle models}: Getrennte Modellierung von Nullen und positiven counts in zwei separaten Modellen (siehe Abschnitt \ref{mod-hurdle}).
-\item
   \emph{Zero-inflated models}: Mixture models, die aus zwei Wahrscheinlichkeitsfunktionen eine neue Wahrscheinlichkeitsfunktion generieren, die sowohl Nullen als auch positive counts beschreibt, allerdings nun auch einen \emph{zero-inflation}-Parameter hat (siehe Abschnitt \ref{mod-zi}).
+\item
+  \emph{Hurdle models}: Getrennte Modellierung von Nullen und positiven counts in zwei separaten Modellen (siehe Abschnitt \ref{mod-hurdle}).
 \end{enumerate}
 
 Ob hurdle model oder zero-inflated model die bessere Wahl ist hängt mitunter davon ab, welche Annahmen über die \emph{Ursache der Nullen} getroffen werden können.\\
 Wenn es eine echte Trennung der Mechanismen (\emph{\enquote{separation of mechanisms}}) gibt, die die Nullen und die positiven counts verursachen, dann wäre ein hurdle model eher angemessen.\\
 Wenn sich die Nullen überlappen, es also keine getrennten Prozesse zu geben scheint, dann wären zero-inflated models angemessen \citep[p.~209]{hilbeModelingCountData2014}.
 
-Als Veranschaulichung dieser getrennten Mechanismen können wir das \emph{fish}-Beispiel auf \href{https://stats.idre.ucla.edu/sas/output/zero-inflated-poisson-regression/}{dieser UCLA-Tutorialseite verwenden}. Hier ist die Anzahl der gefangenen Fische an einem Wochenende in einem Park die Zählvariable.
+Als Veranschaulichung für zwei sich überlappende Mechanismen können wir das \emph{fish}-Beispiel auf \href{https://stats.idre.ucla.edu/sas/output/zero-inflated-poisson-regression/}{dieser UCLA-Tutorialseite verwenden}. Hier ist die Anzahl der gefangenen Fische an einem Wochenende in einem Park die Zählvariable.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2095,7 +2072,9 @@ N & Missing & Mittelwert & Varianz & Range\\
 
 \begin{center}\includegraphics{poisson-regression_files/figure-latex/fishing_zeros-1} \end{center}
 
-Die Anzahl der Nullen scheint hier auffallend groß zu sein, allerdings beobachten wir hier auch zwei unterschiedliche Mechanismen: Eine Gruppe kann das ganze Wochenende geangelt haben, während eine andere Gruppe gar nicht geangelt hat -- beide Gruppen werden jedoch am Ende nach der Anzahl ihrer gefangenen Fische befragt.
+Die Anzahl der Nullen ist hier auffallend groß -- allerdings beobachten wir hier auch zwei unterschiedliche Mechanismen, die sich überlappen: Eine Gruppe kann das ganze Wochenende geangelt haben, während eine andere Gruppe gar nicht geangelt hat -- beide Gruppen werden jedoch am Ende nach der Anzahl ihrer gefangenen Fische befragt, weshalb wir in den Daten Nullen mit unterschiedlichem \enquote{Ursprung} erhalten
+
+Da es hier nicht angemessen wäre, die Nullen und die positiven counts getrennt zu Modellieren, würden wir hier ein \emph{zero-inflated} Modell (z.B ZIP, ZINB, \ldots{}) verwenden.
 
 \hypertarget{entscheidungshilfen}{%
 \section{Entscheidungshilfen}\label{entscheidungshilfen}}
@@ -2173,10 +2152,9 @@ Unterschieden werden kann zwischen \emph{left truncation} (z.B. keine counts kle
 \hypertarget{mod-hurdle}{%
 \subsection{Hurdle models}\label{mod-hurdle}}
 
-Im Falle von \textbf{binären Outcomes} ist es fraglich plausibel hurdle models anzuwenden, da in diesem Fall die Nullen und die Einsen separat modelliert würden -- normalerweise würde man die Nullen durch ein logit- und die positiven Counts durch ein Poisson(ähnliches) Modell beschreiben wollen, was aber natürlich für binäre Outcomes entsprechend schwierig wäre.\\
-Die nachfolgende Beschreibung dient daher eher der Vollständigkeit, insbesondere da hurdle models in bestimmten Anwendungsgebieten scheinbar recht populär sind.
+Die nachfolgende Beschreibung dient daher eher der Vollständigkeit, da hurdle models in bestimmten Anwendungsgebieten scheinbar recht populär sind -- allerdings ist es vermutlich eher schwierig sie auf binäre outcomes anzuwenden.
 
-Im Allgemeinen kann man zwei Arten von hurdle models unterscheiden, die jjeweils aus zwei Modellkomponenten bestehen:
+Im Allgemeinen kann man zwei Arten von hurdle models unterscheiden, die jeweils aus zwei Modellkomponenten bestehen:
 
 \begin{itemize}
 \tightlist

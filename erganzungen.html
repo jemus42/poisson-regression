@@ -176,7 +176,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="anwendung.html"><a href="anwendung.html#zeros"><i class="fa fa-check"></i><b>5.2</b> Zero-Inflation (ZI)</a><ul>
-<li class="chapter" data-level="" data-path="anwendung.html"><a href="anwendung.html#tests-auf-zero-inflation"><i class="fa fa-check"></i>Tests auf Zero-Inflation</a></li>
+<li class="chapter" data-level="" data-path="anwendung.html"><a href="anwendung.html#vergleich-von-zero-inflated-models"><i class="fa fa-check"></i>Vergleich von Zero-Inflated models</a></li>
 <li class="chapter" data-level="" data-path="anwendung.html"><a href="anwendung.html#modellierung"><i class="fa fa-check"></i>Modellierung</a></li>
 </ul></li>
 </ul></li>
@@ -240,9 +240,8 @@ Unterschieden werden kann zwischen <em>left truncation</em> (z.B. keine counts k
 </div>
 <div id="mod-hurdle" class="section level2">
 <h2><span class="header-section-number">B.3</span> Hurdle models</h2>
-<p>Im Falle von <strong>binären Outcomes</strong> ist es fraglich plausibel hurdle models anzuwenden, da in diesem Fall die Nullen und die Einsen separat modelliert würden – normalerweise würde man die Nullen durch ein logit- und die positiven Counts durch ein Poisson(ähnliches) Modell beschreiben wollen, was aber natürlich für binäre Outcomes entsprechend schwierig wäre.<br />
-Die nachfolgende Beschreibung dient daher eher der Vollständigkeit, insbesondere da hurdle models in bestimmten Anwendungsgebieten scheinbar recht populär sind.</p>
-<p>Im Allgemeinen kann man zwei Arten von hurdle models unterscheiden, die jjeweils aus zwei Modellkomponenten bestehen:</p>
+<p>Die nachfolgende Beschreibung dient daher eher der Vollständigkeit, da hurdle models in bestimmten Anwendungsgebieten scheinbar recht populär sind – allerdings ist es vermutlich eher schwierig sie auf binäre outcomes anzuwenden.</p>
+<p>Im Allgemeinen kann man zwei Arten von hurdle models unterscheiden, die jeweils aus zwei Modellkomponenten bestehen:</p>
 <ul>
 <li><em>Nested</em> hurdle models: Beide Komponenten nested (e.g. beide Poisson).</li>
 <li><em>Non-nested</em> hurdle models: Hurdle-Komponente als vollständig anderer Prozess betrachtet und via e.g. logit modelliert.</li>

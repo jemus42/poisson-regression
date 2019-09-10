@@ -176,7 +176,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="anwendung.html"><a href="anwendung.html#zeros"><i class="fa fa-check"></i><b>5.2</b> Zero-Inflation (ZI)</a><ul>
-<li class="chapter" data-level="" data-path="anwendung.html"><a href="anwendung.html#tests-auf-zero-inflation"><i class="fa fa-check"></i>Tests auf Zero-Inflation</a></li>
+<li class="chapter" data-level="" data-path="anwendung.html"><a href="anwendung.html#vergleich-von-zero-inflated-models"><i class="fa fa-check"></i>Vergleich von Zero-Inflated models</a></li>
 <li class="chapter" data-level="" data-path="anwendung.html"><a href="anwendung.html#modellierung"><i class="fa fa-check"></i>Modellierung</a></li>
 </ul></li>
 </ul></li>
@@ -694,26 +694,26 @@ Wobei <span class="math inline">\(D\)</span> der Pearson-Dispersionsindex ist (v
 <p>Problem: “Excess zeros”, i.e. das Modell sagt für <span class="math inline">\(P(y_i = 0\ |\ x_i)\)</span> eine deutlich kleinere Wahrscheinlichkeit vor, als in gegebenen Daten tatsächlich vorliegen.</p>
 <p>Zero-inflation hängt eng mit overdispersion zusammen. Sie <em>kann</em> Ursache für overdispersion sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechend auf <em>ZI</em>-fokussiertes Modell (ZIP, ZINB…) verwendet werden <em>muss</em> – ggf. lässt sich die overdispersion bereits durch ein anderes geeignetes Modell “auffangen”. Zum Beispiel zeigt <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>)</span>, dass die <em>NB</em> allgemein eine größere Anzahl an Nullen erwartet als die Poisson.</p>
 <p><img src="poisson-regression_files/figure-html/excess_zeros_viz-1.png" width="768" style="display: block; margin: auto;" /></p>
-<div id="tests-auf-zero-inflation" class="section level3 unnumbered">
-<h3>Tests auf Zero-Inflation</h3>
-<p>Zwar schlagen <span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">2013</a>)</span> den Vuong Test (siehe <span class="citation">Vuong (<a href="#ref-vuongLikelihoodRatioTests1989">1989</a>)</span> und insbesondere <span class="citation">Desmarais und Harden (<a href="#ref-desmarais2013TestingZero">2013</a>)</span> zur Anwendung) vor, um reguläre Modelle mit ihren zero-inflated Gegenstücken zu vergleichen (e.g Poisson vs. ZIP oder NB vs. ZINB), allerdings spricht sich <span class="citation">Wilson (<a href="#ref-wilson2015MisuseVuong">2015</a>)</span> explizit <em>gegen</em> den Vuong-Test aus, da die Vorraussetzungen für den Test (ungeschachtelte Modelle) verletzt seien:</p>
+<div id="vergleich-von-zero-inflated-models" class="section level3 unnumbered">
+<h3>Vergleich von Zero-Inflated models</h3>
+<p>Zum Vergleich zwischen Zählmodellen und ihren zero-inflated Gegenstücken (e.g. Poisson vs. ZIP oder NB vs. ZINB) wird in der Literatur häufig der Vuong-Test <span class="citation">(Vuong <a href="#ref-vuongLikelihoodRatioTests1989">1989</a>; Desmarais und Harden <a href="#ref-desmarais2013TestingZero">2013</a>)</span> verwendet. Dieser Test ist explizit für den Vergleich von <strong>un</strong>geschachtelten Modellen entworfen (im Gegensatz zu z.B. dem Likelihood Ratio test). <span class="citation">Wilson (<a href="#ref-wilson2015MisuseVuong">2015</a>)</span> kritisiert dieses Vorgehen mit der Begründung (und Demonstration), dass zero-inflated Modelle <em>nicht</em> ungeschachtelt mit ihren ursprünglichen Zähmodellen sind. Auch <span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">2013</a>)</span> und <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, die in diesem Dokument mehrfach zitiert werden, verwenden den Vuong-Test auf diese Weise.</p>
+<p>Das Paper (<span class="citation">Wilson (<a href="#ref-wilson2015MisuseVuong">2015</a>)</span>) ist recht kurz und definitiv einen Blick Wert, insbesondere da ich (Lukas) mir bisher nicht zutraue zu beurteilen, wer in dieser Frage “Recht” hat.</p>
 <blockquote>
 <p>The misuse of the test stems from misunderstanding of what is meant by the terms “non-nested model” and “nested model”. As is the case with many frequently used terms their meanings are approximately understood by many, but precisely understood by few.</p>
 <p>— <span class="citation">Wilson (<a href="#ref-wilson2015MisuseVuong">2015</a>)</span>, p. 52</p>
 </blockquote>
-<p>(Hausman Test: Vergleich der Koeffizienten zweier Modelle, taucht in Hilbe (2014) aber eher im Kontext von Validation samples auf)</p>
 </div>
 <div id="modellierung" class="section level3 unnumbered">
 <h3>Modellierung</h3>
 <p>Für die Modellierung von zero-inflated Daten stehen primär zwei Möglichkeiten zur Verfügung (vgl. auch <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 19):</p>
 <ol style="list-style-type: decimal">
-<li><em>Hurdle models</em>: Getrennte Modellierung von Nullen und positiven counts in zwei separaten Modellen (siehe Abschnitt <a href="erganzungen.html#mod-hurdle">B.3</a>).</li>
 <li><em>Zero-inflated models</em>: Mixture models, die aus zwei Wahrscheinlichkeitsfunktionen eine neue Wahrscheinlichkeitsfunktion generieren, die sowohl Nullen als auch positive counts beschreibt, allerdings nun auch einen <em>zero-inflation</em>-Parameter hat (siehe Abschnitt <a href="weitere-modelle.html#mod-zi">4.2</a>).</li>
+<li><em>Hurdle models</em>: Getrennte Modellierung von Nullen und positiven counts in zwei separaten Modellen (siehe Abschnitt <a href="erganzungen.html#mod-hurdle">B.3</a>).</li>
 </ol>
 <p>Ob hurdle model oder zero-inflated model die bessere Wahl ist hängt mitunter davon ab, welche Annahmen über die <em>Ursache der Nullen</em> getroffen werden können.<br />
 Wenn es eine echte Trennung der Mechanismen (<em>“separation of mechanisms”</em>) gibt, die die Nullen und die positiven counts verursachen, dann wäre ein hurdle model eher angemessen.<br />
 Wenn sich die Nullen überlappen, es also keine getrennten Prozesse zu geben scheint, dann wären zero-inflated models angemessen <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>, p. 209)</span>.</p>
-<p>Als Veranschaulichung dieser getrennten Mechanismen können wir das <em>fish</em>-Beispiel auf <a href="https://stats.idre.ucla.edu/sas/output/zero-inflated-poisson-regression/">dieser UCLA-Tutorialseite verwenden</a>. Hier ist die Anzahl der gefangenen Fische an einem Wochenende in einem Park die Zählvariable.</p>
+<p>Als Veranschaulichung für zwei sich überlappende Mechanismen können wir das <em>fish</em>-Beispiel auf <a href="https://stats.idre.ucla.edu/sas/output/zero-inflated-poisson-regression/">dieser UCLA-Tutorialseite verwenden</a>. Hier ist die Anzahl der gefangenen Fische an einem Wochenende in einem Park die Zählvariable.</p>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1"><span class="co"># Mittelwert &amp; Varianz von &#39;count&#39;</span></a>
 <a class="sourceLine" id="cb39-2" data-line-number="2"><span class="kw">describe_counts</span>(fish<span class="op">$</span>count)</a></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
@@ -768,7 +768,8 @@ Range
 <a class="sourceLine" id="cb40-10" data-line-number="10">    <span class="dt">x =</span> <span class="st">&quot;Anzahl gefangener Fischer&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span></a>
 <a class="sourceLine" id="cb40-11" data-line-number="11">  )</a></code></pre></div>
 <p><img src="poisson-regression_files/figure-html/fishing_zeros-1.png" width="768" style="display: block; margin: auto;" /></p>
-<p>Die Anzahl der Nullen scheint hier auffallend groß zu sein, allerdings beobachten wir hier auch zwei unterschiedliche Mechanismen: Eine Gruppe kann das ganze Wochenende geangelt haben, während eine andere Gruppe gar nicht geangelt hat – beide Gruppen werden jedoch am Ende nach der Anzahl ihrer gefangenen Fische befragt.</p>
+<p>Die Anzahl der Nullen ist hier auffallend groß – allerdings beobachten wir hier auch zwei unterschiedliche Mechanismen, die sich überlappen: Eine Gruppe kann das ganze Wochenende geangelt haben, während eine andere Gruppe gar nicht geangelt hat – beide Gruppen werden jedoch am Ende nach der Anzahl ihrer gefangenen Fische befragt, weshalb wir in den Daten Nullen mit unterschiedlichem “Ursprung” erhalten</p>
+<p>Da es hier nicht angemessen wäre, die Nullen und die positiven counts getrennt zu Modellieren, würden wir hier ein <em>zero-inflated</em> Modell (z.B ZIP, ZINB, …) verwenden.</p>
 
 </div>
 </div>
