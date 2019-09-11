@@ -13,6 +13,7 @@ cache:
     - $TRAVIS_BUILD_DIR/_bookdown_files # Rendered images cache
 
 apt_packages:
+  - fonts-roboto
   - fonts-oflb-asana-math # Asana Math font that may be not needed
 
 before_install:

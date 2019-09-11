@@ -18,7 +18,9 @@ bookdown::gitbook:
       twitter: no
   mathjax: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML
   includes:
-    in_header: mathjax.js
+    in_header:
+      - mathjax.js
+      - roboto.html
 bookdown::pdf_book:
   includes:
     in_header: latex/preamble.tex
