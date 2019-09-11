@@ -33,6 +33,8 @@ options(
 )
 
 knitr::opts_chunk$set(
+  warning = FALSE,
+  error = FALSE,
   #cache = TRUE,
   fig.width = 8,
   fig.asp = 1/1.618,

@@ -1,11 +1,8 @@
 #! /usr/bin/env Rscript --no-init-file
-# (1.1 Update source from git repository and)
-# 1.2 clean up previous output
+# 1. Clean up previous output
 # 2. Build the project (HTML + PDF output)
-# 3. Copy output to destination folder
+# 3. Copy output if appropriate
 
-# cat("1.1 Pulling from git repository\n")
-# git2r::pull(credentials = git2r::cred_ssh_key())
 library(cliapp)
 start_app(theme = simple_theme(dark = TRUE))
 
@@ -14,9 +11,8 @@ cli_h1("{format(Sys.time(), '%b. %d, %T')}")
 
 # Cleanup ----
 cli_alert_info("Removing previously built output")
-if (fs::dir_exists("poisson-regression"))  fs::dir_delete("poisson-regression")
+# if (fs::dir_exists("poisson-regression"))  fs::dir_delete("poisson-regression")
 if (fs::file_exists("poisson-regression.Rmd")) fs::file_delete("poisson-regression.Rmd")
-if (fs::dir_exists("poisson-regression_files"))  fs::dir_delete("poisson-regression_files")
 
 cli_h2("Rendering documents")
 cli_div(id = "list", theme = list(ol = list("margin-left" = 1)))
