@@ -13,15 +13,14 @@ Als Beispiel verwenden wir hier `rwm1984`, ein Subset des Datensatz `rwm5yr` (vg
 - `age`: Alter (25 - 64)
 
 ```{r poisson-example-rwm}
-# Daten (bemerke: rwm1984 ist kein exportiertes Objekt in COUNT)
+# Daten
 data(rwm1984, package = "COUNT")
 
 # Model fit
 mod_rwm <- glm(docvis ~ outwork + age, family = poisson(), data = rwm1984)
 
 # Summary display
-pander(mod_rwm)
-pander(glance(mod_rwm))
+pander(summary(mod_rwm))
 ```
 
 Das erste was wir zur Evaluation unseres Modells tun können, ohne direkt andere Modelle zum vergleich heranzuziehen, ist die beobachteten Counts und die auf Basis des Modells erwarteten Counts zu vergleichen, um ein grobes Gefühl für die Situation zu erhalten (Code frei adaptiert nach @hilbeModelingCountData2014, p. 88f):
@@ -32,7 +31,7 @@ observed_v_expected <- rwm1984 %>%
   count(docvis, name = "observed") %>%
   mutate(
     expected = purrr::map_dbl(docvis, ~{
-                  dpois(.x, fitted(mod)) %>%
+                  dpois(.x, fitted(mod_rwm)) %>%
                     sum() %>%
                     round(2)
                 }),
