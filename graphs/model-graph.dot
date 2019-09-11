@@ -22,14 +22,13 @@ disp_flexible [label = "Positive/negative Dispersion", fillcolor = "orange"]
 
 edge [color = grey]
 pois -- twoparam
-pois -- zi
 twoparam -- {disp_pos disp_flexible}
 
-node [fillcolor = white]
-nb [label = "NB"]
-pig [label = "PIG"]
-gpois [label = "GP"]
-cmp [label = "COMP"]
+node [fillcolor = white, shape = rectangle]
+nb [label = "NB Family", fillcolor = red]
+pig [label = "PIG", fillcolor = red]
+gpois [label = "GP", fillcolor = orange]
+cmp [label = "COMP", fillcolor = orange]
 
 zip [label = "ZIP"]
 zinb [label = "ZINB"]
@@ -39,7 +38,7 @@ edge [color = orange]
 disp_flexible -- {gpois cmp}
 disp_pos -- {nb pig}
 
-nb, pig, gpois, cmp -- zi
+pois, nb, pig, gpois, cmp -- zi [color = gray]
 
-zi -- {zip zinb zmisc}
+zi -- {zip zinb zmisc} [color = darkgray]
 }

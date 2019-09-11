@@ -5,14 +5,14 @@ graph [layout = dot]
 ################################
 #### Global node attributes ####
 ################################
-node [shape = oval,
+node [shape = rectangle,
       style = filled,
       color = grey,
       fontname = "Roboto"]
 edge [fontname = "Roboto"]
 
 node [fillcolor = white]
-start [label = "Start with Poisson",
+start [label = "Start\nFit Poisson",
        shape = rectangle,
        fillcolor = "lightblue"]
 
@@ -20,32 +20,41 @@ start [label = "Start with Poisson",
 #### First step             ####
 ################################
 node [fillcolor = white]
-checkdisp [label = "Check Pearson-Dispersion"]
+checkdisp [label = "Check Pearson-Dispersion", shape = oval]
 
-ud [label = "Underdispersion", fillcolor = "yellow"]
-unicorn [label = "You found a unicorn!\nUse Poisson", fillcolor = pink]
-od [label = "Overdispersion", fillcolor = "red"]
+ud [label = "Underdispersion", fillcolor = "yellow", shape = hexagon]
+pois [label = "Poisson", fillcolor = lightblue, shape = hexagon]
+od [label = "Overdispersion", fillcolor = "red", shape = hexagon]
 
 node [fillcolor = orange]
 
 edge [color = grey]
 start -> checkdisp [label = ""]
 checkdisp -> ud [label = "D < 1"]
-checkdisp -> unicorn [label = "D ≈ 1"]
+checkdisp -> pois [label = "D ≈ 1"]
 checkdisp -> od [label = "D > 1"]
-#unicorn -> start [label = "Use actual Poisson regression"]
 
 node []
-se_adjust [label = "Adjust SE", color = lightblue]
-nbin [label = "NB", fillcolor = red]
-pig [label = "PIG", fillcolor = red]
+# se_adjust [label = "Adjust SE", color = lightblue]
+nb2 [label = "NB2\n(Common default)", fillcolor = red]
+pig [label = "PIG\nIf very skewed to the right", fillcolor = red]
 cmp [label = "COMP", fillcolor = orange]
-gpois [label = "GP", fillcolor = yellow]
+gpois [label = "GP", fillcolor = orange]
+
+nbp [label = "NB-P\n(Choose NB or use directly)", fillcolor = red]
+nb1 [label = "NB1", fillcolor = red]
+nbh [label = "NB-H\nModel source\nof overdispersion", fillcolor = red]
+nbfam [label = "NB-Family", fillcolor = red, shape = oval]
 
 edge [color = red]
-od -> {nbin pig se_adjust}
-#edge [color = yellow]
-#ud -> gpois
+od -> nbfam
+nbfam -> nbp [label = ""]
+nbp -> nb1 [label = "p ≈ 1"]
+nbp -> nb2 [label = "p ≈ 2"]
+od -> pig [label = ""]
+nbfam -> nbh [label = ""]
+
 edge [color = orange]
 od, ud -> {cmp, gpois}
+
 }
