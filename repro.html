@@ -224,43 +224,43 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">C.1</span> R-Code</h2>
 <p>Hier verwendeter Code profitiert stark vom <a href="https://www.tidyverse.org/"><code>tidyverse</code></a>.<br />
 Insbesondere wird anstelle der Funktion <code>data.frame</code> in der Regel <code>tibble</code> (package <code>tibble</code>, automatisch re-exportiert von <code>dplyr</code>) verwendet. Diese Alternative bietet einige quality of life improvements für schnelle Simulationen, zum Beispiel die Verwendung von Variablen während diese noch definiert werden:</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="co"># Nicht möglich:</span></a>
-<a class="sourceLine" id="cb41-2" data-line-number="2"><span class="kw">data.frame</span>(</a>
-<a class="sourceLine" id="cb41-3" data-line-number="3">   <span class="dt">x1 =</span> <span class="kw">rnorm</span>(<span class="dv">10</span>),</a>
-<a class="sourceLine" id="cb41-4" data-line-number="4">   <span class="dt">x2 =</span> <span class="kw">rnorm</span>(<span class="dv">10</span>, <span class="dt">mean =</span> <span class="dv">5</span>),</a>
-<a class="sourceLine" id="cb41-5" data-line-number="5">   <span class="dt">y =</span> <span class="dv">50</span> <span class="op">+</span><span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span><span class="dv">5</span> <span class="op">*</span><span class="st"> </span>x2</a>
-<a class="sourceLine" id="cb41-6" data-line-number="6">)</a>
-<a class="sourceLine" id="cb41-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb41-8" data-line-number="8"><span class="co"># Funktioniert!</span></a>
-<a class="sourceLine" id="cb41-9" data-line-number="9"><span class="kw">tibble</span>(</a>
-<a class="sourceLine" id="cb41-10" data-line-number="10">   <span class="dt">x1 =</span> <span class="kw">rnorm</span>(<span class="dv">10</span>),</a>
-<a class="sourceLine" id="cb41-11" data-line-number="11">   <span class="dt">x2 =</span> <span class="kw">rnorm</span>(<span class="dv">10</span>, <span class="dt">mean =</span> <span class="dv">5</span>),</a>
-<a class="sourceLine" id="cb41-12" data-line-number="12">   <span class="dt">y =</span> <span class="dv">50</span> <span class="op">+</span><span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span><span class="dv">5</span> <span class="op">*</span><span class="st"> </span>x2</a>
-<a class="sourceLine" id="cb41-13" data-line-number="13">)</a></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="co"># Nicht möglich:</span></a>
+<a class="sourceLine" id="cb40-2" data-line-number="2"><span class="kw">data.frame</span>(</a>
+<a class="sourceLine" id="cb40-3" data-line-number="3">   <span class="dt">x1 =</span> <span class="kw">rnorm</span>(<span class="dv">10</span>),</a>
+<a class="sourceLine" id="cb40-4" data-line-number="4">   <span class="dt">x2 =</span> <span class="kw">rnorm</span>(<span class="dv">10</span>, <span class="dt">mean =</span> <span class="dv">5</span>),</a>
+<a class="sourceLine" id="cb40-5" data-line-number="5">   <span class="dt">y =</span> <span class="dv">50</span> <span class="op">+</span><span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span><span class="dv">5</span> <span class="op">*</span><span class="st"> </span>x2</a>
+<a class="sourceLine" id="cb40-6" data-line-number="6">)</a>
+<a class="sourceLine" id="cb40-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb40-8" data-line-number="8"><span class="co"># Funktioniert!</span></a>
+<a class="sourceLine" id="cb40-9" data-line-number="9"><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb40-10" data-line-number="10">   <span class="dt">x1 =</span> <span class="kw">rnorm</span>(<span class="dv">10</span>),</a>
+<a class="sourceLine" id="cb40-11" data-line-number="11">   <span class="dt">x2 =</span> <span class="kw">rnorm</span>(<span class="dv">10</span>, <span class="dt">mean =</span> <span class="dv">5</span>),</a>
+<a class="sourceLine" id="cb40-12" data-line-number="12">   <span class="dt">y =</span> <span class="dv">50</span> <span class="op">+</span><span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span><span class="dv">5</span> <span class="op">*</span><span class="st"> </span>x2</a>
+<a class="sourceLine" id="cb40-13" data-line-number="13">)</a></code></pre></div>
 <p>Zusätzlich kann die Pipe (<code>%&gt;%</code>) Verwendung finden, ein function composition operator.<br />
 Es gilt:</p>
 <p><code>f(g(h(x), b = 4), a = 1)</code> = <code>h(x) %&gt;% g(b = 4) %&gt;% f(a = 1)</code></p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="co"># Klassisch</span></a>
-<a class="sourceLine" id="cb42-2" data-line-number="2">x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dt">mean =</span> <span class="dv">15</span>)</a>
-<a class="sourceLine" id="cb42-3" data-line-number="3">x_mean &lt;-<span class="st"> </span><span class="kw">mean</span>(x)</a>
-<a class="sourceLine" id="cb42-4" data-line-number="4"><span class="kw">sqrt</span>(x_mean)</a>
-<a class="sourceLine" id="cb42-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb42-6" data-line-number="6"><span class="co"># oder</span></a>
-<a class="sourceLine" id="cb42-7" data-line-number="7"><span class="kw">sqrt</span>(<span class="kw">mean</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dt">mean =</span> <span class="dv">15</span>)))</a>
-<a class="sourceLine" id="cb42-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb42-9" data-line-number="9"><span class="co"># piped</span></a>
-<a class="sourceLine" id="cb42-10" data-line-number="10"><span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dt">mean =</span> <span class="dv">15</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb42-11" data-line-number="11"><span class="st">   </span><span class="kw">mean</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb42-12" data-line-number="12"><span class="st">   </span><span class="kw">sqrt</span>()</a>
-<a class="sourceLine" id="cb42-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb42-14" data-line-number="14"><span class="co"># Klassisch</span></a>
-<a class="sourceLine" id="cb42-15" data-line-number="15">iris_subset &lt;-<span class="st"> </span><span class="kw">subset</span>(iris, Species <span class="op">==</span><span class="st"> &quot;setosa&quot;</span>)</a>
-<a class="sourceLine" id="cb42-16" data-line-number="16"><span class="kw">head</span>(iris_subset[<span class="kw">order</span>(iris_subset<span class="op">$</span>Sepal.Length, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>), ], <span class="dt">n =</span> <span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb42-17" data-line-number="17"></a>
-<a class="sourceLine" id="cb42-18" data-line-number="18"><span class="co"># tidyverse-style (incl. filter() als subset()-Analog und top_n() für order() + head())</span></a>
-<a class="sourceLine" id="cb42-19" data-line-number="19">iris <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb42-20" data-line-number="20"><span class="st">   </span><span class="kw">filter</span>(Species <span class="op">==</span><span class="st"> &quot;setosa&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb42-21" data-line-number="21"><span class="st">   </span><span class="kw">top_n</span>(Sepal.Length, <span class="dt">n =</span> <span class="dv">5</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="co"># Klassisch</span></a>
+<a class="sourceLine" id="cb41-2" data-line-number="2">x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dt">mean =</span> <span class="dv">15</span>)</a>
+<a class="sourceLine" id="cb41-3" data-line-number="3">x_mean &lt;-<span class="st"> </span><span class="kw">mean</span>(x)</a>
+<a class="sourceLine" id="cb41-4" data-line-number="4"><span class="kw">sqrt</span>(x_mean)</a>
+<a class="sourceLine" id="cb41-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb41-6" data-line-number="6"><span class="co"># oder</span></a>
+<a class="sourceLine" id="cb41-7" data-line-number="7"><span class="kw">sqrt</span>(<span class="kw">mean</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dt">mean =</span> <span class="dv">15</span>)))</a>
+<a class="sourceLine" id="cb41-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb41-9" data-line-number="9"><span class="co"># piped</span></a>
+<a class="sourceLine" id="cb41-10" data-line-number="10"><span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dt">mean =</span> <span class="dv">15</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb41-11" data-line-number="11"><span class="st">   </span><span class="kw">mean</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb41-12" data-line-number="12"><span class="st">   </span><span class="kw">sqrt</span>()</a>
+<a class="sourceLine" id="cb41-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb41-14" data-line-number="14"><span class="co"># Klassisch</span></a>
+<a class="sourceLine" id="cb41-15" data-line-number="15">iris_subset &lt;-<span class="st"> </span><span class="kw">subset</span>(iris, Species <span class="op">==</span><span class="st"> &quot;setosa&quot;</span>)</a>
+<a class="sourceLine" id="cb41-16" data-line-number="16"><span class="kw">head</span>(iris_subset[<span class="kw">order</span>(iris_subset<span class="op">$</span>Sepal.Length, <span class="dt">decreasing =</span> <span class="ot">TRUE</span>), ], <span class="dt">n =</span> <span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb41-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb41-18" data-line-number="18"><span class="co"># tidyverse-style (incl. filter() als subset()-Analog und top_n() für order() + head())</span></a>
+<a class="sourceLine" id="cb41-19" data-line-number="19">iris <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb41-20" data-line-number="20"><span class="st">   </span><span class="kw">filter</span>(Species <span class="op">==</span><span class="st"> &quot;setosa&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb41-21" data-line-number="21"><span class="st">   </span><span class="kw">top_n</span>(Sepal.Length, <span class="dt">n =</span> <span class="dv">5</span>)</a></code></pre></div>
 <p>Letztlich stellt das Package <a href="https://broom.tidyverse.org/"><code>broom</code></a> eine wichtige Ergänzung dar. Mitunter ist <a href="https://broom.tidyverse.org/reference/augment.lm.html#examples"><code>augment()</code></a> eine komfortable Möglichkeit um schnell in tabellarischer Form gefittete Werte mit ihren dazugehörigen x-Werten zu erhalten.</p>
 </div>
 <div id="session-info" class="section level2">
@@ -562,9 +562,9 @@ CRAN (R 3.6.1)
 <p>(Eigentlich kompliziertes Beispiel, weil 0 counts nicht möglich sind, müsste man truncated drangehen)</p>
 <p>Grundlage ist der Datensatz <code>azprocedure</code> (siehe Abschnitt <a href="index.html#data">1.1</a>) zur Dauer des Krankenhausaufenthalts.</p>
 <p>Zuerst werfen wir einen Blick auf die Daten und fitten ein reguläres Poissonmodell.</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="kw">data</span>(azprocedure, <span class="dt">package =</span> <span class="st">&quot;COUNT&quot;</span>)</a>
-<a class="sourceLine" id="cb43-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb43-3" data-line-number="3"><span class="kw">describe_counts</span>(azprocedure<span class="op">$</span>los)</a></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="kw">data</span>(azprocedure, <span class="dt">package =</span> <span class="st">&quot;COUNT&quot;</span>)</a>
+<a class="sourceLine" id="cb42-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb42-3" data-line-number="3"><span class="kw">describe_counts</span>(azprocedure<span class="op">$</span>los)</a></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -605,21 +605,21 @@ Range
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="co"># Barchart: So grob poissonverteilt?</span></a>
-<a class="sourceLine" id="cb44-2" data-line-number="2"><span class="kw">ggplot</span>(<span class="dt">data =</span> azprocedure, <span class="kw">aes</span>(<span class="dt">x =</span> los)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb44-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">alpha =</span> <span class="fl">.75</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb44-4" data-line-number="4"><span class="st">  </span><span class="kw">labs</span>(</a>
-<a class="sourceLine" id="cb44-5" data-line-number="5">    <span class="dt">title =</span> <span class="st">&quot;Hospital length of stay (LOS)&quot;</span>,</a>
-<a class="sourceLine" id="cb44-6" data-line-number="6">    <span class="dt">subtitle =</span> <span class="st">&quot;azprocedure data (Hilbe 2014)&quot;</span>,</a>
-<a class="sourceLine" id="cb44-7" data-line-number="7">    <span class="dt">x =</span> <span class="st">&quot;LOS&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span> </a>
-<a class="sourceLine" id="cb44-8" data-line-number="8">  )</a></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="co"># Barchart: So grob poissonverteilt?</span></a>
+<a class="sourceLine" id="cb43-2" data-line-number="2"><span class="kw">ggplot</span>(<span class="dt">data =</span> azprocedure, <span class="kw">aes</span>(<span class="dt">x =</span> los)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb43-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">alpha =</span> <span class="fl">.75</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb43-4" data-line-number="4"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb43-5" data-line-number="5">    <span class="dt">title =</span> <span class="st">&quot;Hospital length of stay (LOS)&quot;</span>,</a>
+<a class="sourceLine" id="cb43-6" data-line-number="6">    <span class="dt">subtitle =</span> <span class="st">&quot;azprocedure data (Hilbe 2014)&quot;</span>,</a>
+<a class="sourceLine" id="cb43-7" data-line-number="7">    <span class="dt">x =</span> <span class="st">&quot;LOS&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span> </a>
+<a class="sourceLine" id="cb43-8" data-line-number="8">  )</a></code></pre></div>
 <p><img src="poisson-regression_files/figure-html/underdisp-azprocedure-over-1.png" width="768" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="co"># Model fit</span></a>
-<a class="sourceLine" id="cb45-2" data-line-number="2">model_azproc &lt;-<span class="st"> </span><span class="kw">glm</span>(los <span class="op">~</span><span class="st"> </span>procedure <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>admit, </a>
-<a class="sourceLine" id="cb45-3" data-line-number="3">                    <span class="dt">data =</span> azprocedure, <span class="dt">family =</span> <span class="kw">poisson</span>())</a>
-<a class="sourceLine" id="cb45-4" data-line-number="4"> </a>
-<a class="sourceLine" id="cb45-5" data-line-number="5"><span class="co"># Model output (ohne exponentierte Koeffizienten)</span></a>
-<a class="sourceLine" id="cb45-6" data-line-number="6"><span class="kw">pander</span>(model_azproc)</a></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="co"># Model fit</span></a>
+<a class="sourceLine" id="cb44-2" data-line-number="2">model_azproc &lt;-<span class="st"> </span><span class="kw">glm</span>(los <span class="op">~</span><span class="st"> </span>procedure <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>admit, </a>
+<a class="sourceLine" id="cb44-3" data-line-number="3">                    <span class="dt">data =</span> azprocedure, <span class="dt">family =</span> <span class="kw">poisson</span>())</a>
+<a class="sourceLine" id="cb44-4" data-line-number="4"> </a>
+<a class="sourceLine" id="cb44-5" data-line-number="5"><span class="co"># Model output (ohne exponentierte Koeffizienten)</span></a>
+<a class="sourceLine" id="cb44-6" data-line-number="6"><span class="kw">pander</span>(model_azproc)</a></code></pre></div>
 <table style="width:89%;">
 <caption>Fitting generalized (poisson/log) linear model: los ~ procedure + sex + admit</caption>
 <colgroup>
@@ -669,15 +669,15 @@ Range
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="co"># Pearson Dispersion:</span></a>
-<a class="sourceLine" id="cb46-2" data-line-number="2"><span class="kw">dispersion</span>(model_azproc)</a></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="co"># Pearson Dispersion:</span></a>
+<a class="sourceLine" id="cb45-2" data-line-number="2"><span class="kw">dispersion</span>(model_azproc)</a></code></pre></div>
 <pre><code>#&gt; X-squared(3585) = 11588.08
 #&gt; Pearson Dispersion = 3.232</code></pre>
 <p>Der Dispersionsindex lässt auf overdispersion schließen.<br />
 Betrachten wir ein Subset der Daten, indem wir nur Beobachtungen mit <span class="math inline">\(\mathtt{LOS} \le 8\)</span> betrachten, erhalten wir ein anderes Bild:</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1">azprocedure_subset &lt;-<span class="st"> </span><span class="kw">subset</span>(azprocedure, los <span class="op">&lt;=</span><span class="st"> </span><span class="dv">8</span>)</a>
-<a class="sourceLine" id="cb48-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb48-3" data-line-number="3"><span class="kw">describe_counts</span>(azprocedure_subset<span class="op">$</span>los)</a></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1">azprocedure_subset &lt;-<span class="st"> </span><span class="kw">subset</span>(azprocedure, los <span class="op">&lt;=</span><span class="st"> </span><span class="dv">8</span>)</a>
+<a class="sourceLine" id="cb47-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb47-3" data-line-number="3"><span class="kw">describe_counts</span>(azprocedure_subset<span class="op">$</span>los)</a></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -718,19 +718,19 @@ Range
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1"><span class="co"># Barchart</span></a>
-<a class="sourceLine" id="cb49-2" data-line-number="2"><span class="kw">ggplot</span>(<span class="dt">data =</span> azprocedure_subset, <span class="kw">aes</span>(<span class="dt">x =</span> los)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb49-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">alpha =</span> <span class="fl">.75</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb49-4" data-line-number="4"><span class="st">  </span><span class="kw">labs</span>(</a>
-<a class="sourceLine" id="cb49-5" data-line-number="5">    <span class="dt">title =</span> <span class="st">&quot;Hospital length of stay (LOS)&quot;</span>,</a>
-<a class="sourceLine" id="cb49-6" data-line-number="6">    <span class="dt">subtitle =</span> <span class="st">&quot;Subset (LOS &lt;= 8) der azprocedure data (Hilbe 2014)&quot;</span>,</a>
-<a class="sourceLine" id="cb49-7" data-line-number="7">    <span class="dt">x =</span> <span class="st">&quot;LOS&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span> </a>
-<a class="sourceLine" id="cb49-8" data-line-number="8">  )</a></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1"><span class="co"># Barchart</span></a>
+<a class="sourceLine" id="cb48-2" data-line-number="2"><span class="kw">ggplot</span>(<span class="dt">data =</span> azprocedure_subset, <span class="kw">aes</span>(<span class="dt">x =</span> los)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb48-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">alpha =</span> <span class="fl">.75</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb48-4" data-line-number="4"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb48-5" data-line-number="5">    <span class="dt">title =</span> <span class="st">&quot;Hospital length of stay (LOS)&quot;</span>,</a>
+<a class="sourceLine" id="cb48-6" data-line-number="6">    <span class="dt">subtitle =</span> <span class="st">&quot;Subset (LOS &lt;= 8) der azprocedure data (Hilbe 2014)&quot;</span>,</a>
+<a class="sourceLine" id="cb48-7" data-line-number="7">    <span class="dt">x =</span> <span class="st">&quot;LOS&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span> </a>
+<a class="sourceLine" id="cb48-8" data-line-number="8">  )</a></code></pre></div>
 <p><img src="poisson-regression_files/figure-html/underdisp-azprocedure_under-1.png" width="768" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1">model_azproc_u &lt;-<span class="st"> </span><span class="kw">glm</span>(los <span class="op">~</span><span class="st"> </span>procedure <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>admit, </a>
-<a class="sourceLine" id="cb50-2" data-line-number="2">                      <span class="dt">data =</span> azprocedure_subset, <span class="dt">family =</span> <span class="kw">poisson</span>())</a>
-<a class="sourceLine" id="cb50-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb50-4" data-line-number="4"><span class="kw">pander</span>(model_azproc_u)</a></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1">model_azproc_u &lt;-<span class="st"> </span><span class="kw">glm</span>(los <span class="op">~</span><span class="st"> </span>procedure <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>admit, </a>
+<a class="sourceLine" id="cb49-2" data-line-number="2">                      <span class="dt">data =</span> azprocedure_subset, <span class="dt">family =</span> <span class="kw">poisson</span>())</a>
+<a class="sourceLine" id="cb49-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb49-4" data-line-number="4"><span class="kw">pander</span>(model_azproc_u)</a></code></pre></div>
 <table style="width:90%;">
 <caption>Fitting generalized (poisson/log) linear model: los ~ procedure + sex + admit</caption>
 <colgroup>
@@ -780,20 +780,20 @@ Range
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1"><span class="kw">dispersion</span>(model_azproc_u)</a></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1"><span class="kw">dispersion</span>(model_azproc_u)</a></code></pre></div>
 <pre><code>#&gt; X-squared(1978) = 1562.75
 #&gt; Pearson Dispersion = 0.790</code></pre>
 <p>In diesem Fall haben wir es mit underdispersion zu tun, also versuchen wir es mal mit der GP:</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" data-line-number="1"><span class="kw">library</span>(VGAM)</a>
-<a class="sourceLine" id="cb53-2" data-line-number="2"><span class="kw">library</span>(gamlss)</a>
-<a class="sourceLine" id="cb53-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb53-4" data-line-number="4">mod_gp_vgam &lt;-<span class="st"> </span><span class="kw">vglm</span>(los <span class="op">~</span><span class="st"> </span>procedure <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>admit, <span class="dt">data =</span> azprocedure_subset, <span class="dt">family =</span> <span class="kw">genpoisson</span>())</a>
-<a class="sourceLine" id="cb53-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb53-6" data-line-number="6">mod_gp_gamlss &lt;-<span class="st"> </span><span class="kw">gamlss</span>(los <span class="op">~</span><span class="st"> </span>procedure <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>admit, <span class="dt">data =</span> azprocedure_subset, <span class="dt">family =</span> <span class="kw">GPO</span>())</a></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" data-line-number="1"><span class="kw">library</span>(VGAM)</a>
+<a class="sourceLine" id="cb52-2" data-line-number="2"><span class="kw">library</span>(gamlss)</a>
+<a class="sourceLine" id="cb52-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb52-4" data-line-number="4">mod_gp_vgam &lt;-<span class="st"> </span><span class="kw">vglm</span>(los <span class="op">~</span><span class="st"> </span>procedure <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>admit, <span class="dt">data =</span> azprocedure_subset, <span class="dt">family =</span> <span class="kw">genpoisson</span>())</a>
+<a class="sourceLine" id="cb52-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb52-6" data-line-number="6">mod_gp_gamlss &lt;-<span class="st"> </span><span class="kw">gamlss</span>(los <span class="op">~</span><span class="st"> </span>procedure <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>admit, <span class="dt">data =</span> azprocedure_subset, <span class="dt">family =</span> <span class="kw">GPO</span>())</a></code></pre></div>
 <pre><code>#&gt; GAMLSS-RS iteration 1: Global Deviance = 7969.342 
 #&gt; GAMLSS-RS iteration 2: Global Deviance = 7961.567 
 #&gt; GAMLSS-RS iteration 3: Global Deviance = 7961.567</code></pre>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" data-line-number="1"><span class="kw">summary</span>(mod_gp_vgam)</a></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" data-line-number="1"><span class="kw">summary</span>(mod_gp_vgam)</a></code></pre></div>
 <pre><code>#&gt; 
 #&gt; Call:
 #&gt; vglm(formula = los ~ procedure + sex + admit, family = genpoisson(), 
@@ -821,7 +821,7 @@ Range
 #&gt; Number of Fisher scoring iterations: 6 
 #&gt; 
 #&gt; No Hauck-Donner effect found in any of the estimates</code></pre>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1"><span class="kw">summary</span>(mod_gp_gamlss)</a></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" data-line-number="1"><span class="kw">summary</span>(mod_gp_gamlss)</a></code></pre></div>
 <pre><code>#&gt; ******************************************************************
 #&gt; Family:  c(&quot;GPO&quot;, &quot;Generalised Poisson&quot;) 
 #&gt; 

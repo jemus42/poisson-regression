@@ -140,7 +140,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{Stand: 11. September 2019 10:57 Uhr (CEST)}
+    \date{Stand: 11. September 2019 16:14 Uhr (CEST)}
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -402,7 +402,7 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die pr
 \toprule
 N & Missing & Mittelwert & Varianz & Range\\
 \midrule
-100 & 10 & 5.06 & 5.51 & [1, 10]\\
+100 & 10 & 4.87 & 4.25 & [1, 10]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1353,33 +1353,18 @@ Als Beispiel verwenden wir hier \texttt{rwm1984}, ein Subset des Datensatz \text
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Daten (bemerke: rwm1984 ist kein exportiertes Objekt in COUNT)}
+\CommentTok{# Daten}
 \KeywordTok{data}\NormalTok{(rwm1984, }\DataTypeTok{package =} \StringTok{"COUNT"}\NormalTok{)}
 
 \CommentTok{# Model fit}
 \NormalTok{mod_rwm <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(docvis }\OperatorTok{~}\StringTok{ }\NormalTok{outwork }\OperatorTok{+}\StringTok{ }\NormalTok{age, }\DataTypeTok{family =} \KeywordTok{poisson}\NormalTok{(), }\DataTypeTok{data =}\NormalTok{ rwm1984)}
 
 \CommentTok{# Summary display}
-\KeywordTok{pander}\NormalTok{(mod_rwm)}
+\KeywordTok{pander}\NormalTok{(}\KeywordTok{summary}\NormalTok{(mod_rwm))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{longtable}[]{@{}ccccc@{}}
-\caption{Fitting generalized (poisson/log) linear model: docvis \textasciitilde{} outwork + age}\tabularnewline
-\toprule
-\begin{minipage}[b]{0.21\columnwidth}\centering
-~\strut
-\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering
-Estimate\strut
-\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering
-Std. Error\strut
-\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
-z value\strut
-\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering
-Pr(\textgreater{}\textbar{}z\textbar{})\strut
-\end{minipage}\tabularnewline
-\midrule
-\endfirsthead
 \toprule
 \begin{minipage}[b]{0.21\columnwidth}\centering
 ~\strut
@@ -1430,45 +1415,22 @@ Pr(\textgreater{}\textbar{}z\textbar{})\strut
 \bottomrule
 \end{longtable}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{pander}\NormalTok{(}\KeywordTok{glance}\NormalTok{(mod_rwm))}
-\end{Highlighting}
-\end{Shaded}
+(Dispersion parameter for poisson family taken to be 1 )
 
-\begin{longtable}[]{@{}ccccccc@{}}
+\begin{longtable}[]{@{}cc@{}}
 \toprule
-\begin{minipage}[b]{0.17\columnwidth}\centering
-null.deviance\strut
-\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering
-df.null\strut
-\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering
-logLik\strut
-\end{minipage} & \begin{minipage}[b]{0.09\columnwidth}\centering
-AIC\strut
-\end{minipage} & \begin{minipage}[b]{0.09\columnwidth}\centering
-BIC\strut
-\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
-deviance\strut
-\end{minipage} & \begin{minipage}[b]{0.15\columnwidth}\centering
-df.residual\strut
-\end{minipage}\tabularnewline
-\midrule
 \endhead
-\begin{minipage}[t]{0.17\columnwidth}\centering
-25791\strut
-\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering
-3873\strut
-\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering
--15636\strut
-\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\centering
-31279\strut
-\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\centering
-31298\strut
-\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering
-24190\strut
-\end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\centering
-3871\strut
+\begin{minipage}[t]{0.27\columnwidth}\centering
+Null deviance:\strut
+\end{minipage} & \begin{minipage}[t]{0.38\columnwidth}\centering
+25791 on 3873 degrees of
+freedom\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\centering
+Residual deviance:\strut
+\end{minipage} & \begin{minipage}[t]{0.38\columnwidth}\centering
+24190 on 3871 degrees of
+freedom\strut
 \end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
@@ -1482,7 +1444,7 @@ Das erste was wir zur Evaluation unseres Modells tun können, ohne direkt andere
 \StringTok{  }\KeywordTok{count}\NormalTok{(docvis, }\DataTypeTok{name =} \StringTok{"observed"}\NormalTok{) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{mutate}\NormalTok{(}
     \DataTypeTok{expected =}\NormalTok{ purrr}\OperatorTok{::}\KeywordTok{map_dbl}\NormalTok{(docvis, }\OperatorTok{~}\NormalTok{\{}
-                  \KeywordTok{dpois}\NormalTok{(.x, }\KeywordTok{fitted}\NormalTok{(mod)) }\OperatorTok{%>%}
+                  \KeywordTok{dpois}\NormalTok{(.x, }\KeywordTok{fitted}\NormalTok{(mod_rwm)) }\OperatorTok{%>%}
 \StringTok{                    }\KeywordTok{sum}\NormalTok{() }\OperatorTok{%>%}
 \StringTok{                    }\KeywordTok{round}\NormalTok{(}\DecValTok{2}\NormalTok{)}
 \NormalTok{                \}),}
@@ -1526,45 +1488,45 @@ difference\strut
 \end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
 1611\strut
 \end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
-106.2\strut
+264.8\strut
 \end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
-1505\strut
+1346\strut
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.11\columnwidth}\centering
 1\strut
 \end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
 448\strut
 \end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
-194.1\strut
+627.1\strut
 \end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
-253.9\strut
+-179.1\strut
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.11\columnwidth}\centering
 2\strut
 \end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
 440\strut
 \end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
-186.8\strut
+796\strut
 \end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
-253.2\strut
+-356\strut
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.11\columnwidth}\centering
 3\strut
 \end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
 353\strut
 \end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
-129.9\strut
+731.6\strut
 \end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
-223.1\strut
+-378.6\strut
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.11\columnwidth}\centering
 4\strut
 \end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
 213\strut
 \end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
-76.99\strut
+554.6\strut
 \end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
-136\strut
+-341.6\strut
 \end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}

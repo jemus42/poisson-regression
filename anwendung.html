@@ -226,16 +226,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><code>outwork</code>: Arbeitslos (1), arbeitend (0)</li>
 <li><code>age</code>: Alter (25 - 64)</li>
 </ul>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># Daten (bemerke: rwm1984 ist kein exportiertes Objekt in COUNT)</span></a>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># Daten</span></a>
 <a class="sourceLine" id="cb23-2" data-line-number="2"><span class="kw">data</span>(rwm1984, <span class="dt">package =</span> <span class="st">&quot;COUNT&quot;</span>)</a>
 <a class="sourceLine" id="cb23-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb23-4" data-line-number="4"><span class="co"># Model fit</span></a>
 <a class="sourceLine" id="cb23-5" data-line-number="5">mod_rwm &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
 <a class="sourceLine" id="cb23-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb23-7" data-line-number="7"><span class="co"># Summary display</span></a>
-<a class="sourceLine" id="cb23-8" data-line-number="8"><span class="kw">pander</span>(mod_rwm)</a></code></pre></div>
+<a class="sourceLine" id="cb23-8" data-line-number="8"><span class="kw">pander</span>(<span class="kw">summary</span>(mod_rwm))</a></code></pre></div>
 <table style="width:90%;">
-<caption>Fitting generalized (poisson/log) linear model: docvis ~ outwork + age</caption>
 <colgroup>
 <col width="25%" />
 <col width="15%" />
@@ -276,56 +275,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">pander</span>(<span class="kw">glance</span>(mod_rwm))</a></code></pre></div>
-<table style="width:100%;">
+<p>(Dispersion parameter for poisson family taken to be 1 )</p>
+<table style="width:69%;">
 <colgroup>
-<col width="21%" />
-<col width="13%" />
-<col width="11%" />
-<col width="10%" />
-<col width="10%" />
-<col width="14%" />
-<col width="18%" />
+<col width="29%" />
+<col width="40%" />
 </colgroup>
-<thead>
-<tr class="header">
-<th align="center">null.deviance</th>
-<th align="center">df.null</th>
-<th align="center">logLik</th>
-<th align="center">AIC</th>
-<th align="center">BIC</th>
-<th align="center">deviance</th>
-<th align="center">df.residual</th>
-</tr>
-</thead>
 <tbody>
 <tr class="odd">
-<td align="center">25791</td>
-<td align="center">3873</td>
-<td align="center">-15636</td>
-<td align="center">31279</td>
-<td align="center">31298</td>
-<td align="center">24190</td>
-<td align="center">3871</td>
+<td align="center">Null deviance:</td>
+<td align="center">25791 on 3873 degrees of
+freedom</td>
+</tr>
+<tr class="even">
+<td align="center">Residual deviance:</td>
+<td align="center">24190 on 3871 degrees of
+freedom</td>
 </tr>
 </tbody>
 </table>
 <p>Das erste was wir zur Evaluation unseres Modells tun können, ohne direkt andere Modelle zum vergleich heranzuziehen, ist die beobachteten Counts und die auf Basis des Modells erwarteten Counts zu vergleichen, um ein grobes Gefühl für die Situation zu erhalten (Code frei adaptiert nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 88f):</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="co"># Beobachtete und erwartete counts</span></a>
-<a class="sourceLine" id="cb25-2" data-line-number="2">observed_v_expected &lt;-<span class="st"> </span>rwm1984 <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb25-3" data-line-number="3"><span class="st">  </span><span class="kw">count</span>(docvis, <span class="dt">name =</span> <span class="st">&quot;observed&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb25-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(</a>
-<a class="sourceLine" id="cb25-5" data-line-number="5">    <span class="dt">expected =</span> purrr<span class="op">::</span><span class="kw">map_dbl</span>(docvis, <span class="op">~</span>{</a>
-<a class="sourceLine" id="cb25-6" data-line-number="6">                  <span class="kw">dpois</span>(.x, <span class="kw">fitted</span>(mod)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb25-7" data-line-number="7"><span class="st">                    </span><span class="kw">sum</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb25-8" data-line-number="8"><span class="st">                    </span><span class="kw">round</span>(<span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb25-9" data-line-number="9">                }),</a>
-<a class="sourceLine" id="cb25-10" data-line-number="10">    <span class="dt">difference =</span> observed <span class="op">-</span><span class="st"> </span>expected</a>
-<a class="sourceLine" id="cb25-11" data-line-number="11">  ) </a>
-<a class="sourceLine" id="cb25-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb25-13" data-line-number="13">observed_v_expected <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb25-14" data-line-number="14"><span class="st">  </span><span class="kw">head</span>(<span class="dv">5</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb25-15" data-line-number="15"><span class="st">  </span><span class="kw">pander</span>(<span class="dt">caption =</span> <span class="st">&quot;Observed and expected counts&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="co"># Beobachtete und erwartete counts</span></a>
+<a class="sourceLine" id="cb24-2" data-line-number="2">observed_v_expected &lt;-<span class="st"> </span>rwm1984 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-3" data-line-number="3"><span class="st">  </span><span class="kw">count</span>(docvis, <span class="dt">name =</span> <span class="st">&quot;observed&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb24-5" data-line-number="5">    <span class="dt">expected =</span> purrr<span class="op">::</span><span class="kw">map_dbl</span>(docvis, <span class="op">~</span>{</a>
+<a class="sourceLine" id="cb24-6" data-line-number="6">                  <span class="kw">dpois</span>(.x, <span class="kw">fitted</span>(mod_rwm)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-7" data-line-number="7"><span class="st">                    </span><span class="kw">sum</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-8" data-line-number="8"><span class="st">                    </span><span class="kw">round</span>(<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb24-9" data-line-number="9">                }),</a>
+<a class="sourceLine" id="cb24-10" data-line-number="10">    <span class="dt">difference =</span> observed <span class="op">-</span><span class="st"> </span>expected</a>
+<a class="sourceLine" id="cb24-11" data-line-number="11">  ) </a>
+<a class="sourceLine" id="cb24-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb24-13" data-line-number="13">observed_v_expected <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-14" data-line-number="14"><span class="st">  </span><span class="kw">head</span>(<span class="dv">5</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-15" data-line-number="15"><span class="st">  </span><span class="kw">pander</span>(<span class="dt">caption =</span> <span class="st">&quot;Observed and expected counts&quot;</span>)</a></code></pre></div>
 <table style="width:61%;">
 <caption>Observed and expected counts</caption>
 <colgroup>
@@ -346,43 +330,43 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <tr class="odd">
 <td align="center">0</td>
 <td align="center">1611</td>
-<td align="center">106.2</td>
-<td align="center">1505</td>
+<td align="center">264.8</td>
+<td align="center">1346</td>
 </tr>
 <tr class="even">
 <td align="center">1</td>
 <td align="center">448</td>
-<td align="center">194.1</td>
-<td align="center">253.9</td>
+<td align="center">627.1</td>
+<td align="center">-179.1</td>
 </tr>
 <tr class="odd">
 <td align="center">2</td>
 <td align="center">440</td>
-<td align="center">186.8</td>
-<td align="center">253.2</td>
+<td align="center">796</td>
+<td align="center">-356</td>
 </tr>
 <tr class="even">
 <td align="center">3</td>
 <td align="center">353</td>
-<td align="center">129.9</td>
-<td align="center">223.1</td>
+<td align="center">731.6</td>
+<td align="center">-378.6</td>
 </tr>
 <tr class="odd">
 <td align="center">4</td>
 <td align="center">213</td>
-<td align="center">76.99</td>
-<td align="center">136</td>
+<td align="center">554.6</td>
+<td align="center">-341.6</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="co"># Mittelwert und Varianz der jeweiligen counts</span></a>
-<a class="sourceLine" id="cb26-2" data-line-number="2"><span class="co"># (für &quot;expected&quot; gilt Varianz := Mittelwert)</span></a>
-<a class="sourceLine" id="cb26-3" data-line-number="3"><span class="kw">tribble</span>(</a>
-<a class="sourceLine" id="cb26-4" data-line-number="4">  <span class="op">~</span>Counts,   <span class="op">~</span>Mean,                 <span class="op">~</span>Variance,</a>
-<a class="sourceLine" id="cb26-5" data-line-number="5">  <span class="st">&quot;observed&quot;</span>, <span class="kw">mean</span>(rwm1984<span class="op">$</span>docvis), <span class="kw">var</span>(rwm1984<span class="op">$</span>docvis),</a>
-<a class="sourceLine" id="cb26-6" data-line-number="6">  <span class="st">&quot;expected&quot;</span>, <span class="kw">mean</span>(<span class="kw">fitted</span>(mod)),    <span class="kw">mean</span>(<span class="kw">fitted</span>(mod))</a>
-<a class="sourceLine" id="cb26-7" data-line-number="7">) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb26-8" data-line-number="8"><span class="st">  </span><span class="kw">pander</span>(<span class="dt">caption =</span> <span class="st">&quot;Mean &amp; variance of observed and expected counts&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="co"># Mittelwert und Varianz der jeweiligen counts</span></a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="co"># (für &quot;expected&quot; gilt Varianz := Mittelwert)</span></a>
+<a class="sourceLine" id="cb25-3" data-line-number="3"><span class="kw">tribble</span>(</a>
+<a class="sourceLine" id="cb25-4" data-line-number="4">  <span class="op">~</span>Counts,   <span class="op">~</span>Mean,                 <span class="op">~</span>Variance,</a>
+<a class="sourceLine" id="cb25-5" data-line-number="5">  <span class="st">&quot;observed&quot;</span>, <span class="kw">mean</span>(rwm1984<span class="op">$</span>docvis), <span class="kw">var</span>(rwm1984<span class="op">$</span>docvis),</a>
+<a class="sourceLine" id="cb25-6" data-line-number="6">  <span class="st">&quot;expected&quot;</span>, <span class="kw">mean</span>(<span class="kw">fitted</span>(mod)),    <span class="kw">mean</span>(<span class="kw">fitted</span>(mod))</a>
+<a class="sourceLine" id="cb25-7" data-line-number="7">) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb25-8" data-line-number="8"><span class="st">  </span><span class="kw">pander</span>(<span class="dt">caption =</span> <span class="st">&quot;Mean &amp; variance of observed and expected counts&quot;</span>)</a></code></pre></div>
 <table style="width:42%;">
 <caption>Mean &amp; variance of observed and expected counts</caption>
 <colgroup>
@@ -410,22 +394,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="co"># Plot: observed vs. expected counts</span></a>
-<a class="sourceLine" id="cb27-2" data-line-number="2">observed_v_expected <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(docvis <span class="op">&lt;=</span><span class="st"> </span><span class="dv">12</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb27-4" data-line-number="4"><span class="st">  </span><span class="kw">gather</span>(type, count, observed, expected) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb27-5" data-line-number="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> docvis, <span class="dt">y =</span> count, <span class="dt">fill =</span> type, <span class="dt">color =</span> type)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb27-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">stroke =</span> <span class="fl">.5</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb27-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_path</span>(<span class="dt">linetype =</span> <span class="st">&quot;dotted&quot;</span>, <span class="dt">size =</span> <span class="fl">.25</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb27-8" data-line-number="8"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">2</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb27-9" data-line-number="9"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>, <span class="dt">aesthetics =</span> <span class="kw">c</span>(<span class="st">&quot;color&quot;</span>, <span class="st">&quot;fill&quot;</span>), <span class="dt">name =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb27-10" data-line-number="10"><span class="st">  </span><span class="kw">labs</span>(</a>
-<a class="sourceLine" id="cb27-11" data-line-number="11">    <span class="dt">title =</span> <span class="st">&quot;rwm1984: Poisson Modell&quot;</span>,</a>
-<a class="sourceLine" id="cb27-12" data-line-number="12">    <span class="dt">subtitle =</span> <span class="st">&quot;Observed und expected counts bei overdispersion&quot;</span>,</a>
-<a class="sourceLine" id="cb27-13" data-line-number="13">    <span class="dt">caption =</span> <span class="st">&quot;Output begrenzt auf docvs &lt;= 12&quot;</span>,</a>
-<a class="sourceLine" id="cb27-14" data-line-number="14">    <span class="dt">x =</span> <span class="st">&quot;Anzahl der Arztbesuche (docvis)&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span></a>
-<a class="sourceLine" id="cb27-15" data-line-number="15">  ) <span class="op">+</span></a>
-<a class="sourceLine" id="cb27-16" data-line-number="16"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;top&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="co"># Plot: observed vs. expected counts</span></a>
+<a class="sourceLine" id="cb26-2" data-line-number="2">observed_v_expected <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(docvis <span class="op">&lt;=</span><span class="st"> </span><span class="dv">12</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-4" data-line-number="4"><span class="st">  </span><span class="kw">gather</span>(type, count, observed, expected) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb26-5" data-line-number="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> docvis, <span class="dt">y =</span> count, <span class="dt">fill =</span> type, <span class="dt">color =</span> type)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb26-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">stroke =</span> <span class="fl">.5</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb26-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_path</span>(<span class="dt">linetype =</span> <span class="st">&quot;dotted&quot;</span>, <span class="dt">size =</span> <span class="fl">.25</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb26-8" data-line-number="8"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">2</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb26-9" data-line-number="9"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>, <span class="dt">aesthetics =</span> <span class="kw">c</span>(<span class="st">&quot;color&quot;</span>, <span class="st">&quot;fill&quot;</span>), <span class="dt">name =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb26-10" data-line-number="10"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb26-11" data-line-number="11">    <span class="dt">title =</span> <span class="st">&quot;rwm1984: Poisson Modell&quot;</span>,</a>
+<a class="sourceLine" id="cb26-12" data-line-number="12">    <span class="dt">subtitle =</span> <span class="st">&quot;Observed und expected counts bei overdispersion&quot;</span>,</a>
+<a class="sourceLine" id="cb26-13" data-line-number="13">    <span class="dt">caption =</span> <span class="st">&quot;Output begrenzt auf docvs &lt;= 12&quot;</span>,</a>
+<a class="sourceLine" id="cb26-14" data-line-number="14">    <span class="dt">x =</span> <span class="st">&quot;Anzahl der Arztbesuche (docvis)&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span></a>
+<a class="sourceLine" id="cb26-15" data-line-number="15">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb26-16" data-line-number="16"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;top&quot;</span>)</a></code></pre></div>
 <p><img src="poisson-regression_files/figure-html/diag_compare_expected-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Anhand der ersten Tabelle können wir recht schnell erkennen, dass wir hier <em>deutlich</em> mehr Nullen beobachten als das Modell vorhersagt – mehr dazu in Abschnitt <a href="anwendung.html#zeros">5.2</a>.<br />
 Der Plot veranschaulicht den eher suboptimalen model fit unter diesen Umständen (overdispersion &amp; zero-inflation).</p>
@@ -480,14 +464,14 @@ Mit <span class="math inline">\(\mathcal{L}_F\)</span> als log-likelihood des vo
 <p>— <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 115</p>
 </blockquote>
 <p>Am Beispiel der <code>rwm1984</code>-Daten:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="co"># Poisson-Modell</span></a>
-<a class="sourceLine" id="cb28-2" data-line-number="2">mod_p &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb28-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb28-4" data-line-number="4"><span class="co"># NB-Modell</span></a>
-<a class="sourceLine" id="cb28-5" data-line-number="5">mod_nb &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">glm.nb</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb28-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb28-7" data-line-number="7"><span class="co"># BLR: Recht eindeutig.</span></a>
-<a class="sourceLine" id="cb28-8" data-line-number="8">lmtest<span class="op">::</span><span class="kw">lrtest</span>(mod_p, mod_nb)</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="co"># Poisson-Modell</span></a>
+<a class="sourceLine" id="cb27-2" data-line-number="2">mod_p &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb27-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb27-4" data-line-number="4"><span class="co"># NB-Modell</span></a>
+<a class="sourceLine" id="cb27-5" data-line-number="5">mod_nb &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">glm.nb</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb27-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb27-7" data-line-number="7"><span class="co"># BLR: Recht eindeutig.</span></a>
+<a class="sourceLine" id="cb27-8" data-line-number="8">lmtest<span class="op">::</span><span class="kw">lrtest</span>(mod_p, mod_nb)</a></code></pre></div>
 <div class="kable-table">
 
 <table>
@@ -548,11 +532,11 @@ NA
 </tbody>
 </table>
 </div>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="co"># Bei gegebenem BLR-Wert von 4.2 ließe sich der p-Wert wie folgt berechnen:</span></a>
-<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="co"># Bei gegebenem BLR-Wert von 4.2 ließe sich der p-Wert wie folgt berechnen:</span></a>
+<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
 <pre><code>#&gt; [1] 0.02021199</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="co"># Oder</span></a>
-<a class="sourceLine" id="cb31-2" data-line-number="2">(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>)) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="co"># Oder</span></a>
+<a class="sourceLine" id="cb30-2" data-line-number="2">(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>)) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
 <pre><code>#&gt; [1] 0.02021199</code></pre>
 </div>
 <div id="umgang-mit-overdispersion" class="section level3">
@@ -571,19 +555,19 @@ NA
 Wobei <span class="math inline">\(D\)</span> der Pearson-Dispersionsindex ist (vgl. <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 92ff), den wir in <a href="poisson-modell.html#def:def-pearsondisp">2.5</a> als <span class="math inline">\(\frac{\chi^2_{\mathrm{Pearson}}}{\mathrm{df}}\)</span> definiert hatten.</p>
 <p>Ein möglicher Nachteil jedoch: Es wird zuerst ein reguläres Poisson-Modell gefittet, Standardfehler und Dispersionsindex bestimmt, und dann dasselbe Modell mit skalierten Standardfehlern erneut gefittet – dementsprechend ist diese Methode vermutlich für größere Datensätze eher ineffizient.</p>
 <p>Einmal auf unser voriges Beispiel anhand der <code>rwm5yr</code>-Daten angewandt:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="co"># Urprüngliches Model</span></a>
-<a class="sourceLine" id="cb33-2" data-line-number="2">mod &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb33-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb33-4" data-line-number="4">mod_qp &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">quasipoisson</span>(), <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb33-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb33-6" data-line-number="6"><span class="kw">dispersion</span>(mod)</a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="co"># Urprüngliches Model</span></a>
+<a class="sourceLine" id="cb32-2" data-line-number="2">mod &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb32-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb32-4" data-line-number="4">mod_qp &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">quasipoisson</span>(), <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb32-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb32-6" data-line-number="6"><span class="kw">dispersion</span>(mod)</a></code></pre></div>
 <pre><code>#&gt; X-squared(3871) = 43909.62
 #&gt; Pearson Dispersion = 11.343</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="kw">dispersion</span>(mod_qp)</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="kw">dispersion</span>(mod_qp)</a></code></pre></div>
 <pre><code>#&gt; X-squared(3871) = 43909.62
 #&gt; Pearson Dispersion = 11.343</code></pre>
 <p>An der Dispersion hat sich nichts geändert, nur an den Standardfehlern der Koeffizienten (in folgenden Tabellen auf log-Skala):</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="kw">pander</span>(mod, <span class="dt">caption =</span> <span class="st">&quot;Poisson-Modell&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="kw">pander</span>(mod, <span class="dt">caption =</span> <span class="st">&quot;Poisson-Modell&quot;</span>)</a></code></pre></div>
 <table style="width:90%;">
 <caption>Poisson-Modell</caption>
 <colgroup>
@@ -626,7 +610,7 @@ Wobei <span class="math inline">\(D\)</span> der Pearson-Dispersionsindex ist (v
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="kw">pander</span>(mod_qp, <span class="dt">caption =</span> <span class="st">&quot;Quasipoisson-Modell&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="kw">pander</span>(mod_qp, <span class="dt">caption =</span> <span class="st">&quot;Quasipoisson-Modell&quot;</span>)</a></code></pre></div>
 <table style="width:89%;">
 <caption>Quasipoisson-Modell</caption>
 <colgroup>
@@ -714,8 +698,8 @@ Wobei <span class="math inline">\(D\)</span> der Pearson-Dispersionsindex ist (v
 Wenn es eine echte Trennung der Mechanismen (<em>“separation of mechanisms”</em>) gibt, die die Nullen und die positiven counts verursachen, dann wäre ein hurdle model eher angemessen.<br />
 Wenn sich die Nullen überlappen, es also keine getrennten Prozesse zu geben scheint, dann wären zero-inflated models angemessen <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>, p. 209)</span>.</p>
 <p>Als Veranschaulichung für zwei sich überlappende Mechanismen können wir das <em>fish</em>-Beispiel auf <a href="https://stats.idre.ucla.edu/sas/output/zero-inflated-poisson-regression/">dieser UCLA-Tutorialseite verwenden</a>. Hier ist die Anzahl der gefangenen Fische an einem Wochenende in einem Park die Zählvariable.</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1"><span class="co"># Mittelwert &amp; Varianz von &#39;count&#39;</span></a>
-<a class="sourceLine" id="cb39-2" data-line-number="2"><span class="kw">describe_counts</span>(fish<span class="op">$</span>count)</a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="co"># Mittelwert &amp; Varianz von &#39;count&#39;</span></a>
+<a class="sourceLine" id="cb38-2" data-line-number="2"><span class="kw">describe_counts</span>(fish<span class="op">$</span>count)</a></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -756,17 +740,17 @@ Range
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="co"># Barchart für counts &lt;= 50, Spannweite sehr groß</span></a>
-<a class="sourceLine" id="cb40-2" data-line-number="2">fish <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb40-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(count <span class="op">&lt;=</span><span class="st"> </span><span class="dv">50</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb40-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> count)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb40-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">alpha =</span> <span class="fl">.75</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb40-6" data-line-number="6"><span class="st">  </span><span class="kw">scale_x_continuous</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb40-7" data-line-number="7"><span class="st">  </span><span class="kw">labs</span>(</a>
-<a class="sourceLine" id="cb40-8" data-line-number="8">    <span class="dt">title =</span> <span class="st">&quot;&#39;fish&#39;: Anzahl gefangener Fische&quot;</span>,</a>
-<a class="sourceLine" id="cb40-9" data-line-number="9">    <span class="dt">subtitle =</span> <span class="st">&quot;Limitiert auf counts unter 50&quot;</span>,</a>
-<a class="sourceLine" id="cb40-10" data-line-number="10">    <span class="dt">x =</span> <span class="st">&quot;Anzahl gefangener Fischer&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span></a>
-<a class="sourceLine" id="cb40-11" data-line-number="11">  )</a></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1"><span class="co"># Barchart für counts &lt;= 50, Spannweite sehr groß</span></a>
+<a class="sourceLine" id="cb39-2" data-line-number="2">fish <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb39-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(count <span class="op">&lt;=</span><span class="st"> </span><span class="dv">50</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb39-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> count)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb39-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">alpha =</span> <span class="fl">.75</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb39-6" data-line-number="6"><span class="st">  </span><span class="kw">scale_x_continuous</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb39-7" data-line-number="7"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb39-8" data-line-number="8">    <span class="dt">title =</span> <span class="st">&quot;&#39;fish&#39;: Anzahl gefangener Fische&quot;</span>,</a>
+<a class="sourceLine" id="cb39-9" data-line-number="9">    <span class="dt">subtitle =</span> <span class="st">&quot;Limitiert auf counts unter 50&quot;</span>,</a>
+<a class="sourceLine" id="cb39-10" data-line-number="10">    <span class="dt">x =</span> <span class="st">&quot;Anzahl gefangener Fischer&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span></a>
+<a class="sourceLine" id="cb39-11" data-line-number="11">  )</a></code></pre></div>
 <p><img src="poisson-regression_files/figure-html/fishing_zeros-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Die Anzahl der Nullen ist hier auffallend groß – allerdings beobachten wir hier auch zwei unterschiedliche Mechanismen, die sich überlappen: Eine Gruppe kann das ganze Wochenende geangelt haben, während eine andere Gruppe gar nicht geangelt hat – beide Gruppen werden jedoch am Ende nach der Anzahl ihrer gefangenen Fische befragt, weshalb wir in den Daten Nullen mit unterschiedlichem “Ursprung” erhalten</p>
 <p>Da es hier nicht angemessen wäre, die Nullen und die positiven counts getrennt zu Modellieren, würden wir hier ein <em>zero-inflated</em> Modell (z.B ZIP, ZINB, …) verwenden.</p>
