@@ -317,7 +317,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="mod-nbp" class="section level3">
 <h3><span class="header-section-number">4.1.2</span> Negative binomial-P (NB-P)</h3>
-<p>Eine Erweiterung der NB1 und NB2, die den Exponenten im Varianzterm parametrisiert, womit die Dispersion nun nicht mehr statisch für alle Beobachtungen ist:</p>
+<p>Eine Erweiterung der NB1 und NB2, die den Exponenten im Varianzterm parametrisiert (<span class="math inline">\(\rho\)</span>), womit die Dispersion nun nicht mehr statisch für alle Beobachtungen ist:</p>
+
+<div class="definition">
+<span id="def:defnbp" class="definition"><strong>Definition 4.1  (NB-P)  </strong></span><span class="math display">\[\begin{align*}
+  \text{NB-P: }\qquad \mathrm{Var}(Y) &amp;= \mu + \alpha\mu^\rho \\
+  \text{NB1: } \qquad \mathrm{Var}(Y) &amp;= \mu + \alpha\mu      \\
+  \text{NB2: } \qquad \mathrm{Var}(Y) &amp;= \mu + \alpha\mu^2
+\end{align*}\]</span>
+</div>
 
 <p>Damit ist NB-P äquivalent zu NB2 für <span class="math inline">\(\rho = 2\)</span> bzw. NB1 für <span class="math inline">\(\rho = 1\)</span>.<br />
 Um zu evaluieren, ob ein NB1 oder NB2 Modell einen besseren Fit liefert, kann man nun ein NB-P Modell zum Vergleich fitten und Likelihood Ratio Tests zum Vergleich heranziehen.</p>
@@ -329,16 +337,20 @@ Um zu evaluieren, ob ein NB1 oder NB2 Modell einen besseren Fit liefert, kann ma
 <p>Zero-inflated Modelle sind <em>mixtures</em>, das heißt, sie entstehen durch Mischung zweier Wahrscheinlichkeitsfunktionen. In der Regel wird eine Nullverteilung mit einer regulären Zählverteilung (Poisson, NB, PIG, …) “gemischt”, abhängig von einem <em>mixture parameter</em> <span class="math inline">\(\pi \in [0,1]\)</span>, der z.B. logistisch modelliert wird. Die Nullen im Modell werden dementsprechend durch beide Verteilungen (Nullverteilung, Zählverteilung) beschrieben – im Gegensatz zu <em>hurdle models</em> (vgl. <a href="erganzungen.html#mod-hurdle">B.3</a>), die Nullen logistisch und die positiven counts über eine <em>truncated</em> distribution modellieren würden.</p>
 <p>Zero-inflated distributions wie ZIP und ZINB wurden hergeleitet als zweiteilige mixture distributions. Die allgemeine Form für mixture distributions ist</p>
 
+<div class="definition">
+<p><span id="def:defmixture" class="definition"><strong>Definition 4.2  (Mixture distribution und zero-inflated distribution)  </strong></span><span class="math display">\[\begin{equation*}
+  P(Y = y) = p \cdot g_1(y) + (1-p) \cdot g_2(y)
+\end{equation*}\]</span></p>
 <p>mit <span class="math inline">\(p\)</span> als <em>mixture proportion</em> und <span class="math inline">\(g_1, g_2\)</span> als Dichte-/Massefunktionen der beiden Komponenten.</p>
 <p>Für zero-inflation setzt man <span class="math inline">\(p\)</span> als <em>rate of zero-inflation</em> <span class="math inline">\(\pi\)</span>, <span class="math inline">\(g_1\)</span> als degenerierten 0-Verteilung und <span class="math inline">\(g_2\)</span> als Poisson-PMF oder ähnliche Zähl-Verteilung wie NB, PIG, etc.</p>
 <p>Eine alternative Darstellung für eine <em>zero-inflated</em> Verteilung (<a href="https://www.statistik.uni-dortmund.de/useR-2008/slides/Kleiber+Zeileis.pdf">siehe</a>):</p>
-
 <p>Mit zu modellierendem Erwartungswert</p>
+Wobei <span class="math inline">\(\pi\)</span> in der Regel binomial, bzw. mittels logistischer Regression geschätzt wird.
+</div>
 
-<p>Wobei <span class="math inline">\(\pi\)</span> in der Regel binomial, bzw. mittels logistischer Regression geschätzt wird.</p>
 
 <div class="definition">
-<p><span id="def:defzip" class="definition"><strong>Definition 4.1  (Zero-Inflated Poisson Verteilung (ZIP))  </strong></span>Nach <span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">2013</a>)</span> (p. 1675)</p>
+<p><span id="def:defzip" class="definition"><strong>Definition 4.3  (Zero-Inflated Poisson Verteilung (ZIP))  </strong></span>Nach <span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">2013</a>)</span> (p. 1675)</p>
 <span class="math display">\[\begin{align*}
 P(Y = 0) &amp;= \pi + (1-\pi) \cdot e^{-\mu} \\
 P(Y = y) &amp;= (1 - \pi) \cdot \frac{\mu^y e^{-\mu}}{y!}, \quad y = 1, 2, 3, \ldots
@@ -347,7 +359,7 @@ P(Y = y) &amp;= (1 - \pi) \cdot \frac{\mu^y e^{-\mu}}{y!}, \quad y = 1, 2, 3, \l
 
 
 <div class="definition">
-<p><span id="def:defzinb" class="definition"><strong>Definition 4.2  (Zero-Inflated Negative Binomialverteilung (ZINB))  </strong></span>Nach <span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">2013</a>)</span> (p. 1675)</p>
+<p><span id="def:defzinb" class="definition"><strong>Definition 4.4  (Zero-Inflated Negative Binomialverteilung (ZINB))  </strong></span>Nach <span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">2013</a>)</span> (p. 1675)</p>
 <span class="math display">\[\begin{align*}
 P(Y = 0) &amp;= \pi + (1 - \pi) \cdot \frac{\theta^\theta}{(\theta + \mu)^\theta}  \\
 P(Y = y) &amp;= (1 - \pi) \cdot \frac{\Gamma(\theta+y)}{\Gamma(\theta) \Gamma(y + 1)} \frac{\theta^\theta \mu^y}{(\theta + \mu)^{(\theta + y)}}, \quad y = 1, 2, 3, \ldots
@@ -409,7 +421,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["poisson-regression.pdf", "poisson-regression.tex"],
+"download": ["poisson-regression.pdf", "poisson-regression.tex", "poisson-regression.epub"],
 "toc": {
 "collapse": "subsection",
 "scroll_highlight": true

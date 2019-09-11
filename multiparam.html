@@ -431,10 +431,12 @@ Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob <span
 <p>“Simply put, PIG models can better deal with highly overdispersed data that can negative binomial regression, particularly data clumped heavily at 1 and 2”</p>
 <p>– <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 163)</p>
 </blockquote>
-<p><strong>Software</strong>:
-- R: <code>gamlss</code> (CRAN)
-- SAS: Machbar via <code>NLMIXED</code>, aber unschön <span class="citation">(siehe High <a href="#ref-high2018AlternativeVariance">2018</a>)</span>.
-- Stata: <code>pigreg</code></p>
+<p><strong>Software</strong>:</p>
+<ul>
+<li>R: <code>gamlss</code> (CRAN)</li>
+<li>SAS: Machbar via <code>NLMIXED</code>, aber unschön <span class="citation">(siehe High <a href="#ref-high2018AlternativeVariance">2018</a>)</span>.</li>
+<li>Stata: <code>pigreg</code></li>
+</ul>
 </div>
 <div id="mod-gp" class="section level2">
 <h2><span class="header-section-number">3.3</span> Generalized Poisson (GP)</h2>
@@ -456,7 +458,7 @@ Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob <span
 <li>Numerisch instabil für <span class="math inline">\(\lambda\)</span> nahe 0 oder 1</li>
 <li>Siehe <a href="https://rdrr.io/cran/VGAM/man/genpoisson.html"><code>?VGAM::genpoisson</code></a></li>
 </ul></li>
-<li>R: Alternativ via <a href="https://www.gamlss.com/">gamlss</a>: <code>gamlss(..., family = GPO)</code></li>
+<li>Alternativ via <a href="https://www.gamlss.com/">gamlss</a>: <code>gamlss(..., family = GPO)</code></li>
 </ul>
 <p>In beiden R-Varianten habe ich bisher nicht geschafft <span class="math inline">\(\theta\)</span>, den Dispersionsparameter, zu extrahieren – auch wenn die Koeffizientien aus dem Stata-Beispiel in <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>, p. 213f)</span> reproduzierbar sind.</p>
 <ul>
@@ -585,7 +587,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["poisson-regression.pdf", "poisson-regression.tex"],
+"download": ["poisson-regression.pdf", "poisson-regression.tex", "poisson-regression.epub"],
 "toc": {
 "collapse": "subsection",
 "scroll_highlight": true

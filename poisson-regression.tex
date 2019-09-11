@@ -140,7 +140,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{Stand: 10. September 2019 17:13 Uhr (CEST)}
+    \date{Stand: 11. September 2019 10:57 Uhr (CEST)}
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -402,7 +402,7 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die pr
 \toprule
 N & Missing & Mittelwert & Varianz & Range\\
 \midrule
-100 & 10 & 5.26 & 4.98 & [0, 11]\\
+100 & 10 & 5.06 & 5.51 & [1, 10]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -963,9 +963,16 @@ So wie die \emph{NB} als mixture aus Poisson-Verteilung mit Gamma-verteilter Var
 \end{quote}
 
 \textbf{Software}:
-- R: \texttt{gamlss} (CRAN)
-- SAS: Machbar via \texttt{NLMIXED}, aber unschön \citep[siehe][]{high2018AlternativeVariance}.
-- Stata: \texttt{pigreg}
+
+\begin{itemize}
+\tightlist
+\item
+  R: \texttt{gamlss} (CRAN)
+\item
+  SAS: Machbar via \texttt{NLMIXED}, aber unschön \citep[siehe][]{high2018AlternativeVariance}.
+\item
+  Stata: \texttt{pigreg}
+\end{itemize}
 
 \hypertarget{mod-gp}{%
 \subsection{Generalized Poisson (GP)}\label{mod-gp}}
@@ -1019,7 +1026,7 @@ Auch hier kann ein Likelihood-Ratio Test auf \(\delta = 0\) durchgeführt werden
     Siehe \href{https://rdrr.io/cran/VGAM/man/genpoisson.html}{\texttt{?VGAM::genpoisson}}
   \end{itemize}
 \item
-  R: Alternativ via \href{https://www.gamlss.com/}{gamlss}: \texttt{gamlss(...,\ family\ =\ GPO)}
+  Alternativ via \href{https://www.gamlss.com/}{gamlss}: \texttt{gamlss(...,\ family\ =\ GPO)}
 \end{itemize}
 
 In beiden R-Varianten habe ich bisher nicht geschafft \(\theta\), den Dispersionsparameter, zu extrahieren -- auch wenn die Koeffizientien aus dem Stata-Beispiel in \citep[p.~213f]{hilbeModelingCountData2014} reproduzierbar sind.
@@ -1265,13 +1272,15 @@ Signifikanz der Dispersionsprädiktoren (Suffix \texttt{\_s}) kann nun verwendet
 \hypertarget{mod-nbp}{%
 \subsubsection{Negative binomial-P (NB-P)}\label{mod-nbp}}
 
-Eine Erweiterung der NB1 und NB2, die den Exponenten im Varianzterm parametrisiert, womit die Dispersion nun nicht mehr statisch für alle Beobachtungen ist:
+Eine Erweiterung der NB1 und NB2, die den Exponenten im Varianzterm parametrisiert (\(\rho\)), womit die Dispersion nun nicht mehr statisch für alle Beobachtungen ist:
 
-\begin{align*}
-\text{NB1: } \qquad \mathrm{Var}(Y) &= \mu + \alpha\mu \\
-\text{NB2: } \qquad \mathrm{Var}(Y) &= \mu + \alpha\mu^2 \\
-\text{NB-P: }\qquad \mathrm{Var}(Y) &= \mu + \alpha\mu^\rho
+\BeginKnitrBlock{definition}[NB-P]
+\protect\hypertarget{def:defnbp}{}{\label{def:defnbp} \iffalse (NB-P) \fi{} }\begin{align*}
+  \text{NB-P: }\qquad \mathrm{Var}(Y) &= \mu + \alpha\mu^\rho \\
+  \text{NB1: } \qquad \mathrm{Var}(Y) &= \mu + \alpha\mu      \\
+  \text{NB2: } \qquad \mathrm{Var}(Y) &= \mu + \alpha\mu^2
 \end{align*}
+\EndKnitrBlock{definition}
 
 Damit ist NB-P äquivalent zu NB2 für \(\rho = 2\) bzw. NB1 für \(\rho = 1\).\\
 Um zu evaluieren, ob ein NB1 oder NB2 Modell einen besseren Fit liefert, kann man nun ein NB-P Modell zum Vergleich fitten und Likelihood Ratio Tests zum Vergleich heranziehen.
@@ -1285,7 +1294,8 @@ Zero-inflated Modelle sind \emph{mixtures}, das heißt, sie entstehen durch Misc
 
 Zero-inflated distributions wie ZIP und ZINB wurden hergeleitet als zweiteilige mixture distributions. Die allgemeine Form für mixture distributions ist
 
-\begin{equation*}
+\BeginKnitrBlock{definition}[Mixture distribution und zero-inflated distribution]
+\protect\hypertarget{def:defmixture}{}{\label{def:defmixture} \iffalse (Mixture distribution und zero-inflated distribution) \fi{} }\begin{equation*}
   P(Y = y) = p \cdot g_1(y) + (1-p) \cdot g_2(y)
 \end{equation*}
 
@@ -1306,6 +1316,7 @@ Mit zu modellierendem Erwartungswert
 \end{equation*}
 
 Wobei \(\pi\) in der Regel binomial, bzw. mittels logistischer Regression geschätzt wird.
+\EndKnitrBlock{definition}
 
 \BeginKnitrBlock{definition}[Zero-Inflated Poisson Verteilung (ZIP)]
 \protect\hypertarget{def:defzip}{}{\label{def:defzip} \iffalse (Zero-Inflated Poisson Verteilung (ZIP)) \fi{} }Nach \citet{perumean-chaneyZeroinflatedOverdispersedWhat2013} (p.~1675)
@@ -2324,7 +2335,7 @@ language & en\_US.UTF-8\\
 collate & en\_US.UTF-8\\
 ctype & en\_US.UTF-8\\
 tz & UTC\\
-date & 2019-09-10\\
+date & 2019-09-11\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2712,10 +2723,6 @@ In diesem Fall haben wir es mit underdispersion zu tun, also versuchen wir es ma
 \KeywordTok{summary}\NormalTok{(mod_gp_gamlss)}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-#> Warning in summary.gamlss(mod_gp_gamlss): summary: vcov has failed, option qr is used instead
-\end{verbatim}
 
 \begin{verbatim}
 #> ******************************************************************
