@@ -4,7 +4,7 @@ author: "Lukas Burk"
 date: "Stand: `r format(Sys.time(), '%d. %B %Y %H:%M Uhr (%Z)', tz = 'Europe/Berlin')`"
 lang: de-DE
 site: bookdown::bookdown_site
-cover-image: "images/poiscovr-orly.png"
+cover-image: "includes/images/poiscovr-orly.png"
 url: ''
 github-repo: jemus42/poisson-regression
 documentclass: scrartcl

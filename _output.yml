@@ -1,6 +1,6 @@
 bookdown::gitbook:
   df_print: kable
-  css: css/style.css
+  css: includes/css/style.css
   toc_depth: 4
   split_by: chapter
   config:
@@ -19,11 +19,11 @@ bookdown::gitbook:
   mathjax: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML
   includes:
     in_header:
-      - mathjax.js
-      - roboto.html
+      - includes/html/mathjax.js
+      - includes/html/roboto.html
 bookdown::pdf_book:
   includes:
-    in_header: latex/preamble.tex
+    in_header: includes/latex/preamble.tex
   latex_engine: xelatex
   citation_package: natbib
   keep_tex: yes
@@ -31,4 +31,4 @@ bookdown::pdf_book:
   toc_appendix: yes
 bookdown::epub_book:
   dev: svglite
-  stylesheet: css/style.css
+  stylesheet: includes/html/css/style.css
