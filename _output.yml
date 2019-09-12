@@ -2,7 +2,7 @@ bookdown::gitbook:
   df_print: kable
   css: includes/css/style.css
   toc_depth: 4
-  split_by: chapter
+  split_by: section
   config:
     toc:
       collapse: subsection
