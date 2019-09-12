@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden</title>
+  <title>3.4 Conway-Maxwell Poisson (COMP) | Poisson-Regression und ihre Leiden</title>
   <meta name="description" content="Because count data is hard" />
   <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden" />
+  <meta property="og:title" content="3.4 Conway-Maxwell Poisson (COMP) | Poisson-Regression und ihre Leiden" />
   <meta property="og:type" content="book" />
   
   <meta property="og:image" content="includes/images/poiscovr-orly.png" />
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="jemus42/poisson-regression" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden" />
+  <meta name="twitter:title" content="3.4 Conway-Maxwell Poisson (COMP) | Poisson-Regression und ihre Leiden" />
   
   <meta name="twitter:description" content="Because count data is hard" />
   <meta name="twitter:image" content="includes/images/poiscovr-orly.png" />
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="software-funs.html"/>
-<link rel="next" href="annahmen.html"/>
+<link rel="prev" href="mod-gp.html"/>
+<link rel="next" href="diagnostische-modelle.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -210,67 +210,75 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="poisson-modell" class="section level1">
-<h1><span class="header-section-number">Kapitel 2</span> Das Poisson-Modell</h1>
-<p>Das Poisson-Modell ist die allgemeine Grundlage für die Modellierung von Zählvorgängen / Counts, und auch wenn es in seiner “reinen” Form in der Praxis meist nicht ausreicht, bauen alle weiteren Methoden auf die eine oder andere Art darauf auf. Auch die häufig verwendete Negative Binomialverteilung ist letztlich eine Poisson-Verteilung mit Gamma-verteilter Varianz, also eine Erweiterung der Poisson um einen zusätzlichen Parameter. Das gleiche Prinzip findet sich in allen hier besprochenen Verteilungen.</p>
-<p>Für eine ausführliche Diskussion der Eigenschaften, siehe <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>)</span> (p. 7-20).</p>
-<p>Grundlage zur Modellierung ist das GLM mit den dazugehörigen Voraussetzungen:</p>
+<div id="mod-comp" class="section level2">
+<h2><span class="header-section-number">3.4</span> Conway-Maxwell Poisson (COMP)</h2>
+
+<div class="definition">
+<p><span id="def:unnamed-chunk-2" class="definition"><strong>Definition 3.7  (Conway-Maxwell-Poisson Modell (CMP))  </strong></span>Nach <span class="citation">Shmueli u. a. (<a href="#ref-shmueli2005UsefulDistribution">2005</a>)</span> (p. 129):</p>
+<p>Mit (im Unterschied zur Poisson) nichtlinearer Zerfallsrate <span class="math inline">\(\nu\)</span> <em>rate of decay</em>, so dass:</p>
+<p>Der Zusammenhang zwischen <span class="math inline">\(\nu\)</span> und <span class="math inline">\(\lambda\)</span> nach <span class="citation">Sellers und Shmueli (<a href="#ref-sellers2010FlexibleRegression">2010</a>)</span> (p. 946) legt Nahe, dass <span class="math inline">\(\nu\)</span> ähnlich <span class="math inline">\(\alpha\)</span> in NB-Modellen die Dispersion bestimmt:</p>
+Als link wird <span class="math inline">\(\log \lambda\)</span> verwendet, da so die links für Poisson- und logistische Regression Spezialfälle der COMP sind.
+</div>
+
+<p>Die Verteilung hat als Spezialfälle:</p>
 <ul>
-<li>Die abhängige Variable <span class="math inline">\(Y\)</span> kommt aus der Exponentialfamilie (Normal-, Poisson-, Gamma-, Binomialverteilung)</li>
-<li>Modelliert wird der lineare Prädiktor <span class="math inline">\(\eta_i = \boldsymbol{x}_i&#39; \boldsymbol{\beta}\)</span>.</li>
-<li>Response- und Linkfunktionen <span class="math inline">\(h(x)\)</span> und <span class="math inline">\(g(x) = h^{-1}(x)\)</span></li>
+<li><span class="math inline">\(\nu = 1 \Longrightarrow Z(\lambda, \nu) = exp(\lambda)\)</span>: Poisson</li>
+<li><span class="math inline">\(\nu \to \infty \Longrightarrow Z(\lambda, \nu) \to 1 + \lambda\)</span>: Bernoulli mit <span class="math inline">\(P(X = 1) = \frac{\lambda}{1+\lambda}\)</span></li>
+<li><span class="math inline">\(\nu = 0,\ \lambda &lt; 1\)</span>: Geometrisch mit <span class="math inline">\(P(X = x) = \lambda^x (1 - \lambda)\)</span></li>
 </ul>
-
-<div class="definition">
-<p><span id="def:unnamed-chunk-1" class="definition"><strong>Definition 2.1  (Poisson-Verteilung)  </strong></span>Eine Poisson-verteilte Zufallsvariable <span class="math inline">\(Y \sim \mathrm{Poi}(\mu)\)</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> hat die Dichte</p>
-<span class="math display">\[\begin{equation*}
-\mathrm{P}(Y = y) = \frac{\mu^y \exp(-\mu)}{y!} \quad, y \in \mathbb{N}_0
-\end{equation*}\]</span>
-</div>
-
-<div class="figure" style="text-align: center"><span id="fig:poissondists"></span>
-<img src="poisson-regression_files/figure-html/poissondists-1.png" alt="Poisson-Verteilungen mit ausgewählten Parametern." width="768" />
-<p class="caption">
-Abbildung 2.1: Poisson-Verteilungen mit ausgewählten Parametern.
-</p>
-</div>
-
-<div class="definition">
-<p><span id="def:poisson-modell" class="definition"><strong>Definition 2.2  (Poisson-Modell)  </strong></span>Die Zielvariablen <span class="math inline">\(y_i \in \mathbb{N}_0\)</span> sind (bedingt) unabhängig gegeben der Kovariablen <span class="math inline">\(x_{i1}, x_{i2}, \ldots, x_{ik}\)</span>.</p>
-<p>Die Rate <span class="math inline">\(\mu_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)\)</span> der Poissonverteilung wird in der Regel log-linear modelliert als</p>
-</div>
-
-<p>Vgl. <span class="citation">Fahrmeir, Kneib, und Lang (<a href="#ref-fahrmeirRegressionModelleMethoden2009">2009</a>)</span></p>
-<p>Für das log-lineare Poisson-Modell entsprechen die resultierenden Koeffizienten der Veränderung der log-counts – durch Exponentiation lassen diese sich als <em>incidence rate ratios</em> (<em>IRR</em>) interpretieren.</p>
-<p>Um auf ungleiche Expositionsdauern oder -gebiete zu adjustieren wird ein <strong>offset</strong> (oder auch <em>exposure</em>) benötigt. Dazu dient der Koeffizient <span class="math inline">\(t\)</span>, der die Länge der Zeit unter Exposition angibt:</p>
-
-<p>Damit entspricht <span class="math inline">\(t \mu\)</span> der Inzidenzrate des Outcomes adjustiert auf e.g. die geographische Lage oder Expositionsdauer. Ohne Offset entspräche <span class="math inline">\(t = 1\)</span>.
-Für als Offset wird in der Regel <span class="math inline">\(\log(t)\)</span> verwendet, womit gelten:</p>
-
-<p>Ein offset kann z.B. in <code>R</code> via <code>+ offset(log(variable))</code> in der model <code>formula</code> oder über das Argument <code>offset = log(variable)</code> in <code>glm</code> und verwandten Funktionen angegeben werden.</p> 
+<p><strong>Vorteile</strong>:</p>
+<ul>
+<li>“Brücke” zwischen logistischer und Poisson-Regression <span class="citation">(Sellers und Shmueli <a href="#ref-sellers2010FlexibleRegression">2010</a>)</span></li>
+</ul>
+<blockquote>
+<p>Although the logistic regression is a limiting case <span class="math inline">\((\nu \to \infty)\)</span>, in practice, fitting a COM-Poisson regression to binary data yields estimates and predictions that are practically identical to those from a logistic regression.</p>
+<p>— <span class="citation">Sellers und Shmueli (<a href="#ref-sellers2010FlexibleRegression">2010</a>)</span>, p. 945</p>
+</blockquote>
+<ul>
+<li>“Low cost”, i.e. “nur” ein zusätzlicher Parameter</li>
+<li>Einfach zu handhaben (wenn in GLM mit MLE statt MCMC estimation)</li>
+<li>Over- und underdispersion abbildbar</li>
+<li>Zero-inflation abbildbar</li>
+</ul>
+<p><strong>Software</strong>:</p>
+<ul>
+<li><code>CompGLM::glm.comp</code>: Funktioniert, aber crasht RStudio wenn <code>nuFormula</code> spezifiziert wird</li>
+<li><code>compoisson::com.fit</code>: Entweder generell nicht geeignet oder unfassbar langsam (und deshalb nicht geeignet)</li>
+<li><code>COMPoissonReg</code> (GitHub: <code>lotze/COMPoissonReg</code>): Scheint zu funktionieren</li>
+</ul>
+<p>Da die COMP-Wahrscheinlichkeitsfunktion eine unendliche Summe <span class="math inline">\(Z(\lambda, \nu)\)</span> enthält, kann es bei der Anwendung in Software durchaus dazu kommen, dass keine Konvergenz erreicht wird. Wie viele Iterationen für die Konvergenz der Summe benötigt werden hängt zum einen von <span class="math inline">\(\nu\)</span> ab: Je größer, desto schneller die Konvergenz. Das Gegenteil gilt für <span class="math inline">\(\lambda\)</span> – je größer, desto langsamer die Konvergenz <span class="citation">(High <a href="#ref-high2018AlternativeVariance">2018</a>, p. 4)</span>.</p>
+<p>Siehe auch</p>
+<ul>
+<li><span class="citation">Sellers und Shmueli (<a href="#ref-sellers2010FlexibleRegression">2010</a>)</span> für eine gute Übersicht</li>
+<li><span class="citation">Lord, Geedipally, und Guikema (<a href="#ref-lord2010ExtensionApplication">2010</a>)</span>, <span class="citation">Lord, Guikema, und Geedipally (<a href="#ref-lord2008ApplicationConwayMaxwellPoisson">2008</a>)</span> für eine Anwendung</li>
+<li><span class="citation">Shmueli u. a. (<a href="#ref-shmueli2005UsefulDistribution">2005</a>)</span></li>
+</ul>
 </div>
 <h3>Literatur</h3>
 <div id="refs" class="references">
-<div id="ref-fahrmeirRegressionModelleMethoden2009">
-<p>Fahrmeir, Ludwig, Thomas Kneib, und Stefan Lang. 2009. <em>Regression: Modelle, Methoden und Anwendungen</em>. 2. Aufl. Statistik und ihre Anwendungen. Berlin: Springer.</p>
+<div id="ref-high2018AlternativeVariance">
+<p>High, Robin. 2018. „Alternative Variance Parameterizations in Count Data Models with the NLMIXED Procedure“. In. <a href="https://www.semanticscholar.org/paper/Alternative-Variance-Parameterizations-in-Count-the-High/1224075e77acdee9eef91643e0bbfe869406a35d" class="uri">https://www.semanticscholar.org/paper/Alternative-Variance-Parameterizations-in-Count-the-High/1224075e77acdee9eef91643e0bbfe869406a35d</a>.</p>
 </div>
-<div id="ref-winkelmannEconometricAnalysisCount2010">
-<p>Winkelmann, Rainer. 2010. <em>Econometric Analysis of Count Data</em>. 5th ed. Berlin: Springer Berlin.</p>
+<div id="ref-lord2010ExtensionApplication">
+<p>Lord, Dominique, Srinivas Reddy Geedipally, und Seth D. Guikema. 2010. „Extension of the Application of Conway-Maxwell-Poisson Models: Analyzing Traffic Crash Data Exhibiting Underdispersion“. <em>Risk Analysis</em> 30 (8): 1268–76. <a href="https://doi.org/10.1111/j.1539-6924.2010.01417.x" class="uri">https://doi.org/10.1111/j.1539-6924.2010.01417.x</a>.</p>
 </div>
+<div id="ref-lord2008ApplicationConwayMaxwellPoisson">
+<p>Lord, Dominique, Seth D. Guikema, und Srinivas Reddy Geedipally. 2008. „Application of the Conway-Maxwell-Poisson Generalized Linear Model for Analyzing Motor Vehicle Crashes“. <em>Accident Analysis &amp; Prevention</em> 40 (3): 1123–34. <a href="https://doi.org/10.1016/j.aap.2007.12.003" class="uri">https://doi.org/10.1016/j.aap.2007.12.003</a>.</p>
 </div>
-<div class="footnotes">
-<hr />
-<ol start="1">
-<li id="fn1"><p>Der Poisson-Parameter wird von unterschiedlichen Autoren als <span class="math inline">\(\lambda\)</span> oder <span class="math inline">\(\mu\)</span> bezeichnet, und ich habe mich noch nicht für eine Variante entschieden).<a href="poisson-modell.html#fnref1" class="footnote-back">↩</a></p></li>
-</ol>
+<div id="ref-sellers2010FlexibleRegression">
+<p>Sellers, Kimberly F., und Galit Shmueli. 2010. „A Flexible Regression Model for Count Data“. <em>The Annals of Applied Statistics</em> 4 (2): 943–61. <a href="https://doi.org/10.1214/09-AOAS306" class="uri">https://doi.org/10.1214/09-AOAS306</a>.</p>
+</div>
+<div id="ref-shmueli2005UsefulDistribution">
+<p>Shmueli, Galit, Thomas P. Minka, Joseph B. Kadane, Sharad Borle, und Peter Boatwright. 2005. „A Useful Distribution for Fitting Discrete Data: Revival of the Conway-Maxwell-Poisson Distribution“. <em>Journal of the Royal Statistical Society: Series C (Applied Statistics)</em> 54 (1): 127–42. <a href="https://doi.org/10.1111/j.1467-9876.2005.00474.x" class="uri">https://doi.org/10.1111/j.1467-9876.2005.00474.x</a>.</p>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="software-funs.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="annahmen.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="mod-gp.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="diagnostische-modelle.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

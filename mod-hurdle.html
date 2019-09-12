@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden</title>
+  <title>B.3 Hurdle models | Poisson-Regression und ihre Leiden</title>
   <meta name="description" content="Because count data is hard" />
   <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden" />
+  <meta property="og:title" content="B.3 Hurdle models | Poisson-Regression und ihre Leiden" />
   <meta property="og:type" content="book" />
   
   <meta property="og:image" content="includes/images/poiscovr-orly.png" />
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="jemus42/poisson-regression" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden" />
+  <meta name="twitter:title" content="B.3 Hurdle models | Poisson-Regression und ihre Leiden" />
   
   <meta name="twitter:description" content="Because count data is hard" />
   <meta name="twitter:image" content="includes/images/poiscovr-orly.png" />
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="software-funs.html"/>
-<link rel="next" href="annahmen.html"/>
+<link rel="prev" href="trunc-cens.html"/>
+<link rel="next" href="repro.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -210,67 +210,74 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="poisson-modell" class="section level1">
-<h1><span class="header-section-number">Kapitel 2</span> Das Poisson-Modell</h1>
-<p>Das Poisson-Modell ist die allgemeine Grundlage für die Modellierung von Zählvorgängen / Counts, und auch wenn es in seiner “reinen” Form in der Praxis meist nicht ausreicht, bauen alle weiteren Methoden auf die eine oder andere Art darauf auf. Auch die häufig verwendete Negative Binomialverteilung ist letztlich eine Poisson-Verteilung mit Gamma-verteilter Varianz, also eine Erweiterung der Poisson um einen zusätzlichen Parameter. Das gleiche Prinzip findet sich in allen hier besprochenen Verteilungen.</p>
-<p>Für eine ausführliche Diskussion der Eigenschaften, siehe <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>)</span> (p. 7-20).</p>
-<p>Grundlage zur Modellierung ist das GLM mit den dazugehörigen Voraussetzungen:</p>
+<div id="mod-hurdle" class="section level2">
+<h2><span class="header-section-number">B.3</span> Hurdle models</h2>
+<p>Die nachfolgende Beschreibung dient daher eher der Vollständigkeit, da hurdle models in bestimmten Anwendungsgebieten scheinbar recht populär sind – allerdings ist es vermutlich eher schwierig sie auf binäre outcomes anzuwenden.</p>
+<p>Im Allgemeinen kann man zwei Arten von hurdle models unterscheiden, die jeweils aus zwei Modellkomponenten bestehen:</p>
 <ul>
-<li>Die abhängige Variable <span class="math inline">\(Y\)</span> kommt aus der Exponentialfamilie (Normal-, Poisson-, Gamma-, Binomialverteilung)</li>
-<li>Modelliert wird der lineare Prädiktor <span class="math inline">\(\eta_i = \boldsymbol{x}_i&#39; \boldsymbol{\beta}\)</span>.</li>
-<li>Response- und Linkfunktionen <span class="math inline">\(h(x)\)</span> und <span class="math inline">\(g(x) = h^{-1}(x)\)</span></li>
+<li><em>Nested</em> hurdle models: Beide Komponenten nested (e.g. beide Poisson).</li>
+<li><em>Non-nested</em> hurdle models: Hurdle-Komponente als vollständig anderer Prozess betrachtet und via e.g. logit modelliert.</li>
 </ul>
+<p>Zwei gängige Komponenten für unnested hurdle models:</p>
+<ol style="list-style-type: decimal">
+<li>Binary 0,1 response, (logit oder probit)
+<ul>
+<li>Modellierung der Wahrscheinlichkeit für die non-zero counts</li>
+</ul></li>
+<li>Zero-truncated count model</li>
+</ol>
+<ul>
+<li>Erlauben sowohl under- als auch overdispersion</li>
+<li>(Unnested models) erlauben systematischen Unterschied im Prozess, der zu e.g. Outcomes = 0 vs. Outcomes &gt; 0 führt, was durch die Wahl unterschiedlicher Modelle für beide Komponenten abgebildet wird</li>
+</ul>
+<p>In diesem Fall entspricht das Resultat eines hurdle models zwei separat gefitteten Modellen (e.g. Pois + Logit), die getrennt interpretierbar sind (im Gegensatz zu zero-inflated models!).</p>
 
 <div class="definition">
-<p><span id="def:unnamed-chunk-1" class="definition"><strong>Definition 2.1  (Poisson-Verteilung)  </strong></span>Eine Poisson-verteilte Zufallsvariable <span class="math inline">\(Y \sim \mathrm{Poi}(\mu)\)</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> hat die Dichte</p>
-<span class="math display">\[\begin{equation*}
-\mathrm{P}(Y = y) = \frac{\mu^y \exp(-\mu)}{y!} \quad, y \in \mathbb{N}_0
-\end{equation*}\]</span>
+<p><span id="def:unnamed-chunk-5" class="definition"><strong>Definition B.1  (Hurdle Model)  </strong></span>Nach <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>)</span>, p. 179f:</p>
+<p>Sei <span class="math inline">\(g_1(0)\)</span> die Wahrscheinlichkeit des Outcomes <span class="math inline">\(0\)</span> und <span class="math inline">\(g_1(k), k = 1, 2, 3, \ldots\)</span> die Wahrscheinlichkeitsfunktion für natürliche Zahlen, dann ist die Wahrscheinlichkeitsfunktion eines <em>hurdle-at-zero</em> Modells:</p>
+<p>Bzw. nach <span class="citation">Mullahy (<a href="#ref-mullahy1986SpecificationTesting">1986</a>)</span> mit <span class="math inline">\(f_1\)</span> und <span class="math inline">\(f_2\)</span> als PMFs für natürliche Zahlen</p>
+<p>Wobei</p>
+<ul>
+<li><span class="math inline">\(f_2\)</span> als <em>parent process</em> bezeichnet wird</li>
+<li><span class="math inline">\(1 - f_1(0)\)</span> die Wahrscheinlichkeit angibt, die Hürde (<span class="math inline">\(y = 0\)</span>) zu “überqueren” (<em>“crossing the hurdle”</em>).</li>
+<li><span class="math inline">\(1 - f_2(0)\)</span> zur Normalisierung von <span class="math inline">\(f_2\)</span> dient, um deren truncation zu berücksichtigen.</li>
+</ul>
+<p>Der Erwartungswert des hurdle models ist</p>
+<p><span class="math display">\[
+  \mathbb{E}_h(y) = \Theta \sum_{k=1}^\infty k f_2(k) = \Theta \mathbb{E}_2(y)
+\]</span></p>
+<p>Mit <span class="math inline">\(\mathbb{E}_2\)</span> als Erwartunsgwert von <span class="math inline">\(f_2\)</span>.</p>
+<p>Mit <span class="math inline">\(f_2 = \mathrm{Poisson}\)</span>:</p>
+<ul>
+<li><span class="math inline">\(0 &lt; \Theta &lt; 1\)</span>: Overdispersion<br />
+</li>
+<li><span class="math inline">\(1 &lt; \Theta &lt; \frac{\lambda_2 + 1}{\lambda_2}\)</span>: Underdispersion</li>
+</ul>
 </div>
 
-<div class="figure" style="text-align: center"><span id="fig:poissondists"></span>
-<img src="poisson-regression_files/figure-html/poissondists-1.png" alt="Poisson-Verteilungen mit ausgewählten Parametern." width="768" />
-<p class="caption">
-Abbildung 2.1: Poisson-Verteilungen mit ausgewählten Parametern.
-</p>
+<blockquote>
+<p>“By far the most popular hurdle model in practice is the hurdle-at-zero negative bonomial model”
+<span class="citation">(Winkelmann <a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>, p. 183)</span></p>
+</blockquote>
+<p>mit <span class="math inline">\(f_1 \sim NB(\beta_1, \alpha_1)\)</span> und <span class="math inline">\(f_2 \sim NB(\beta_2, \alpha_2)\)</span></p>
 </div>
-
-<div class="definition">
-<p><span id="def:poisson-modell" class="definition"><strong>Definition 2.2  (Poisson-Modell)  </strong></span>Die Zielvariablen <span class="math inline">\(y_i \in \mathbb{N}_0\)</span> sind (bedingt) unabhängig gegeben der Kovariablen <span class="math inline">\(x_{i1}, x_{i2}, \ldots, x_{ik}\)</span>.</p>
-<p>Die Rate <span class="math inline">\(\mu_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)\)</span> der Poissonverteilung wird in der Regel log-linear modelliert als</p>
-</div>
-
-<p>Vgl. <span class="citation">Fahrmeir, Kneib, und Lang (<a href="#ref-fahrmeirRegressionModelleMethoden2009">2009</a>)</span></p>
-<p>Für das log-lineare Poisson-Modell entsprechen die resultierenden Koeffizienten der Veränderung der log-counts – durch Exponentiation lassen diese sich als <em>incidence rate ratios</em> (<em>IRR</em>) interpretieren.</p>
-<p>Um auf ungleiche Expositionsdauern oder -gebiete zu adjustieren wird ein <strong>offset</strong> (oder auch <em>exposure</em>) benötigt. Dazu dient der Koeffizient <span class="math inline">\(t\)</span>, der die Länge der Zeit unter Exposition angibt:</p>
-
-<p>Damit entspricht <span class="math inline">\(t \mu\)</span> der Inzidenzrate des Outcomes adjustiert auf e.g. die geographische Lage oder Expositionsdauer. Ohne Offset entspräche <span class="math inline">\(t = 1\)</span>.
-Für als Offset wird in der Regel <span class="math inline">\(\log(t)\)</span> verwendet, womit gelten:</p>
-
-<p>Ein offset kann z.B. in <code>R</code> via <code>+ offset(log(variable))</code> in der model <code>formula</code> oder über das Argument <code>offset = log(variable)</code> in <code>glm</code> und verwandten Funktionen angegeben werden.</p> 
-</div>
+<!-- </div> -->
 <h3>Literatur</h3>
 <div id="refs" class="references">
-<div id="ref-fahrmeirRegressionModelleMethoden2009">
-<p>Fahrmeir, Ludwig, Thomas Kneib, und Stefan Lang. 2009. <em>Regression: Modelle, Methoden und Anwendungen</em>. 2. Aufl. Statistik und ihre Anwendungen. Berlin: Springer.</p>
+<div id="ref-mullahy1986SpecificationTesting">
+<p>Mullahy, John. 1986. „Specification and Testing of Some Modified Count Data Models“. <em>Journal of Econometrics</em> 33 (3): 341–65. <a href="https://doi.org/10.1016/0304-4076(86)90002-3" class="uri">https://doi.org/10.1016/0304-4076(86)90002-3</a>.</p>
 </div>
 <div id="ref-winkelmannEconometricAnalysisCount2010">
 <p>Winkelmann, Rainer. 2010. <em>Econometric Analysis of Count Data</em>. 5th ed. Berlin: Springer Berlin.</p>
 </div>
-</div>
-<div class="footnotes">
-<hr />
-<ol start="1">
-<li id="fn1"><p>Der Poisson-Parameter wird von unterschiedlichen Autoren als <span class="math inline">\(\lambda\)</span> oder <span class="math inline">\(\mu\)</span> bezeichnet, und ich habe mich noch nicht für eine Variante entschieden).<a href="poisson-modell.html#fnref1" class="footnote-back">↩</a></p></li>
-</ol>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="software-funs.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="annahmen.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="trunc-cens.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="repro.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

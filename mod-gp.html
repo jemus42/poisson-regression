@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden</title>
+  <title>3.3 Generalized Poisson (GP) | Poisson-Regression und ihre Leiden</title>
   <meta name="description" content="Because count data is hard" />
   <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden" />
+  <meta property="og:title" content="3.3 Generalized Poisson (GP) | Poisson-Regression und ihre Leiden" />
   <meta property="og:type" content="book" />
   
   <meta property="og:image" content="includes/images/poiscovr-orly.png" />
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="jemus42/poisson-regression" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden" />
+  <meta name="twitter:title" content="3.3 Generalized Poisson (GP) | Poisson-Regression und ihre Leiden" />
   
   <meta name="twitter:description" content="Because count data is hard" />
   <meta name="twitter:image" content="includes/images/poiscovr-orly.png" />
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="software-funs.html"/>
-<link rel="next" href="annahmen.html"/>
+<link rel="prev" href="mod-pig.html"/>
+<link rel="next" href="mod-comp.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -210,67 +210,62 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="poisson-modell" class="section level1">
-<h1><span class="header-section-number">Kapitel 2</span> Das Poisson-Modell</h1>
-<p>Das Poisson-Modell ist die allgemeine Grundlage für die Modellierung von Zählvorgängen / Counts, und auch wenn es in seiner “reinen” Form in der Praxis meist nicht ausreicht, bauen alle weiteren Methoden auf die eine oder andere Art darauf auf. Auch die häufig verwendete Negative Binomialverteilung ist letztlich eine Poisson-Verteilung mit Gamma-verteilter Varianz, also eine Erweiterung der Poisson um einen zusätzlichen Parameter. Das gleiche Prinzip findet sich in allen hier besprochenen Verteilungen.</p>
-<p>Für eine ausführliche Diskussion der Eigenschaften, siehe <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>)</span> (p. 7-20).</p>
-<p>Grundlage zur Modellierung ist das GLM mit den dazugehörigen Voraussetzungen:</p>
+<div id="mod-gp" class="section level2">
+<h2><span class="header-section-number">3.3</span> Generalized Poisson (GP)</h2>
+<p>Die Verteilung besitzt auch einen zusätzlichen Dispersionsparameter (analog NB, PIG), allerdings kann dieser hier auch negative Werte annehmen, womit die GP für alle Dispersionsarten (bzw. insbesondere underdispersion) geeignet ist.</p>
+
+<div class="definition">
+<p><span id="def:def-genois" class="definition"><strong>Definition 3.5  (Generalized Poisson)  </strong></span>Aus <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 211) und <span class="citation">Harris, Yang, und Hardin (<a href="#ref-harris2012ModelingUnderdispersed">2012</a>)</span>:</p>
+<p>Eine Variable <span class="math inline">\(Y\)</span> ist <em>generalized Poisson</em> verteilt mit der PMF:</p>
+<p>Wobei <span class="math inline">\(\Phi = \frac{1}{(1 - \theta)^2}\)</span> als Dispersionsparameter dient.</p>
+<p>Es gilt außerdem</p>
+<p>Auch hier kann ein Likelihood-Ratio Test auf <span class="math inline">\(\delta = 0\)</span> durchgeführt werden, analog <span class="math inline">\(\alpha = 0\)</span> für die NB – wobei <span class="math inline">\(\delta\)</span> hier keine Restriktion hat (siehe BLR, Definition <a href="overdisp-diag.html#def:BLR">4.4</a>).</p>
+</div>
+
+<p>Eine alternative Darstellung unter Verwendung von Parametern <span class="math inline">\(\mu\)</span> und <span class="math inline">\(sigma\)</span> findet sich in <span class="citation">Stasinopoulos und Rigby (<a href="#ref-stasinopoulos2007GeneralizedAdditive">2007</a>)</span>, der Grundlage für das R-package <code>gamlss</code> (<em>“Generalized additive models for location, scale and shape”</em>):</p>
+
+<div class="definition">
+<p><span id="def:defgpois2" class="definition"><strong>Definition 3.6  (Generalized Poisson (GAMLSS))  </strong></span><span class="math display">\[\begin{equation*}
+f(y\ |\ \mu,\sigma)= \left(\frac{\mu}{(1+\sigma+\mu)}\right)^y \frac{(1+\sigma y)^{(y-1)}}{y!} \exp\left(-\mu \frac{(1+\sigma y)}{(1+\sigma+\mu)}\right)
+\end{equation*}\]</span></p>
+Für <span class="math inline">\(y=0,1,2,\ldots\)</span> mit <span class="math inline">\(\mu &gt; 0\)</span> und <span class="math inline">\(\sigma &gt; 0\)</span>.
+</div>
+
+<p><strong>Software</strong>:</p>
 <ul>
-<li>Die abhängige Variable <span class="math inline">\(Y\)</span> kommt aus der Exponentialfamilie (Normal-, Poisson-, Gamma-, Binomialverteilung)</li>
-<li>Modelliert wird der lineare Prädiktor <span class="math inline">\(\eta_i = \boldsymbol{x}_i&#39; \boldsymbol{\beta}\)</span>.</li>
-<li>Response- und Linkfunktionen <span class="math inline">\(h(x)\)</span> und <span class="math inline">\(g(x) = h^{-1}(x)\)</span></li>
+<li>R: <code>VGAM</code>: <code>vgam(..., family = genpoisson())</code>]
+<ul>
+<li>Hier wird das obige <span class="math inline">\(\delta\)</span> als <span class="math inline">\(\lambda\)</span> bezeichnet (Verwechslungsgefahr mit Poisson-Parameter)</li>
+<li>Numerisch instabil für <span class="math inline">\(\lambda\)</span> nahe 0 oder 1</li>
+<li>Siehe <a href="https://rdrr.io/cran/VGAM/man/genpoisson.html"><code>?VGAM::genpoisson</code></a></li>
+</ul></li>
+<li>Alternativ via <a href="https://www.gamlss.com/">gamlss</a>: <code>gamlss(..., family = GPO)</code></li>
 </ul>
-
-<div class="definition">
-<p><span id="def:unnamed-chunk-1" class="definition"><strong>Definition 2.1  (Poisson-Verteilung)  </strong></span>Eine Poisson-verteilte Zufallsvariable <span class="math inline">\(Y \sim \mathrm{Poi}(\mu)\)</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> hat die Dichte</p>
-<span class="math display">\[\begin{equation*}
-\mathrm{P}(Y = y) = \frac{\mu^y \exp(-\mu)}{y!} \quad, y \in \mathbb{N}_0
-\end{equation*}\]</span>
-</div>
-
-<div class="figure" style="text-align: center"><span id="fig:poissondists"></span>
-<img src="poisson-regression_files/figure-html/poissondists-1.png" alt="Poisson-Verteilungen mit ausgewählten Parametern." width="768" />
-<p class="caption">
-Abbildung 2.1: Poisson-Verteilungen mit ausgewählten Parametern.
-</p>
-</div>
-
-<div class="definition">
-<p><span id="def:poisson-modell" class="definition"><strong>Definition 2.2  (Poisson-Modell)  </strong></span>Die Zielvariablen <span class="math inline">\(y_i \in \mathbb{N}_0\)</span> sind (bedingt) unabhängig gegeben der Kovariablen <span class="math inline">\(x_{i1}, x_{i2}, \ldots, x_{ik}\)</span>.</p>
-<p>Die Rate <span class="math inline">\(\mu_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)\)</span> der Poissonverteilung wird in der Regel log-linear modelliert als</p>
-</div>
-
-<p>Vgl. <span class="citation">Fahrmeir, Kneib, und Lang (<a href="#ref-fahrmeirRegressionModelleMethoden2009">2009</a>)</span></p>
-<p>Für das log-lineare Poisson-Modell entsprechen die resultierenden Koeffizienten der Veränderung der log-counts – durch Exponentiation lassen diese sich als <em>incidence rate ratios</em> (<em>IRR</em>) interpretieren.</p>
-<p>Um auf ungleiche Expositionsdauern oder -gebiete zu adjustieren wird ein <strong>offset</strong> (oder auch <em>exposure</em>) benötigt. Dazu dient der Koeffizient <span class="math inline">\(t\)</span>, der die Länge der Zeit unter Exposition angibt:</p>
-
-<p>Damit entspricht <span class="math inline">\(t \mu\)</span> der Inzidenzrate des Outcomes adjustiert auf e.g. die geographische Lage oder Expositionsdauer. Ohne Offset entspräche <span class="math inline">\(t = 1\)</span>.
-Für als Offset wird in der Regel <span class="math inline">\(\log(t)\)</span> verwendet, womit gelten:</p>
-
-<p>Ein offset kann z.B. in <code>R</code> via <code>+ offset(log(variable))</code> in der model <code>formula</code> oder über das Argument <code>offset = log(variable)</code> in <code>glm</code> und verwandten Funktionen angegeben werden.</p> 
+<p>In beiden R-Varianten habe ich bisher nicht geschafft <span class="math inline">\(\theta\)</span>, den Dispersionsparameter, zu extrahieren – auch wenn die Koeffizientien aus dem Stata-Beispiel in <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>, p. 213f)</span> reproduzierbar sind.</p>
+<ul>
+<li>SAS: <code>NLMIXED</code> oder <code>FMM</code>, siehe auch <a href="http://support.sas.com/kb/56/549.html">SAS support document</a></li>
+</ul>
+<p>Allgemein scheint die Parametrisierung (und Notation der Parameter) zu variieren.</p>
 </div>
 <h3>Literatur</h3>
 <div id="refs" class="references">
-<div id="ref-fahrmeirRegressionModelleMethoden2009">
-<p>Fahrmeir, Ludwig, Thomas Kneib, und Stefan Lang. 2009. <em>Regression: Modelle, Methoden und Anwendungen</em>. 2. Aufl. Statistik und ihre Anwendungen. Berlin: Springer.</p>
+<div id="ref-harris2012ModelingUnderdispersed">
+<p>Harris, Tammy, Zhao Yang, und James W. Hardin. 2012. „Modeling Underdispersed Count Data with Generalized Poisson Regression“. <em>The Stata Journal</em> 12 (4): 736–47. <a href="https://doi.org/10.1177/1536867X1201200412" class="uri">https://doi.org/10.1177/1536867X1201200412</a>.</p>
 </div>
-<div id="ref-winkelmannEconometricAnalysisCount2010">
-<p>Winkelmann, Rainer. 2010. <em>Econometric Analysis of Count Data</em>. 5th ed. Berlin: Springer Berlin.</p>
+<div id="ref-hilbeModelingCountData2014">
+<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065" class="uri">https://doi.org/10.1017/CBO9781139236065</a>.</p>
 </div>
+<div id="ref-stasinopoulos2007GeneralizedAdditive">
+<p>Stasinopoulos, D. Mikis, und Robert A. Rigby. 2007. „Generalized Additive Models for Location Scale and Shape (GAMLSS) in R“. <em>Journal of Statistical Software</em> 23 (1): 1–46. <a href="https://doi.org/10.18637/jss.v023.i07" class="uri">https://doi.org/10.18637/jss.v023.i07</a>.</p>
 </div>
-<div class="footnotes">
-<hr />
-<ol start="1">
-<li id="fn1"><p>Der Poisson-Parameter wird von unterschiedlichen Autoren als <span class="math inline">\(\lambda\)</span> oder <span class="math inline">\(\mu\)</span> bezeichnet, und ich habe mich noch nicht für eine Variante entschieden).<a href="poisson-modell.html#fnref1" class="footnote-back">↩</a></p></li>
-</ol>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="software-funs.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="annahmen.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="mod-pig.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="mod-comp.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

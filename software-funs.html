@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="de-DE" xml:lang="de-DE">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>1.2 Verwendete Software | Poisson-Regression und ihre Leiden</title>
+  <meta name="description" content="Because count data is hard" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="1.2 Verwendete Software | Poisson-Regression und ihre Leiden" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:image" content="includes/images/poiscovr-orly.png" />
+  <meta property="og:description" content="Because count data is hard" />
+  <meta name="github-repo" content="jemus42/poisson-regression" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="1.2 Verwendete Software | Poisson-Regression und ihre Leiden" />
+  
+  <meta name="twitter:description" content="Because count data is hard" />
+  <meta name="twitter:image" content="includes/images/poiscovr-orly.png" />
+
+<meta name="author" content="Lukas Burk" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="data.html"/>
+<link rel="next" href="poisson-modell.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/viz-0.3/viz.js"></script>
+<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed|Roboto+Slab&display=swap" rel="stylesheet">
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="includes/css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Poisson Regression</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Einführung</a><ul>
+<li class="chapter" data-level="1.1" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>1.1</b> Beispieldaten</a></li>
+<li class="chapter" data-level="1.2" data-path="software-funs.html"><a href="software-funs.html"><i class="fa fa-check"></i><b>1.2</b> Verwendete Software</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="software-funs.html"><a href="software-funs.html#r-packages"><i class="fa fa-check"></i><b>1.2.1</b> R-Packages</a></li>
+<li class="chapter" data-level="1.2.2" data-path="software-funs.html"><a href="software-funs.html#helperfuns"><i class="fa fa-check"></i><b>1.2.2</b> Funktionen</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="poisson-modell.html"><a href="poisson-modell.html"><i class="fa fa-check"></i><b>2</b> Das Poisson-Modell</a><ul>
+<li class="chapter" data-level="2.1" data-path="annahmen.html"><a href="annahmen.html"><i class="fa fa-check"></i><b>2.1</b> Annahmen</a></li>
+<li class="chapter" data-level="2.2" data-path="dispersion.html"><a href="dispersion.html"><i class="fa fa-check"></i><b>2.2</b> Dispersion</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="dispersion.html"><a href="dispersion.html#overdispersion"><i class="fa fa-check"></i><b>2.2.1</b> Overdispersion</a></li>
+<li class="chapter" data-level="2.2.2" data-path="dispersion.html"><a href="dispersion.html#underdispersion"><i class="fa fa-check"></i><b>2.2.2</b> Underdispersion</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="multiparam.html"><a href="multiparam.html"><i class="fa fa-check"></i><b>3</b> Mehrparametrische Modelle</a><ul>
+<li class="chapter" data-level="3.1" data-path="mod-nb.html"><a href="mod-nb.html"><i class="fa fa-check"></i><b>3.1</b> Negativ Binomial (NB)</a></li>
+<li class="chapter" data-level="3.2" data-path="mod-pig.html"><a href="mod-pig.html"><i class="fa fa-check"></i><b>3.2</b> Poisson Inverse Gaussian (PIG)</a></li>
+<li class="chapter" data-level="3.3" data-path="mod-gp.html"><a href="mod-gp.html"><i class="fa fa-check"></i><b>3.3</b> Generalized Poisson (GP)</a></li>
+<li class="chapter" data-level="3.4" data-path="mod-comp.html"><a href="mod-comp.html"><i class="fa fa-check"></i><b>3.4</b> Conway-Maxwell Poisson (COMP)</a></li>
+<li class="chapter" data-level="3.5" data-path="diagnostische-modelle.html"><a href="diagnostische-modelle.html"><i class="fa fa-check"></i><b>3.5</b> Diagnostische Modelle</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="diagnostische-modelle.html"><a href="diagnostische-modelle.html#mod-nbh"><i class="fa fa-check"></i><b>3.5.1</b> Heterogenous Negative Binomial (NBH)</a></li>
+<li class="chapter" data-level="3.5.2" data-path="diagnostische-modelle.html"><a href="diagnostische-modelle.html#mod-nbp"><i class="fa fa-check"></i><b>3.5.2</b> Negative binomial-P (NB-P)</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="mod-zi.html"><a href="mod-zi.html"><i class="fa fa-check"></i><b>3.6</b> Zero-Inflated Models (<em>mixture models</em>)</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="anwendung.html"><a href="anwendung.html"><i class="fa fa-check"></i><b>4</b> Anwendung</a><ul>
+<li class="chapter" data-level="4.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html"><i class="fa fa-check"></i><b>4.1</b> Overdispersion: Erkennung und Handhabung</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#boundary-likelihood-ratio-test-blr"><i class="fa fa-check"></i><b>4.1.1</b> (Boundary) Likelihood Ratio Test (BLR)</a></li>
+<li class="chapter" data-level="4.1.2" data-path="overdisp-diag.html"><a href="overdisp-diag.html#umgang-mit-overdispersion"><i class="fa fa-check"></i><b>4.1.2</b> Umgang mit Overdispersion</a><ul>
+<li class="chapter" data-level="4.1.2.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#sandwich"><i class="fa fa-check"></i><b>4.1.2.1</b> Robuste Varianzschätzer (Sandwich Estimators)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="zeros.html"><a href="zeros.html"><i class="fa fa-check"></i><b>4.2</b> Zero-Inflation (ZI)</a><ul>
+<li class="chapter" data-level="" data-path="zeros.html"><a href="zeros.html#vergleich-von-zero-inflated-models"><i class="fa fa-check"></i>Vergleich von Zero-Inflated models</a></li>
+<li class="chapter" data-level="" data-path="zeros.html"><a href="zeros.html#modellierung"><i class="fa fa-check"></i>Modellierung</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="entscheidungshilfen.html"><a href="entscheidungshilfen.html"><i class="fa fa-check"></i><b>5</b> Entscheidungshilfen</a></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="verfugbarkeit.html"><a href="verfugbarkeit.html"><i class="fa fa-check"></i><b>A</b> Verfügbarkeit</a></li>
+<li class="chapter" data-level="B" data-path="erganzungen.html"><a href="erganzungen.html"><i class="fa fa-check"></i><b>B</b> Ergänzungen</a><ul>
+<li class="chapter" data-level="B.1" data-path="appendix-missingness.html"><a href="appendix-missingness.html"><i class="fa fa-check"></i><b>B.1</b> Missing values und missingness patterns</a></li>
+<li class="chapter" data-level="B.2" data-path="trunc-cens.html"><a href="trunc-cens.html"><i class="fa fa-check"></i><b>B.2</b> Truncation und Censoring</a></li>
+<li class="chapter" data-level="B.3" data-path="mod-hurdle.html"><a href="mod-hurdle.html"><i class="fa fa-check"></i><b>B.3</b> Hurdle models</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="repro.html"><a href="repro.html"><i class="fa fa-check"></i><b>C</b> Reproduzierbarkeit</a><ul>
+<li class="chapter" data-level="C.1" data-path="r-code.html"><a href="r-code.html"><i class="fa fa-check"></i><b>C.1</b> R-Code</a></li>
+<li class="chapter" data-level="C.2" data-path="session-info.html"><a href="session-info.html"><i class="fa fa-check"></i><b>C.2</b> Session Info</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="unsorted.html"><a href="unsorted.html"><i class="fa fa-check"></i><b>D</b> Unsorted</a><ul>
+<li class="chapter" data-level="D.0.1" data-path="unsorted.html"><a href="unsorted.html#general-advice"><i class="fa fa-check"></i><b>D.0.1</b> General Advice</a></li>
+<li class="chapter" data-level="D.0.2" data-path="unsorted.html"><a href="unsorted.html#beispiel-nach-hilbemodelingcountdata2014-p.211ff"><i class="fa fa-check"></i><b>D.0.2</b> Beispiel nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 211ff</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="literatur.html"><a href="literatur.html"><i class="fa fa-check"></i>Literatur</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Built with bookdown</a></li>
+<li><a href="https://git.tadaa-data.de/lukas/poisson-regression" target="blank">Source on Gitea</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Poisson-Regression und ihre Leiden</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="software-funs" class="section level2">
+<h2><span class="header-section-number">1.2</span> Verwendete Software</h2>
+<p>Um Code-Beispiele (und Output) übersichtlich zu halten werden einige R-Packages und Hilfsfunktionen verwendet, die hier kurz beschrieben werden um Code in späteren Abschnitten nachvollziehbar zu halten.<br />
+Siehe dazu auch Anhang <a href="repro.html#repro"><strong>??</strong></a>.</p>
+<div id="r-packages" class="section level3">
+<h3><span class="header-section-number">1.2.1</span> R-Packages</h3>
+<p>Zur Reproduktion der Beispiele sind insbesondere die folgenden <code>R</code> packages notwendig, die durch den angegebenen Code installiert werden, sofern sie nicht bereits verfügbar sind:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># Data transformation / modelling</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;dplyr&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) <span class="kw">install.packages</span>(<span class="st">&quot;dplyr&quot;</span>)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;purrr&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) <span class="kw">install.packages</span>(<span class="st">&quot;purrr&quot;</span>)</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;broom&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) <span class="kw">install.packages</span>(<span class="st">&quot;broom&quot;</span>)</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co"># Plots</span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;ggplot2&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) <span class="kw">install.packages</span>(<span class="st">&quot;ggplot2&quot;</span>)</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co"># Modelling</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;lmtest&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) <span class="kw">install.packages</span>(<span class="st">&quot;lmtest&quot;</span>)</a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;msme&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) <span class="kw">install.packages</span>(<span class="st">&quot;msme&quot;</span>)</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;VGAM&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) <span class="kw">install.packages</span>(<span class="st">&quot;VGAM&quot;</span>)</a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;gamlss&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) <span class="kw">install.packages</span>(<span class="st">&quot;gamlss&quot;</span>)</a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co"># Data (and maybe modelling)</span></a>
+<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;COUNT&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) <span class="kw">install.packages</span>(<span class="st">&quot;COUNT&quot;</span>)</a>
+<a class="sourceLine" id="cb3-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co"># Output formatting (for RMarkdown/pandoc markdown documents)</span></a>
+<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;pander&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) <span class="kw">install.packages</span>(<span class="st">&quot;pander&quot;</span>)</a>
+<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;kableExtra&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) <span class="kw">install.packages</span>(<span class="st">&quot;kableExtra&quot;</span>)</a></code></pre></div>
+<p>Siehe auch Anhang <a href="repro.html#repro"><strong>??</strong></a> zu verwendeten Packages.</p>
+</div>
+<div id="helperfuns" class="section level3">
+<h3><span class="header-section-number">1.2.2</span> Funktionen</h3>
+<p>Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die primär der Abkürzung und/oder der Formatierung des Outputs dienen:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">#&#39; Simple descriptive stats for count variables</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co">#&#39; @param x A count variable, presumed to be a non-negative integer.</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">#&#39; @param digits Number of digits to round statistics to.</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&#39; @return Nichts, nur print output.</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">describe_counts &lt;-<span class="st"> </span><span class="cf">function</span>(x, <span class="dt">digits =</span> <span class="dv">2</span>) {</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">   <span class="kw">require</span>(kableExtra)</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">   </a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">   tibble<span class="op">::</span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">      <span class="dt">n =</span> <span class="kw">length</span>(x),</a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">      <span class="dt">missing =</span> <span class="kw">sum</span>(<span class="kw">is.na</span>(x)),</a>
+<a class="sourceLine" id="cb4-11" data-line-number="11">      <span class="dt">mean =</span> <span class="kw">round</span>(<span class="kw">mean</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), digits),</a>
+<a class="sourceLine" id="cb4-12" data-line-number="12">      <span class="dt">var =</span> <span class="kw">round</span>(<span class="kw">var</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), digits),</a>
+<a class="sourceLine" id="cb4-13" data-line-number="13">      <span class="dt">range =</span> <span class="kw">paste0</span>(<span class="st">&quot;[&quot;</span>, <span class="kw">paste0</span>(<span class="kw">range</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">collapse =</span> <span class="st">&quot;, &quot;</span>), <span class="st">&quot;]&quot;</span>)</a>
+<a class="sourceLine" id="cb4-14" data-line-number="14">   ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="st">   </span><span class="kw">setNames</span>(<span class="kw">c</span>(<span class="st">&quot;N&quot;</span>, <span class="st">&quot;Missing&quot;</span>, <span class="st">&quot;Mittelwert&quot;</span>, <span class="st">&quot;Varianz&quot;</span>, <span class="st">&quot;Range&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="st">   </span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>, <span class="dt">escape =</span> <span class="ot">FALSE</span>, <span class="dt">linesep =</span> <span class="st">&quot;&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="st">   </span><span class="kw">kable_styling</span>(<span class="dt">position =</span> <span class="st">&quot;center&quot;</span>, <span class="dt">protect_latex =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb4-18" data-line-number="18">}</a>
+<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co"># Example usage</span></a>
+<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co"># Define random count variable...</span></a>
+<a class="sourceLine" id="cb4-21" data-line-number="21">x &lt;-<span class="st"> </span><span class="kw">rpois</span>(<span class="dv">100</span>, <span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb4-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co"># ...with some missings</span></a>
+<a class="sourceLine" id="cb4-24" data-line-number="24">x[<span class="kw">sample</span>(<span class="dv">100</span>, <span class="dv">10</span>)] &lt;-<span class="st"> </span><span class="ot">NA</span></a>
+<a class="sourceLine" id="cb4-25" data-line-number="25"></a>
+<a class="sourceLine" id="cb4-26" data-line-number="26"><span class="co"># A basic summary</span></a>
+<a class="sourceLine" id="cb4-27" data-line-number="27"><span class="kw">describe_counts</span>(x)</a></code></pre></div>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+N
+</th>
+<th style="text-align:right;">
+Missing
+</th>
+<th style="text-align:right;">
+Mittelwert
+</th>
+<th style="text-align:right;">
+Varianz
+</th>
+<th style="text-align:left;">
+Range
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+4.96
+</td>
+<td style="text-align:right;">
+5.03
+</td>
+<td style="text-align:left;">
+[1, 11]
+</td>
+</tr>
+</tbody>
+</table>
+<p>Die Pearson-Dispersionsstatistik (eingeführt in Abschnitt <a href="dispersion.html#dispersion">2.2</a>, Definition <a href="dispersion.html#def:def-pearsondisp">2.5</a>):</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">#&#39; Pearson-Dispersion</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#&#39; @param model Ein `glm`-Objekt mit Methoden für `resid()` und `df.residual`-Komponente</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&#39; @param type Entweder &#39;pearson&#39; (default) oder &#39;deviance&#39;.</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#&#39; @return Invisible: Liste mit chi^2-Statistik, Freiheitsgraden und Dispersion.</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&#39;         Printed: Formatiertes output.</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">dispersion &lt;-<span class="st"> </span><span class="cf">function</span>(model, <span class="dt">type =</span> <span class="st">&quot;pearson&quot;</span>) {</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">  chisq &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">resid</span>(model, <span class="dt">type =</span> type)<span class="op">^</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">  disp  &lt;-<span class="st"> </span>chisq <span class="op">/</span><span class="st"> </span>model<span class="op">$</span>df.residual</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">  </a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">  <span class="kw">invisible</span>(<span class="kw">list</span>(<span class="dt">chi2 =</span> chisq, <span class="dt">df =</span> model<span class="op">$</span>df.residual, <span class="dt">dispersion =</span> disp))</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">  <span class="kw">cat</span>(<span class="kw">sprintf</span>(<span class="st">&quot;X-squared(%i) = %.2f</span><span class="ch">\n</span><span class="st">%s Dispersion = %.3f&quot;</span>, model<span class="op">$</span>df.residual,  </a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">              chisq, <span class="kw">chartr</span>(<span class="st">&quot;pd&quot;</span>, <span class="st">&quot;PD&quot;</span>, type), disp))</a>
+<a class="sourceLine" id="cb5-13" data-line-number="13">}</a></code></pre></div>
+<p>Der <em>Lagrange Multiplier Test</em>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co">#&#39; Lagrange Multiplier Test according to Hilbe (2014)</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co">#&#39; @param model A `glm` or similiar object.</span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">#&#39; @return Chi^2 statistic and corresponding p-value in a list of class &quot;htest&quot;.</span></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">lagrange_test &lt;-<span class="st"> </span><span class="cf">function</span>(model) {</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">   mu     &lt;-<span class="st"> </span><span class="kw">predict</span>(model, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">   n_ybar &lt;-<span class="st"> </span><span class="kw">length</span>(model<span class="op">$</span>y) <span class="op">*</span><span class="st"> </span><span class="kw">mean</span>(mu)</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7">   mu2    &lt;-<span class="st"> </span><span class="kw">mean</span>(mu<span class="op">^</span><span class="dv">2</span>) <span class="op">*</span><span class="st"> </span><span class="kw">length</span>(model<span class="op">$</span>y)</a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">   chisq  &lt;-<span class="st"> </span>(mu2 <span class="op">-</span><span class="st"> </span>n_ybar)<span class="op">^</span><span class="dv">2</span> <span class="op">/</span><span class="st"> </span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>mu2)</a>
+<a class="sourceLine" id="cb6-9" data-line-number="9">   <span class="kw">names</span>(chisq) &lt;-<span class="st"> &quot;X-squared&quot;</span></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10">   pval   &lt;-<span class="st"> </span><span class="kw">pchisq</span>(chisq, <span class="dt">df =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb6-11" data-line-number="11">   df &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb6-12" data-line-number="12">   <span class="kw">names</span>(df) &lt;-<span class="st"> &quot;df&quot;</span></a>
+<a class="sourceLine" id="cb6-13" data-line-number="13">  </a>
+<a class="sourceLine" id="cb6-14" data-line-number="14">   rval &lt;-<span class="st"> </span><span class="kw">list</span>(</a>
+<a class="sourceLine" id="cb6-15" data-line-number="15">      <span class="dt">statistic =</span> chisq, <span class="dt">parameter =</span> df, <span class="dt">p.value =</span> pval,</a>
+<a class="sourceLine" id="cb6-16" data-line-number="16">      <span class="dt">alternative =</span> <span class="st">&quot;Data is overdispersed&quot;</span>, </a>
+<a class="sourceLine" id="cb6-17" data-line-number="17">      <span class="dt">method =</span> <span class="st">&quot;Lagrange Multiplier Test&quot;</span>, </a>
+<a class="sourceLine" id="cb6-18" data-line-number="18">      <span class="dt">data.name =</span> <span class="kw">deparse</span>(mod<span class="op">$</span>call)</a>
+<a class="sourceLine" id="cb6-19" data-line-number="19">   )</a>
+<a class="sourceLine" id="cb6-20" data-line-number="20">   </a>
+<a class="sourceLine" id="cb6-21" data-line-number="21">   <span class="kw">class</span>(rval) &lt;-<span class="st"> &quot;htest&quot;</span></a>
+<a class="sourceLine" id="cb6-22" data-line-number="22">   rval</a>
+<a class="sourceLine" id="cb6-23" data-line-number="23">}</a></code></pre></div>
+
+</div>
+</div>
+<!-- </div> -->
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="poisson-modell.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["poisson-regression.pdf", "poisson-regression.tex", "poisson-regression.epub"],
+"toc": {
+"collapse": "subsection",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

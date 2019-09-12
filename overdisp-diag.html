@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Kapitel 4 Anwendung | Poisson-Regression und ihre Leiden</title>
+  <title>4.1 Overdispersion: Erkennung und Handhabung | Poisson-Regression und ihre Leiden</title>
   <meta name="description" content="Because count data is hard" />
   <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Kapitel 4 Anwendung | Poisson-Regression und ihre Leiden" />
+  <meta property="og:title" content="4.1 Overdispersion: Erkennung und Handhabung | Poisson-Regression und ihre Leiden" />
   <meta property="og:type" content="book" />
   
   <meta property="og:image" content="includes/images/poiscovr-orly.png" />
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="jemus42/poisson-regression" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Kapitel 4 Anwendung | Poisson-Regression und ihre Leiden" />
+  <meta name="twitter:title" content="4.1 Overdispersion: Erkennung und Handhabung | Poisson-Regression und ihre Leiden" />
   
   <meta name="twitter:description" content="Because count data is hard" />
   <meta name="twitter:image" content="includes/images/poiscovr-orly.png" />
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="mod-zi.html"/>
-<link rel="next" href="overdisp-diag.html"/>
+<link rel="prev" href="anwendung.html"/>
+<link rel="next" href="zeros.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -210,23 +210,163 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="anwendung" class="section level1">
-<h1><span class="header-section-number">Kapitel 4</span> Anwendung</h1>
-<p>Als Beispiel verwenden wir hier <code>rwm1984</code>, ein Subset des Datensatz <code>rwm5yr</code> (vgl. Abschnitt <a href="data.html#data">1.1</a>, <code>?COUNT::rwm1984</code>), der Angaben zur Anzahl der Arztbesuche pro Person mit zusätzlichen demographischen Merkmalen enthält. Für unser Beispielmodell verwenden wir folgende Variablen:</p>
-<ul>
-<li><code>docvis</code>: Abhängige Variable, Anzahl der Arztbesuche im Jahr (0-121)</li>
-<li><code>outwork</code>: Arbeitslos (1), arbeitend (0)</li>
-<li><code>age</code>: Alter (25 - 64)</li>
-</ul>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="co"># Daten</span></a>
-<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="kw">data</span>(rwm1984, <span class="dt">package =</span> <span class="st">&quot;COUNT&quot;</span>)</a>
-<a class="sourceLine" id="cb29-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb29-4" data-line-number="4"><span class="co"># Model fit</span></a>
-<a class="sourceLine" id="cb29-5" data-line-number="5">mod_rwm &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb29-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb29-7" data-line-number="7"><span class="co"># Summary display</span></a>
-<a class="sourceLine" id="cb29-8" data-line-number="8"><span class="kw">pander</span>(<span class="kw">summary</span>(mod_rwm))</a></code></pre></div>
+<div id="overdisp-diag" class="section level2">
+<h2><span class="header-section-number">4.1</span> Overdispersion: Erkennung und Handhabung</h2>
+<p>Der <em>Score-Test</em> wird nicht unbedingt empfohlen, findet sich aber in der Literatur:</p>
+
+<div class="definition">
+<p><span id="def:unnamed-chunk-3" class="definition"><strong>Definition 4.1  (Score-Test auf Overdispersion)  </strong></span>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 85f):</p>
+<p>Sei <span class="math inline">\(Y\)</span> die abhängige Variable und <span class="math inline">\(y_i\)</span> die <span class="math inline">\(i-te\)</span> Beobachtung, mit <span class="math inline">\(\hat{\mu}_i\)</span> als gefitteter Wert eines Poisson-Modells, dann wird der z-Score wie folgt berechnet:</p>
+<p>Zur Evaluation von <span class="math inline">\(z\)</span> wird z.B. ein Intercept-only Regressionsmodell mit <span class="math inline">\(z\)</span> als abhängiger Variable gefitted, mit der Nullhypothese “Es liegt keine Overdispersion vor”.</p>
+<p>Dabei gelten folgende Annahmen:</p>
+<ol style="list-style-type: decimal">
+<li>Die Stichprobe ist <em>groß</em></li>
+<li><span class="math inline">\(z\)</span> ist t-verteilt</li>
+</ol>
+</div>
+
+
+<div class="definition">
+<p><span id="def:unnamed-chunk-4" class="definition"><strong>Definition 4.2  (Lagrange Multiplier Test)  </strong></span>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 85f):</p>
+<p>Eine <span class="math inline">\(\chi^2\)</span>-Teststatistik mit einem Freiheitsgrad.</p>
+</div>
+
+<p>Eine rudimentäre R-Implementation findet sich in Abschnitt <a href="software-funs.html#helperfuns">1.2.2</a>.</p>
+<div id="boundary-likelihood-ratio-test-blr" class="section level3">
+<h3><span class="header-section-number">4.1.1</span> (Boundary) Likelihood Ratio Test (BLR)</h3>
+<p>Zum vergleich von zwei geschachtelten (<em>nested</em>) Modellen kann der <em>Likelihood Ratio Test</em> verwendet werden:</p>
+
+<div class="definition">
+<p><span id="def:LRT" class="definition"><strong>Definition 4.3  (Likelihood Ratio Test)  </strong></span><span class="math display">\[\begin{equation}
+ LR = -2 (\mathcal{L}_R - \mathcal{L}_F)
+\end{equation}\]</span></p>
+Mit <span class="math inline">\(\mathcal{L}_F\)</span> als log-likelihood des vollen (oder “größeren”) Modells, und <span class="math inline">\(\mathcal{L}_R\)</span> als log-likelihood des reduzierteren Modells.
+</div>
+
+<p>Eine Variante des Tests kann verwendet werden, um den Dispersionsparameter <span class="math inline">\(\alpha\)</span> eines NB-Modells zu testen. Da eine NB-Verteilung für <span class="math inline">\(\alpha = 0\)</span> äquivalent zur Poisson ist (siehe Abschnitt <a href="mod-nb.html#mod-nb">3.1</a>), kann ein Poisson-Modell als reduzierte Variante eines NB-Modells betrachtet werden. In diesem Fall verwendet man den <em>Boundary Likelhihood Ratio</em> test:</p>
+
+<div class="definition">
+<span id="def:BLR" class="definition"><strong>Definition 4.4  (Boundary Likelihood Ratio Test)  </strong></span><span class="math display">\[\begin{equation}
+ BLR = -2 (\mathcal{L}_\mathrm{Poisson} - \mathcal{L}_\mathrm{NB})
+\end{equation}\]</span>
+</div>
+
+<blockquote>
+<p>It is important, though, to remember that the BLR test has a lower limiting case for the value of <span class="math inline">\(\alpha\)</span>, which is what is being tested. Given that the standard parameterization of the negative binomial variance function is <span class="math inline">\(\mu + \alpha \mu^2\)</span> , when <span class="math inline">\(\alpha = 0\)</span>, the variance reduces to <span class="math inline">\(\mu\)</span>.</p>
+<p>— <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 115</p>
+</blockquote>
+<p>Der resultierende Wert ist <span class="math inline">\(\chi^2_{(1)}\)</span>-verteilt. Der resultierende p-Wert muss zusätzlich halbiert werden <span class="citation">(siehe Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>, p. 115)</span>.</p>
+<blockquote>
+<p>Since the distribution being tested can go no lower than 0, that is the boundary. Only one half of the full distribution is used. Therefore the Chi2 (sic!) test is divided by 2</p>
+<p>— <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 115</p>
+</blockquote>
+<p>Am Beispiel der <code>rwm1984</code>-Daten:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="co"># Poisson-Modell</span></a>
+<a class="sourceLine" id="cb33-2" data-line-number="2">mod_p &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb33-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb33-4" data-line-number="4"><span class="co"># NB-Modell</span></a>
+<a class="sourceLine" id="cb33-5" data-line-number="5">mod_nb &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">glm.nb</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb33-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb33-7" data-line-number="7"><span class="co"># BLR: Recht eindeutig.</span></a>
+<a class="sourceLine" id="cb33-8" data-line-number="8">lmtest<span class="op">::</span><span class="kw">lrtest</span>(mod_p, mod_nb)</a></code></pre></div>
+<div class="kable-table">
+
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+#Df
+</th>
+<th style="text-align:right;">
+LogLik
+</th>
+<th style="text-align:right;">
+Df
+</th>
+<th style="text-align:right;">
+Chisq
+</th>
+<th style="text-align:right;">
+Pr(&gt;Chisq)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+-15636.390
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+-8332.762
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+14607.26
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="co"># Bei gegebenem BLR-Wert von 4.2 ließe sich der p-Wert wie folgt berechnen:</span></a>
+<a class="sourceLine" id="cb34-2" data-line-number="2"><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
+<pre><code>#&gt; [1] 0.02021199</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="co"># Oder</span></a>
+<a class="sourceLine" id="cb36-2" data-line-number="2">(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>)) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
+<pre><code>#&gt; [1] 0.02021199</code></pre>
+</div>
+<div id="umgang-mit-overdispersion" class="section level3">
+<h3><span class="header-section-number">4.1.2</span> Umgang mit Overdispersion</h3>
+<p>Zur expliziten Modellierung des Dispersionparameters kann ein NBH Modell (<a href="diagnostische-modelle.html#mod-nbh">3.5.1</a>) genutzt werden, falls die Quelle der overdispersion von besonderem Interesse ist.</p>
+<p>Abseits davon bleiben 2 grobe Strategien :</p>
+<ol style="list-style-type: decimal">
+<li>Adjustierung der durch die overdispersion verzerrten Standardfehler (Quasipoisson, Quasi-Likelihood, robuste Varianzschätzer)</li>
+<li>Wechsel auf ein Modell, das overdispersion (oder allgemeine extradispersion) erlaubt (e.g. NB)</li>
+</ol>
+<p>(Bemerke: Standardfehler für IRRs werden i.A. über die <em>delta method</em> bestimmt, die ich noch recherchieren und irgendwo einbauen muss)</p>
+<div id="quasipoisson-skalierung-der-standardfehler" class="section level5 unnumbered">
+<h5>Quasipoisson: Skalierung der Standardfehler</h5>
+<p>Hier werden lediglich die Standardfehler der Koeffizienten eines Poisson-Modells adjustiert, die bei overdispersion i.d.R. unterschätzt werden – die eigentliche Parameterschätzung wird nicht beeinflusst:</p>
+<p><span class="math display">\[\mathrm{SE}(\beta_k) \cdot \sqrt{D}\]</span>
+Wobei <span class="math inline">\(D\)</span> der Pearson-Dispersionsindex ist (vgl. <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 92ff), den wir in <a href="dispersion.html#def:def-pearsondisp">2.5</a> als <span class="math inline">\(\frac{\chi^2_{\mathrm{Pearson}}}{\mathrm{df}}\)</span> definiert hatten.</p>
+<p>Ein möglicher Nachteil jedoch: Es wird zuerst ein reguläres Poisson-Modell gefittet, Standardfehler und Dispersionsindex bestimmt, und dann dasselbe Modell mit skalierten Standardfehlern erneut gefittet – dementsprechend ist diese Methode vermutlich für größere Datensätze eher ineffizient.</p>
+<p>Einmal auf unser voriges Beispiel anhand der <code>rwm5yr</code>-Daten angewandt:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="co"># Urprüngliches Model</span></a>
+<a class="sourceLine" id="cb38-2" data-line-number="2">mod &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb38-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb38-4" data-line-number="4">mod_qp &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">quasipoisson</span>(), <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb38-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb38-6" data-line-number="6"><span class="kw">dispersion</span>(mod)</a></code></pre></div>
+<pre><code>#&gt; X-squared(3871) = 43909.62
+#&gt; Pearson Dispersion = 11.343</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="kw">dispersion</span>(mod_qp)</a></code></pre></div>
+<pre><code>#&gt; X-squared(3871) = 43909.62
+#&gt; Pearson Dispersion = 11.343</code></pre>
+<p>An der Dispersion hat sich nichts geändert, nur an den Standardfehlern der Koeffizienten (in folgenden Tabellen auf log-Skala):</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="kw">pander</span>(mod, <span class="dt">caption =</span> <span class="st">&quot;Poisson-Modell&quot;</span>)</a></code></pre></div>
 <table style="width:90%;">
+<caption>Poisson-Modell</caption>
 <colgroup>
 <col width="25%" />
 <col width="15%" />
@@ -267,144 +407,68 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
-<p>(Dispersion parameter for poisson family taken to be 1 )</p>
-<table style="width:69%;">
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="kw">pander</span>(mod_qp, <span class="dt">caption =</span> <span class="st">&quot;Quasipoisson-Modell&quot;</span>)</a></code></pre></div>
+<table style="width:89%;">
+<caption>Quasipoisson-Modell</caption>
 <colgroup>
-<col width="29%" />
-<col width="40%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="center">Null deviance:</td>
-<td align="center">25791 on 3873 degrees of
-freedom</td>
-</tr>
-<tr class="even">
-<td align="center">Residual deviance:</td>
-<td align="center">24190 on 3871 degrees of
-freedom</td>
-</tr>
-</tbody>
-</table>
-<p>Das erste was wir zur Evaluation unseres Modells tun können, ohne direkt andere Modelle zum vergleich heranzuziehen, ist die beobachteten Counts und die auf Basis des Modells erwarteten Counts zu vergleichen, um ein grobes Gefühl für die Situation zu erhalten (Code frei adaptiert nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 88f):</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="co"># Beobachtete und erwartete counts</span></a>
-<a class="sourceLine" id="cb30-2" data-line-number="2">observed_v_expected &lt;-<span class="st"> </span>rwm1984 <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb30-3" data-line-number="3"><span class="st">  </span><span class="kw">count</span>(docvis, <span class="dt">name =</span> <span class="st">&quot;observed&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb30-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(</a>
-<a class="sourceLine" id="cb30-5" data-line-number="5">    <span class="dt">expected =</span> purrr<span class="op">::</span><span class="kw">map_dbl</span>(docvis, <span class="op">~</span>{</a>
-<a class="sourceLine" id="cb30-6" data-line-number="6">                  <span class="kw">dpois</span>(.x, <span class="kw">fitted</span>(mod_rwm)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb30-7" data-line-number="7"><span class="st">                    </span><span class="kw">sum</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb30-8" data-line-number="8"><span class="st">                    </span><span class="kw">round</span>(<span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb30-9" data-line-number="9">                }),</a>
-<a class="sourceLine" id="cb30-10" data-line-number="10">    <span class="dt">difference =</span> observed <span class="op">-</span><span class="st"> </span>expected</a>
-<a class="sourceLine" id="cb30-11" data-line-number="11">  ) </a>
-<a class="sourceLine" id="cb30-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb30-13" data-line-number="13">observed_v_expected <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb30-14" data-line-number="14"><span class="st">  </span><span class="kw">head</span>(<span class="dv">5</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb30-15" data-line-number="15"><span class="st">  </span><span class="kw">pander</span>(<span class="dt">caption =</span> <span class="st">&quot;Observed and expected counts&quot;</span>)</a></code></pre></div>
-<table style="width:61%;">
-<caption>Observed and expected counts</caption>
-<colgroup>
-<col width="12%" />
-<col width="15%" />
+<col width="25%" />
 <col width="15%" />
 <col width="18%" />
+<col width="13%" />
+<col width="16%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th align="center">docvis</th>
-<th align="center">observed</th>
-<th align="center">expected</th>
-<th align="center">difference</th>
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Std. Error</th>
+<th align="center">t value</th>
+<th align="center">Pr(&gt;|t|)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">0</td>
-<td align="center">1611</td>
-<td align="center">264.8</td>
-<td align="center">1346</td>
+<td align="center"><strong>(Intercept)</strong></td>
+<td align="center">-0.03352</td>
+<td align="center">0.132</td>
+<td align="center">-0.254</td>
+<td align="center">0.7995</td>
 </tr>
 <tr class="even">
-<td align="center">1</td>
-<td align="center">448</td>
-<td align="center">627.1</td>
-<td align="center">-179.1</td>
+<td align="center"><strong>outwork</strong></td>
+<td align="center">0.4079</td>
+<td align="center">0.06347</td>
+<td align="center">6.427</td>
+<td align="center">1.457e-10</td>
 </tr>
 <tr class="odd">
-<td align="center">2</td>
-<td align="center">440</td>
-<td align="center">796</td>
-<td align="center">-356</td>
-</tr>
-<tr class="even">
-<td align="center">3</td>
-<td align="center">353</td>
-<td align="center">731.6</td>
-<td align="center">-378.6</td>
-</tr>
-<tr class="odd">
-<td align="center">4</td>
-<td align="center">213</td>
-<td align="center">554.6</td>
-<td align="center">-341.6</td>
+<td align="center"><strong>age</strong></td>
+<td align="center">0.02208</td>
+<td align="center">0.002821</td>
+<td align="center">7.827</td>
+<td align="center">6.386e-15</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="co"># Mittelwert und Varianz der jeweiligen counts</span></a>
-<a class="sourceLine" id="cb31-2" data-line-number="2"><span class="co"># (für &quot;expected&quot; gilt Varianz := Mittelwert)</span></a>
-<a class="sourceLine" id="cb31-3" data-line-number="3"><span class="kw">tribble</span>(</a>
-<a class="sourceLine" id="cb31-4" data-line-number="4">  <span class="op">~</span>Counts,   <span class="op">~</span>Mean,                 <span class="op">~</span>Variance,</a>
-<a class="sourceLine" id="cb31-5" data-line-number="5">  <span class="st">&quot;observed&quot;</span>, <span class="kw">mean</span>(rwm1984<span class="op">$</span>docvis), <span class="kw">var</span>(rwm1984<span class="op">$</span>docvis),</a>
-<a class="sourceLine" id="cb31-6" data-line-number="6">  <span class="st">&quot;expected&quot;</span>, <span class="kw">mean</span>(<span class="kw">fitted</span>(mod)),    <span class="kw">mean</span>(<span class="kw">fitted</span>(mod))</a>
-<a class="sourceLine" id="cb31-7" data-line-number="7">) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb31-8" data-line-number="8"><span class="st">  </span><span class="kw">pander</span>(<span class="dt">caption =</span> <span class="st">&quot;Mean &amp; variance of observed and expected counts&quot;</span>)</a></code></pre></div>
-<table style="width:42%;">
-<caption>Mean &amp; variance of observed and expected counts</caption>
-<colgroup>
-<col width="15%" />
-<col width="11%" />
-<col width="15%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">Counts</th>
-<th align="center">Mean</th>
-<th align="center">Variance</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">observed</td>
-<td align="center">3.163</td>
-<td align="center">39.39</td>
-</tr>
-<tr class="even">
-<td align="center">expected</td>
-<td align="center">5.401</td>
-<td align="center">5.401</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="co"># Plot: observed vs. expected counts</span></a>
-<a class="sourceLine" id="cb32-2" data-line-number="2">observed_v_expected <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb32-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(docvis <span class="op">&lt;=</span><span class="st"> </span><span class="dv">12</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb32-4" data-line-number="4"><span class="st">  </span><span class="kw">gather</span>(type, count, observed, expected) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb32-5" data-line-number="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> docvis, <span class="dt">y =</span> count, <span class="dt">fill =</span> type, <span class="dt">color =</span> type)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb32-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">stroke =</span> <span class="fl">.5</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb32-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_path</span>(<span class="dt">linetype =</span> <span class="st">&quot;dotted&quot;</span>, <span class="dt">size =</span> <span class="fl">.25</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb32-8" data-line-number="8"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">2</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb32-9" data-line-number="9"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>, <span class="dt">aesthetics =</span> <span class="kw">c</span>(<span class="st">&quot;color&quot;</span>, <span class="st">&quot;fill&quot;</span>), <span class="dt">name =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb32-10" data-line-number="10"><span class="st">  </span><span class="kw">labs</span>(</a>
-<a class="sourceLine" id="cb32-11" data-line-number="11">    <span class="dt">title =</span> <span class="st">&quot;rwm1984: Poisson Modell&quot;</span>,</a>
-<a class="sourceLine" id="cb32-12" data-line-number="12">    <span class="dt">subtitle =</span> <span class="st">&quot;Observed und expected counts bei overdispersion&quot;</span>,</a>
-<a class="sourceLine" id="cb32-13" data-line-number="13">    <span class="dt">caption =</span> <span class="st">&quot;Output begrenzt auf docvs &lt;= 12&quot;</span>,</a>
-<a class="sourceLine" id="cb32-14" data-line-number="14">    <span class="dt">x =</span> <span class="st">&quot;Anzahl der Arztbesuche (docvis)&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span></a>
-<a class="sourceLine" id="cb32-15" data-line-number="15">  ) <span class="op">+</span></a>
-<a class="sourceLine" id="cb32-16" data-line-number="16"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;top&quot;</span>)</a></code></pre></div>
-<p><img src="poisson-regression_files/figure-html/diag_compare_expected-1.png" width="768" style="display: block; margin: auto;" /></p>
-<p>Anhand der ersten Tabelle können wir recht schnell erkennen, dass wir hier <em>deutlich</em> mehr Nullen beobachten als das Modell vorhersagt – mehr dazu in Abschnitt <a href="zeros.html#zeros">4.2</a>.<br />
-Der Plot veranschaulicht den eher suboptimalen model fit unter diesen Umständen (overdispersion &amp; zero-inflation).</p> 
+<p>In diesem Fall “lohnt” sich dieser Ansatz zwar eher nicht, da wir neben overdispersion noch ein Problem mit zero-inflation haben, aber in manchen Fällen kann Quasipoisson-Methode ausreichen.</p>
+<blockquote>
+<p>“Scaling is an easy, quick-and-dirty method of adjusting standard errors for overdispersion. However, when data are highly correlated or clustered, model slopes or coefficients usually need to be adjusted as well. Scaling does not accommodate that need, but simulations demonstrate that it is quite useful for models with little to moderate overdispersion.”</p>
+<p>— <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 96)</p>
+</blockquote>
+</div>
+<div id="sandwich" class="section level4">
+<h4><span class="header-section-number">4.1.2.1</span> Robuste Varianzschätzer (Sandwich Estimators)</h4>
+<p>(Andere Namen: Huber &amp; White standard errors, empirical standard errors)</p>
+<p>Sandwich estimators sind in erster Linie für nicht unabhängige bzw. korrellierte Daten gedacht, zum Beispiel für Daten, die innerhalb mehrere Haushalte, Krankenhäuser, Städte etc. gesammelt wurden.</p>
+<p>Robuste Varianzschätzer können (und je nach Quelle: <em>sollten</em>) standardmäßig für Count-response Daten verwendet werden, da die resultierenden Schätzer im Falle tatsächlich unkorrellierter Daten äquivalent zu den Standardfehlern des ursprünglichen Modells sind (i.e. “schadet nicht”).</p>
+<p>Bootstrapped SEs wiederum erfordern mehr Aufwand, ähneln aber den robusten SEs sowieso sehr stark, weshalb sich der Aufwand ggf. nicht wirklich lohnt.</p>
+<p>Siehe <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 99f) für eine ausführlichere Beschreibung. Zudem gibt der Autor explizit den Rat:</p>
+<blockquote>
+<p>“Unless your Poisson or negative binomial model is well fitted and meets its respective distributional assumptions, use robust or empirical standard errors as a default”</p>
+<p>— <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 133)</p>
+</blockquote>
+</div>
+</div>
 </div>
 <h3>Literatur</h3>
 <div id="refs" class="references">
@@ -417,8 +481,8 @@ Der Plot veranschaulicht den eher suboptimalen model fit unter diesen Umständen
           </div>
         </div>
       </div>
-<a href="mod-zi.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="overdisp-diag.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="anwendung.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="zeros.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

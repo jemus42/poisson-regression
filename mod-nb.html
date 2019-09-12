@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden</title>
+  <title>3.1 Negativ Binomial (NB) | Poisson-Regression und ihre Leiden</title>
   <meta name="description" content="Because count data is hard" />
   <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden" />
+  <meta property="og:title" content="3.1 Negativ Binomial (NB) | Poisson-Regression und ihre Leiden" />
   <meta property="og:type" content="book" />
   
   <meta property="og:image" content="includes/images/poiscovr-orly.png" />
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="jemus42/poisson-regression" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden" />
+  <meta name="twitter:title" content="3.1 Negativ Binomial (NB) | Poisson-Regression und ihre Leiden" />
   
   <meta name="twitter:description" content="Because count data is hard" />
   <meta name="twitter:image" content="includes/images/poiscovr-orly.png" />
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="software-funs.html"/>
-<link rel="next" href="annahmen.html"/>
+<link rel="prev" href="multiparam.html"/>
+<link rel="next" href="mod-pig.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -210,58 +210,136 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="poisson-modell" class="section level1">
-<h1><span class="header-section-number">Kapitel 2</span> Das Poisson-Modell</h1>
-<p>Das Poisson-Modell ist die allgemeine Grundlage für die Modellierung von Zählvorgängen / Counts, und auch wenn es in seiner “reinen” Form in der Praxis meist nicht ausreicht, bauen alle weiteren Methoden auf die eine oder andere Art darauf auf. Auch die häufig verwendete Negative Binomialverteilung ist letztlich eine Poisson-Verteilung mit Gamma-verteilter Varianz, also eine Erweiterung der Poisson um einen zusätzlichen Parameter. Das gleiche Prinzip findet sich in allen hier besprochenen Verteilungen.</p>
-<p>Für eine ausführliche Diskussion der Eigenschaften, siehe <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>)</span> (p. 7-20).</p>
-<p>Grundlage zur Modellierung ist das GLM mit den dazugehörigen Voraussetzungen:</p>
-<ul>
-<li>Die abhängige Variable <span class="math inline">\(Y\)</span> kommt aus der Exponentialfamilie (Normal-, Poisson-, Gamma-, Binomialverteilung)</li>
-<li>Modelliert wird der lineare Prädiktor <span class="math inline">\(\eta_i = \boldsymbol{x}_i&#39; \boldsymbol{\beta}\)</span>.</li>
-<li>Response- und Linkfunktionen <span class="math inline">\(h(x)\)</span> und <span class="math inline">\(g(x) = h^{-1}(x)\)</span></li>
-</ul>
+<div id="mod-nb" class="section level2">
+<h2><span class="header-section-number">3.1</span> Negativ Binomial (NB)</h2>
+<p>Die Negative Binomialverteilung (<em>NB</em>) kann als zweiparametrische Erweiterung der <em>Poisson</em> betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird (<em>Poisson-Gamma Mischmodell</em>).<br />
+Für eine ausführliche Beschreibung, siehe <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 126ff).</p>
+<p>Die Wahrscheinlichkeitsfunktion mit der <span class="math inline">\(\alpha\)</span>-Parametriserung:</p>
 
 <div class="definition">
-<p><span id="def:unnamed-chunk-1" class="definition"><strong>Definition 2.1  (Poisson-Verteilung)  </strong></span>Eine Poisson-verteilte Zufallsvariable <span class="math inline">\(Y \sim \mathrm{Poi}(\mu)\)</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> hat die Dichte</p>
-<span class="math display">\[\begin{equation*}
-\mathrm{P}(Y = y) = \frac{\mu^y \exp(-\mu)}{y!} \quad, y \in \mathbb{N}_0
-\end{equation*}\]</span>
+<p><span id="def:defnb2" class="definition"><strong>Definition 3.1  (Negative Binimialverteilung 2, alpha)  </strong></span>Nach <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a> p. 130)</span>:</p>
+<p>Für <span class="math inline">\(Y \sim NB(\mu, \alpha)\)</span> gilt</p>
+<p>Mit <span class="math inline">\(\mathbb{E}(Y) = \mu\)</span> und <span class="math inline">\(\mathrm{Var}(Y) = \mu + \alpha \mu^2\)</span></p>
 </div>
 
-<div class="figure" style="text-align: center"><span id="fig:poissondists"></span>
-<img src="poisson-regression_files/figure-html/poissondists-1.png" alt="Poisson-Verteilungen mit ausgewählten Parametern." width="768" />
-<p class="caption">
-Abbildung 2.1: Poisson-Verteilungen mit ausgewählten Parametern.
-</p>
-</div>
+<p>Eine Alternative unter Verwendung von <span class="math inline">\(\theta = \frac{1}{\alpha}\)</span>:</p>
 
 <div class="definition">
-<p><span id="def:poisson-modell" class="definition"><strong>Definition 2.2  (Poisson-Modell)  </strong></span>Die Zielvariablen <span class="math inline">\(y_i \in \mathbb{N}_0\)</span> sind (bedingt) unabhängig gegeben der Kovariablen <span class="math inline">\(x_{i1}, x_{i2}, \ldots, x_{ik}\)</span>.</p>
-<p>Die Rate <span class="math inline">\(\mu_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)\)</span> der Poissonverteilung wird in der Regel log-linear modelliert als</p>
+<p><span id="def:defNB" class="definition"><strong>Definition 3.2  (Negative Binomialverteilung 2, theta)  </strong></span>Nach <span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">2013</a>)</span> (p. 1675):</p>
+<p>Für <span class="math inline">\(Y \sim NB(\mu, \theta)\)</span> gilt</p>
+Mit <span class="math inline">\(\mathbb{E}(Y) = \mu\)</span> und <span class="math inline">\(\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}\)</span>
 </div>
 
-<p>Vgl. <span class="citation">Fahrmeir, Kneib, und Lang (<a href="#ref-fahrmeirRegressionModelleMethoden2009">2009</a>)</span></p>
-<p>Für das log-lineare Poisson-Modell entsprechen die resultierenden Koeffizienten der Veränderung der log-counts – durch Exponentiation lassen diese sich als <em>incidence rate ratios</em> (<em>IRR</em>) interpretieren.</p>
-<p>Um auf ungleiche Expositionsdauern oder -gebiete zu adjustieren wird ein <strong>offset</strong> (oder auch <em>exposure</em>) benötigt. Dazu dient der Koeffizient <span class="math inline">\(t\)</span>, der die Länge der Zeit unter Exposition angibt:</p>
+<p>Der gängigste Anwendungsfall der <em>NB</em> findet sich bei Daten mit nicht korrigierbarer overdispersion (siehe Abschnitt <a href="dispersion.html#overdispersion">2.2.1</a>), da der Parameter <span class="math inline">\(\theta\)</span> bzw. auch <span class="math inline">\(\alpha = \frac 1 \theta\)</span> als <em>Dispersionsparameter</em> dient:</p>
 
-<p>Damit entspricht <span class="math inline">\(t \mu\)</span> der Inzidenzrate des Outcomes adjustiert auf e.g. die geographische Lage oder Expositionsdauer. Ohne Offset entspräche <span class="math inline">\(t = 1\)</span>.
-Für als Offset wird in der Regel <span class="math inline">\(\log(t)\)</span> verwendet, womit gelten:</p>
+<div class="definition">
+<p><span id="def:nbdisppar" class="definition"><strong>Definition 3.3  (NB-Dispersionsparameter)  </strong></span>
+Meist wird der Parameter als <span class="math inline">\(\alpha\)</span> bezeichnet, mit der Interpretation (relativ zum Poisson-Modell):</p>
+<p><span class="math display">\[\mathrm{Var}(Y) = \mu + \alpha \mu^2\]</span></p>
+<p>Je nach Quelle (und unter Anderem in R (z.B. <code>MASS::glm.nb</code>)) wird die inverse Variante <span class="math inline">\(\theta = \frac 1 \alpha\)</span> verwendet, womit gilt:</p>
+<p><span class="math display">\[\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}\]</span></p>
+<p>Siehe dazu auch <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 131).</p>
+</div>
 
-<p>Ein offset kann z.B. in <code>R</code> via <code>+ offset(log(variable))</code> in der model <code>formula</code> oder über das Argument <code>offset = log(variable)</code> in <code>glm</code> und verwandten Funktionen angegeben werden.</p> 
+<p>Das GLM sieht keinen weiteren zu schätzenden Parameter vor, weshalb <span class="math inline">\(\theta\)</span> bzw. <span class="math inline">\(\alpha\)</span> in der Praxis separat geschätzt wird.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
+<p>Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob <span class="math inline">\(\alpha\)</span> oder <span class="math inline">\(\theta\)</span> verwendet wird, ist sein Vorzeichen: Er ist <em>immer</em> positiv, das heißt die Varianz der NB ist entweder <em>größer oder gleich</em> der Poisson, oder mit anderen Worten:</p>
+<blockquote>
+<p>“The negative binomial model adjusts for Poisson overdispersion; it <strong>cannot be used to model underdispersed</strong> Poisson data”</p>
+<p>— <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a> (p. 11), eigene Hervorhebung)</span></p>
+</blockquote>
+<p>Je nach Software/Algorithmus ist es auch möglich, dass ein NB-fit nicht möglich ist, wenn <span class="math inline">\(\alpha \approx 0\)</span> (die Verteilung zu nah an Poisson) bzw. die Daten Poisson-underdispersed sind.</p>
+<p>Weiterhin gibt es zwei verschiedene Formulierungen der Negativen Binomialverteilung, NB1 und NB2, deren Nummerierung auf den Exponenten im zweiten Term ihrer Varianzen zurückzuführen ist:</p>
+
+<div class="definition">
+<p><span id="def:defNB1NB2" class="definition"><strong>Definition 3.4  (NB1 und NB2)  </strong></span>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 126f):</p>
+<p>Die <strong>NB1</strong>, oder auch <em>lineare</em> Negative Binomialverteilung hat die Varianz</p>
+<p>…und die gängigere <strong>NB2</strong>, oder auch <em>quadratische</em> Negative Binomialverteilung hat (wie oben beschrieben) die Varianz</p>
+</div>
+
+<p>Beide Varianten können mittels MLE geschätzt werden, wobei NB2 zusätzlich im Kontext des GLM via <a href="https://en.wikipedia.org/wiki/Iteratively_reweighted_least_squares">IRLS</a> geschätzt werden kann.</p>
+<p>Als link wird <span class="math inline">\(\log \mu\)</span> verwendet, wobei der <em>canonical link</em> eigentlich <span class="math inline">\(\log\left(\frac{\alpha\mu}{1 + \alpha\mu}\right)\)</span> ist.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
+<p>Für ein gut angepasstes NB-Modell gilt analog eines Poisson-Modells, dass die Dispersionsstatistik approximativ 1 ist (siehe <a href="dispersion.html#def:def-pearsondisp">2.5</a>).</p>
+<p>Zur Anwendung in R gibt es zwei Möglichkeiten: <code>MASS::glm.nb</code> oder <code>msme::nbinomial</code>, wobei letztere mehrere Optionen zur Parametrisierung hat und zusätzlich die Dispersionsstatistik ausgibt:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">mod_nb &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">glm.nb</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age,</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">                       <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="kw">summary</span>(mod_nb)</a></code></pre></div>
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; MASS::glm.nb(formula = docvis ~ outwork + age, data = rwm1984, 
+#&gt;     init.theta = 0.4353451729, link = log)
+#&gt; 
+#&gt; Deviance Residuals: 
+#&gt;     Min       1Q   Median       3Q      Max  
+#&gt; -1.5316  -1.2816  -0.4895   0.1043   5.0468  
+#&gt; 
+#&gt; Coefficients:
+#&gt;              Estimate Std. Error z value Pr(&gt;|z|)    
+#&gt; (Intercept) -0.039550   0.106669  -0.371    0.711    
+#&gt; outwork      0.414662   0.055451   7.478 7.55e-14 ***
+#&gt; age          0.022146   0.002396   9.242  &lt; 2e-16 ***
+#&gt; ---
+#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+#&gt; 
+#&gt; (Dispersion parameter for Negative Binomial(0.4353) family taken to be 1)
+#&gt; 
+#&gt;     Null deviance: 4100.8  on 3873  degrees of freedom
+#&gt; Residual deviance: 3909.6  on 3871  degrees of freedom
+#&gt; AIC: 16674
+#&gt; 
+#&gt; Number of Fisher Scoring iterations: 1
+#&gt; 
+#&gt; 
+#&gt;               Theta:  0.4353 
+#&gt;           Std. Err.:  0.0135 
+#&gt; 
+#&gt;  2 x log-likelihood:  -16665.5250</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">mod_nb2 &lt;-<span class="st"> </span>msme<span class="op">::</span><span class="kw">nbinomial</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age,</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">                           <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="kw">summary</span>(mod_nb2)</a></code></pre></div>
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; ml_glm2(formula1 = formula1, formula2 = formula2, data = data, 
+#&gt;     family = family, mean.link = mean.link, scale.link = scale.link, 
+#&gt;     offset = offset, start = start, verbose = verbose)
+#&gt; 
+#&gt; Deviance Residuals:
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt; -1.5320 -1.2816 -0.4896 -0.4553  0.1035  5.0497 
+#&gt; 
+#&gt; Pearson Residuals:
+#&gt;      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+#&gt; -0.637147 -0.607737 -0.376257  0.000055  0.108975 21.659334 
+#&gt; 
+#&gt; Coefficients (all in linear predictor):
+#&gt;               Estimate      SE      Z         p     LCL    UCL
+#&gt; (Intercept)    -0.0443 0.10570 -0.419     0.675 -0.2514 0.1629
+#&gt; outwork         0.4141 0.05532  7.485  7.15e-14  0.3056 0.5225
+#&gt; age             0.0223 0.00237  9.401  5.42e-21  0.0176 0.0269
+#&gt; (Intercept)_s   2.2971 0.07098 32.364 8.85e-230  2.1580 2.4362
+#&gt; 
+#&gt; Null deviance: 4100.786  on  3872 d.f.
+#&gt; Residual deviance: 3909.522  on  3870 d.f.
+#&gt; Null Pearson: 5835.302  on  3872 d.f.
+#&gt; Residual Pearson: 5458.2  on  3870 d.f.
+#&gt; Dispersion: 1.410388
+#&gt; AIC:  16673.53
+#&gt; 
+#&gt; Number of optimizer iterations:  82</code></pre>
 </div>
 <h3>Literatur</h3>
 <div id="refs" class="references">
-<div id="ref-fahrmeirRegressionModelleMethoden2009">
-<p>Fahrmeir, Ludwig, Thomas Kneib, und Stefan Lang. 2009. <em>Regression: Modelle, Methoden und Anwendungen</em>. 2. Aufl. Statistik und ihre Anwendungen. Berlin: Springer.</p>
+<div id="ref-hilbeModelingCountData2014">
+<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065" class="uri">https://doi.org/10.1017/CBO9781139236065</a>.</p>
 </div>
-<div id="ref-winkelmannEconometricAnalysisCount2010">
-<p>Winkelmann, Rainer. 2010. <em>Econometric Analysis of Count Data</em>. 5th ed. Berlin: Springer Berlin.</p>
+<div id="ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">
+<p>Perumean-Chaney, Suzanne E., Charity Morgan, David McDowall, und Inmaculada Aban. 2013. „Zero-Inflated and Overdispersed: What’s One to Do?“ <em>Journal of Statistical Computation and Simulation</em> 83 (9): 1671–83. <a href="https://doi.org/10.1080/00949655.2012.668550" class="uri">https://doi.org/10.1080/00949655.2012.668550</a>.</p>
 </div>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="1">
-<li id="fn1"><p>Der Poisson-Parameter wird von unterschiedlichen Autoren als <span class="math inline">\(\lambda\)</span> oder <span class="math inline">\(\mu\)</span> bezeichnet, und ich habe mich noch nicht für eine Variante entschieden).<a href="poisson-modell.html#fnref1" class="footnote-back">↩</a></p></li>
+<ol start="3">
+<li id="fn3"><p>Das ist auch der Grund, warum in R nicht <code>glm()</code> verwendet werden kann, sondern eine separate Implementation mit expliziter Schätzung von <span class="math inline">\(\theta\)</span> benötigt wird (<code>MASS::glm.nb</code>)<a href="mod-nb.html#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p>Daher können Standardfehler nicht wie für canonical models üblich via OIM (<em>observed information matrix</em>) geschätzt werden, sondern via EIM (<em>expected information matrix</em>). Die EIM-Methode liefert weniger genaue Resultate für kleine Stichproben (n &lt; 30). So jedenfalls <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>.<a href="mod-nb.html#fnref4" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -269,8 +347,8 @@ Für als Offset wird in der Regel <span class="math inline">\(\log(t)\)</span> v
           </div>
         </div>
       </div>
-<a href="software-funs.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="annahmen.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="multiparam.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="mod-pig.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
