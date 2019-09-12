@@ -16,10 +16,10 @@ bookdown::gitbook:
     sharing:
       facebook: no
       twitter: no
-  mathjax: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML
+  # mathjax: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML
   includes:
     in_header:
-      - includes/html/mathjax.js
+      # - includes/html/mathjax.js
       - includes/html/roboto.html
 bookdown::pdf_book:
   includes:
