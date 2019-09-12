@@ -140,7 +140,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{Stand: 12. September 2019 00:36 Uhr (CEST)}
+    \date{Stand: 12. September 2019 15:15 Uhr (CEST)}
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -402,7 +402,7 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die pr
 \toprule
 N & Missing & Mittelwert & Varianz & Range\\
 \midrule
-100 & 10 & 5.08 & 5.17 & [0, 12]\\
+100 & 10 & 4.91 & 5.12 & [1, 13]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -794,8 +794,24 @@ Generalized Poisson (GP) & $\mu$ & $\mu (1 + \alpha\mu)^2 = \mu + 2\alpha\mu^3 +
 Die Negative Binomialverteilung (\emph{NB}) kann als zweiparametrische Erweiterung der \emph{Poisson} betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird (\emph{Poisson-Gamma Mischmodell}).\\
 Für eine ausführliche Beschreibung, siehe \citet{hilbeModelingCountData2014} (p.~126ff).
 
-\BeginKnitrBlock{definition}[Negative Binomialverteilung]
-\protect\hypertarget{def:defNB}{}{\label{def:defNB} \iffalse (Negative Binomialverteilung) \fi{} }Nach \citet{perumean-chaneyZeroinflatedOverdispersedWhat2013} (p.~1675):
+Die Wahrscheinlichkeitsfunktion mit der \(\alpha\)-Parametriserung:
+
+\BeginKnitrBlock{definition}[Negative Binimialverteilung 2, alpha]
+\protect\hypertarget{def:defnb2}{}{\label{def:defnb2} \iffalse (Negative Binimialverteilung 2, alpha) \fi{} }Nach \citep[ p.~130]{hilbeModelingCountData2014}:
+
+Für \(Y \sim NB(\mu, \alpha)\) gilt
+
+\begin{equation*}
+P(Y = y_i) = \begin{pmatrix} y_i + \frac{1}{\alpha} - 1 \\ \frac{1}{\alpha} - 1\end{pmatrix} \left(\frac{1}{a + \alpha \mu_i}\right)^{\frac{1}{\alpha}} \left(\frac{\alpha \mu_i}{1+\alpha\mu_i}\right)
+\end{equation*}
+
+Mit \(\mathbb{E}(Y) = \mu\) und \(\mathrm{Var}(Y) = \mu + \alpha \mu^2\)
+\EndKnitrBlock{definition}
+
+Eine Alternative unter Verwendung von \(\theta = \frac{1}{\alpha}\):
+
+\BeginKnitrBlock{definition}[Negative Binomialverteilung 2, theta]
+\protect\hypertarget{def:defNB}{}{\label{def:defNB} \iffalse (Negative Binomialverteilung 2, theta) \fi{} }Nach \citet{perumean-chaneyZeroinflatedOverdispersedWhat2013} (p.~1675):
 
 Für \(Y \sim NB(\mu, \theta)\) gilt
 
@@ -805,8 +821,6 @@ P(Y = y) = \frac{\Gamma(\theta + y)}{\Gamma(\theta) \Gamma(y+1)} \frac{\theta^\t
 
 Mit \(\mathbb{E}(Y) = \mu\) und \(\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}\)
 \EndKnitrBlock{definition}
-
-Für eine alternative Darstellung unter Verwendung von \(\alpha = \frac{1}{\theta}\), siehe \citet{hilbeModelingCountData2014} (p.~130)
 
 Der gängigste Anwendungsfall der \emph{NB} findet sich bei Daten mit nicht korrigierbarer overdispersion (siehe Abschnitt \ref{overdispersion}), da der Parameter \(\theta\) bzw. auch \(\alpha = \frac 1 \theta\) als \emph{Dispersionsparameter} dient:
 
@@ -833,7 +847,8 @@ Je nach Quelle (und unter Anderem in R (z.B. \texttt{MASS::glm.nb})) wird die in
 Siehe dazu auch \citet{hilbeModelingCountData2014} (p.~131).
 \EndKnitrBlock{definition}
 
-Das GLM sieht keinen weiteren zu schätzenden Parameter vor, weshalb \(\theta\) bzw. \(\alpha\) in der Praxis separat geschätzt wird.\\
+Das GLM sieht keinen weiteren zu schätzenden Parameter vor, weshalb \(\theta\) bzw. \(\alpha\) in der Praxis separat geschätzt wird \footnote{Das ist auch der Grund, warum in R nicht \texttt{glm()} verwendet werden kann, sondern eine separate Implementation mit expliziter Schätzung von \(\theta\) benötigt wird (\texttt{MASS::glm.nb})}.
+
 Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob \(\alpha\) oder \(\theta\) verwendet wird, ist sein Vorzeichen: Er ist \emph{immer} positiv, das heißt die Varianz der NB ist entweder \emph{größer oder gleich} der Poisson, oder mit anderen Worten:
 
 \begin{quote}
@@ -862,9 +877,9 @@ Die \textbf{NB1}, oder auch \emph{lineare} Negative Binomialverteilung hat die V
 \end{equation*}
 \EndKnitrBlock{definition}
 
-Beide Varianten können wie MLE geschätzt werden, wobei NB2 zusätzlich im Kontext des GLM via IRLS geschätzt werden kann.
+Beide Varianten können mittels MLE geschätzt werden, wobei NB2 zusätzlich im Kontext des GLM via \href{https://en.wikipedia.org/wiki/Iteratively_reweighted_least_squares}{IRLS} geschätzt werden kann.
 
-Als link wird \(\log \mu\) verwendet, wobei der \emph{canonical link} eigentlich \(\log\left(\frac{\alpha\mu}{1 + \alpha\mu}\right)\) ist \footnote{Daher können Standardfehler nicht wie für canonical models überlich via OIM (\emph{observed information matrix}), sondern via EIM (\emph{expected information matrix}) geschätzt werden. Die EIM-Methode liefert weniger genaue Resultate für kleine Stichproben (n \textless{} 30).}.
+Als link wird \(\log \mu\) verwendet, wobei der \emph{canonical link} eigentlich \(\log\left(\frac{\alpha\mu}{1 + \alpha\mu}\right)\) ist \footnote{Daher können Standardfehler nicht wie für canonical models üblich via OIM (\emph{observed information matrix}) geschätzt werden, sondern via EIM (\emph{expected information matrix}). Die EIM-Methode liefert weniger genaue Resultate für kleine Stichproben (n \textless{} 30). So jedenfalls \citet{hilbeModelingCountData2014}.}.
 
 Für ein gut angepasstes NB-Modell gilt analog eines Poisson-Modells, dass die Dispersionsstatistik approximativ 1 ist (siehe \ref{def:def-pearsondisp}).
 
@@ -954,13 +969,18 @@ Zur Anwendung in R gibt es zwei Möglichkeiten: \texttt{MASS::glm.nb} oder \text
 \hypertarget{mod-pig}{%
 \subsection{Poisson Inverse Gaussian (PIG)}\label{mod-pig}}
 
-So wie die \emph{NB} als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz betrachtet werden kann, ist die \emph{Poisson Inverse Gaussian} (\emph{PIG}) eine mixture aus Poisson-Verteilung mit \href{https://en.wikipedia.org/wiki/Inverse_Gaussian_distribution}{invers-normalverteilter} Varianz. Demnach kann man \emph{PIG} als Alternative zur \emph{NB} verwenden, insbesondere für den Fall sehr rechtsschiefer Daten.
+So wie die \emph{NB} als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz betrachtet werden kann, ist die \emph{Poisson Inverse Gaussian} (\emph{PIG}) eine mixture aus Poisson-Verteilung mit \href{https://en.wikipedia.org/wiki/Inverse_Gaussian_distribution}{invers-normalverteilter} Varianz.\\
+Die Verteilung hat Erwartungswert und Varianz mit gleicher Form wie die NB2, unterscheidet sich aber in ihrer Form -- sie ist linkssteiler und hat längere tails.
+
+Die \emph{PIG} kann also alternativ zur \emph{NB} verwendet werden, insbesondere für den Fall sehr linkssteifer Daten.
 
 \begin{quote}
 \enquote{Simply put, PIG models can better deal with highly overdispersed data that can negative binomial regression, particularly data clumped heavily at 1 and 2}
 
 -- \citet{hilbeModelingCountData2014} (p.~163)
 \end{quote}
+
+Siehe auch
 
 \textbf{Software}:
 
@@ -973,6 +993,113 @@ So wie die \emph{NB} als mixture aus Poisson-Verteilung mit Gamma-verteilter Var
 \item
   Stata: \texttt{pigreg}
 \end{itemize}
+
+Vergleichen wir ein PIG Modell mit unserem vorigen NB2-Modell:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Poisson Modell}
+\NormalTok{mod_pois <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(docvis }\OperatorTok{~}\StringTok{ }\NormalTok{outwork }\OperatorTok{+}\StringTok{ }\NormalTok{age, }\DataTypeTok{family =} \KeywordTok{poisson}\NormalTok{(),}
+              \DataTypeTok{data =}\NormalTok{ rwm1984)}
+\CommentTok{# NB2 Modell}
+\NormalTok{mod_nb <-}\StringTok{ }\NormalTok{MASS}\OperatorTok{::}\KeywordTok{glm.nb}\NormalTok{(docvis }\OperatorTok{~}\StringTok{ }\NormalTok{outwork }\OperatorTok{+}\StringTok{ }\NormalTok{age,}
+                       \DataTypeTok{data =}\NormalTok{ rwm1984)}
+
+\CommentTok{# PIG Modell}
+\NormalTok{mod_pig <-}\StringTok{ }\NormalTok{gamlss}\OperatorTok{::}\KeywordTok{gamlss}\NormalTok{(docvis }\OperatorTok{~}\StringTok{ }\NormalTok{outwork }\OperatorTok{+}\StringTok{ }\NormalTok{age, }\DataTypeTok{family =}\NormalTok{ gamlss.dist}\OperatorTok{::}\NormalTok{PIG,}
+                          \DataTypeTok{data =}\NormalTok{ rwm1984)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+#> GAMLSS-RS iteration 1: Global Deviance = 16757.45 
+#> GAMLSS-RS iteration 2: Global Deviance = 16757.15 
+#> GAMLSS-RS iteration 3: Global Deviance = 16757.11 
+#> GAMLSS-RS iteration 4: Global Deviance = 16757.11 
+#> GAMLSS-RS iteration 5: Global Deviance = 16757.11
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(mod_pig)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+#> ******************************************************************
+#> Family:  c("PIG", "Poisson.Inverse.Gaussian") 
+#> 
+#> Call:  
+#> gamlss::gamlss(formula = docvis ~ outwork + age, family = gamlss.dist::PIG,  
+#>     data = rwm1984) 
+#> 
+#> Fitting method: RS() 
+#> 
+#> ------------------------------------------------------------------
+#> Mu link function:  log
+#> Mu Coefficients:
+#>              Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept) -0.285765   0.112128  -2.549   0.0109 *  
+#> outwork      0.527637   0.058037   9.091   <2e-16 ***
+#> age          0.026861   0.002514  10.684   <2e-16 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> ------------------------------------------------------------------
+#> Sigma link function:  log
+#> Sigma Coefficients:
+#>             Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept)  1.34417    0.05564   24.16   <2e-16 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> ------------------------------------------------------------------
+#> No. of observations in the fit:  3874 
+#> Degrees of Freedom for the fit:  4
+#>       Residual Deg. of Freedom:  3870 
+#>                       at cycle:  5 
+#>  
+#> Global Deviance:     16757.11 
+#>             AIC:     16765.11 
+#>             SBC:     16790.16 
+#> ******************************************************************
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cbind}\NormalTok{(}
+  \KeywordTok{exp}\NormalTok{(}\KeywordTok{coef}\NormalTok{(mod_pois)),}
+  \KeywordTok{exp}\NormalTok{(}\KeywordTok{coef}\NormalTok{(mod_nb)),}
+  \KeywordTok{exp}\NormalTok{(}\KeywordTok{coef}\NormalTok{(mod_pig))}
+\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{as_tibble}\NormalTok{(}\DataTypeTok{rownames =} \StringTok{".id"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{setNames}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"Koeffizient"}\NormalTok{, }\StringTok{"Poisson"}\NormalTok{, }\StringTok{"NB2"}\NormalTok{, }\StringTok{"PIG"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+#> # A tibble: 3 x 4
+#>   Koeffizient Poisson   NB2   PIG
+#>   <chr>         <dbl> <dbl> <dbl>
+#> 1 (Intercept)   0.967 0.961 0.751
+#> 2 outwork       1.50  1.51  1.69 
+#> 3 age           1.02  1.02  1.03
+\end{verbatim}
+
+Zum Modellvergleich kann das AIC verwendet werden:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{AIC}\NormalTok{(mod_pois, mod_nb, mod_pig)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+#>          df      AIC
+#> mod_pois  3 31278.78
+#> mod_nb    4 16673.52
+#> mod_pig   4 16765.11
+\end{verbatim}
 
 \hypertarget{mod-gp}{%
 \subsection{Generalized Poisson (GP)}\label{mod-gp}}
@@ -1007,6 +1134,16 @@ Es gilt außerdem
 \end{align*}
 
 Auch hier kann ein Likelihood-Ratio Test auf \(\delta = 0\) durchgeführt werden, analog \(\alpha = 0\) für die NB -- wobei \(\delta\) hier keine Restriktion hat (siehe BLR, Definition \ref{def:BLR}).
+\EndKnitrBlock{definition}
+
+Eine alternative Darstellung unter Verwendung von Parametern \(\mu\) und \(sigma\) findet sich in \citet{stasinopoulos2007GeneralizedAdditive}, der Grundlage für das R-package \texttt{gamlss} (\emph{\enquote{Generalized additive models for location, scale and shape}}):
+
+\BeginKnitrBlock{definition}[Generalized Poisson (GAMLSS)]
+\protect\hypertarget{def:defgpois2}{}{\label{def:defgpois2} \iffalse (Generalized Poisson (GAMLSS)) \fi{} }\begin{equation*}
+f(y\ |\ \mu,\sigma)= \left(\frac{\mu}{(1+\sigma+\mu)}\right)^y \frac{(1+\sigma y)^{(y-1)}}{y!} \exp\left(-\mu \frac{(1+\sigma y)}{(1+\sigma+\mu)}\right)
+\end{equation*}
+
+Für \(y=0,1,2,\ldots\) mit \(\mu > 0\) und \(\sigma > 0\).
 \EndKnitrBlock{definition}
 
 \textbf{Software}:
@@ -1133,9 +1270,6 @@ Siehe auch
 \item
   \citet{shmueli2005UsefulDistribution}
 \end{itemize}
-
-\hypertarget{weitere-modelle}{%
-\section{Weitere Modelle}\label{weitere-modelle}}
 
 \hypertarget{diagnostische-modelle}{%
 \subsection{Diagnostische Modelle}\label{diagnostische-modelle}}
@@ -2297,7 +2431,7 @@ language & en\_US.UTF-8\\
 collate & en\_US.UTF-8\\
 ctype & en\_US.UTF-8\\
 tz & UTC\\
-date & 2019-09-11\\
+date & 2019-09-12\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2322,7 +2456,7 @@ MASS & 7.3-51.4 & CRAN (R 3.6.1)\\
 nlme & 3.1-140 & CRAN (R 3.6.1)\\
 pander & 0.6.3 & CRAN (R 3.6.1)\\
 purrr & 0.3.2 & CRAN (R 3.6.1)\\
-tidyr & 0.8.3 & CRAN (R 3.6.1)\\
+tidyr & 1.0.0 & CRAN (R 3.6.1)\\
 VGAM & 1.1-1 & CRAN (R 3.6.1)\\
 \bottomrule
 \end{tabular}
