@@ -37,7 +37,24 @@ tibble::tribble(
 Die Negative Binomialverteilung (*NB*) kann als zweiparametrische Erweiterung der *Poisson* betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird (*Poisson-Gamma Mischmodell*).  
 Für eine ausführliche Beschreibung, siehe @hilbeModelingCountData2014 (p. 126ff).
 
-```{definition defNB, name = "Negative Binomialverteilung"}
+Die Wahrscheinlichkeitsfunktion mit der $\alpha$-Parametriserung:
+
+```{definition defnb2, name = "Negative Binimialverteilung 2, alpha"}
+Nach [@hilbeModelingCountData2014 p. 130]:
+
+Für $Y \sim NB(\mu, \alpha)$ gilt
+
+\begin{equation*}
+P(Y = y_i) = \begin{pmatrix} y_i + \frac{1}{\alpha} - 1 \\ \frac{1}{\alpha} - 1\end{pmatrix} \left(\frac{1}{a + \alpha \mu_i}\right)^{\frac{1}{\alpha}} \left(\frac{\alpha \mu_i}{1+\alpha\mu_i}\right)
+\end{equation*}
+
+Mit $\mathbb{E}(Y) = \mu$ und $\mathrm{Var}(Y) = \mu + \alpha \mu^2$
+
+```
+
+Eine Alternative unter Verwendung von $\theta = \frac{1}{\alpha}$:
+
+```{definition defNB, name = "Negative Binomialverteilung 2, theta"}
 Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675):
 
 Für $Y \sim NB(\mu, \theta)$ gilt
@@ -48,8 +65,6 @@ P(Y = y) = \frac{\Gamma(\theta + y)}{\Gamma(\theta) \Gamma(y+1)} \frac{\theta^\t
 
 Mit $\mathbb{E}(Y) = \mu$ und $\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}$
 ```
-
-Für eine alternative Darstellung unter Verwendung von $\alpha = \frac{1}{\theta}$, siehe @hilbeModelingCountData2014 (p. 130)
 
 Der gängigste Anwendungsfall der *NB* findet sich bei Daten mit nicht korrigierbarer overdispersion (siehe Abschnitt \@ref(overdispersion)), da der Parameter $\theta$ bzw. auch $\alpha = \frac 1 \theta$ als *Dispersionsparameter* dient:
 
@@ -77,7 +92,8 @@ Siehe dazu auch @hilbeModelingCountData2014 (p. 131).
 
 ```
 
-Das GLM sieht keinen weiteren zu schätzenden Parameter vor, weshalb $\theta$ bzw. $\alpha$ in der Praxis separat geschätzt wird.  
+Das GLM sieht keinen weiteren zu schätzenden Parameter vor, weshalb $\theta$ bzw. $\alpha$ in der Praxis separat geschätzt wird ^[Das ist auch der Grund, warum in R nicht `glm()` verwendet werden kann, sondern eine separate Implementation mit expliziter Schätzung von $\theta$ benötigt wird (`MASS::glm.nb`)].
+
 Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob $\alpha$ oder $\theta$ verwendet wird, ist sein Vorzeichen: Er ist _immer_ positiv, das heißt die Varianz der NB ist entweder _größer oder gleich_ der Poisson, oder mit anderen Worten:
 
 > "The negative binomial model adjusts for Poisson overdispersion; it **cannot be used to model underdispersed** Poisson data" 
@@ -105,11 +121,11 @@ Die **NB1**, oder auch *lineare* Negative Binomialverteilung hat die Varianz
 
 ```
 
-Beide Varianten können wie MLE geschätzt werden, wobei NB2 zusätzlich im Kontext des GLM via IRLS geschätzt werden kann.
+Beide Varianten können mittels MLE geschätzt werden, wobei NB2 zusätzlich im Kontext des GLM via [IRLS](https://en.wikipedia.org/wiki/Iteratively_reweighted_least_squares) geschätzt werden kann.
 
 Als link wird $\log \mu$ verwendet, wobei der *canonical link* eigentlich $\log\left(\frac{\alpha\mu}{1 + \alpha\mu}\right)$ ist [^nblink]. 
 
-[^nblink]: Daher können Standardfehler nicht wie für canonical models überlich via OIM (*observed information matrix*), sondern via EIM (*expected information matrix*) geschätzt werden. Die EIM-Methode liefert weniger genaue Resultate für kleine Stichproben (n < 30).
+[^nblink]: Daher können Standardfehler nicht wie für canonical models üblich via OIM (*observed information matrix*) geschätzt werden, sondern via EIM (*expected information matrix*). Die EIM-Methode liefert weniger genaue Resultate für kleine Stichproben (n < 30). So jedenfalls @hilbeModelingCountData2014.
 
 Für ein gut angepasstes NB-Modell gilt analog eines Poisson-Modells, dass die Dispersionsstatistik approximativ 1 ist (siehe \@ref(def:def-pearsondisp)).
 
@@ -127,20 +143,56 @@ summary(mod_nb2)
 ```
 
 
+
 ## Poisson Inverse Gaussian (PIG) {#mod-pig}
 
-So wie die *NB* als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz betrachtet werden kann, ist die *Poisson Inverse Gaussian* (*PIG*) eine mixture aus Poisson-Verteilung mit [invers-normalverteilter](https://en.wikipedia.org/wiki/Inverse_Gaussian_distribution) Varianz. Demnach kann man *PIG* als Alternative zur *NB* verwenden, insbesondere für den Fall sehr rechtsschiefer Daten.
+So wie die *NB* als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz betrachtet werden kann, ist die *Poisson Inverse Gaussian* (*PIG*) eine mixture aus Poisson-Verteilung mit [invers-normalverteilter](https://en.wikipedia.org/wiki/Inverse_Gaussian_distribution) Varianz.  
+Die Verteilung hat Erwartungswert und Varianz mit gleicher Form wie die NB2, unterscheidet sich aber in ihrer Form – sie ist linkssteiler und hat längere tails.
 
+Die *PIG* kann also alternativ zur *NB* verwendet werden, insbesondere für den Fall sehr linkssteifer Daten.
 
 > "Simply put, PIG models can better deal with highly overdispersed data that can negative binomial regression, particularly data clumped heavily at 1 and 2"
 > 
 > -- @hilbeModelingCountData2014 (p. 163)
+
+Siehe auch 
 
 **Software**:
 
 - R: `gamlss` (CRAN)
 - SAS: Machbar via `NLMIXED`, aber unschön [siehe @high2018AlternativeVariance].
 - Stata: `pigreg`
+
+Vergleichen wir ein PIG Modell mit unserem vorigen NB2-Modell:
+
+```{r pig-example}
+# Poisson Modell
+mod_pois <- glm(docvis ~ outwork + age, family = poisson(),
+              data = rwm1984)
+# NB2 Modell
+mod_nb <- MASS::glm.nb(docvis ~ outwork + age,
+                       data = rwm1984)
+
+# PIG Modell
+mod_pig <- gamlss::gamlss(docvis ~ outwork + age, family = gamlss.dist::PIG,
+                          data = rwm1984)
+summary(mod_pig)
+
+cbind(
+  exp(coef(mod_pois)),
+  exp(coef(mod_nb)),
+  exp(coef(mod_pig))
+) %>%
+  as_tibble(rownames = ".id") %>%
+  setNames(c("Koeffizient", "Poisson", "NB2", "PIG"))
+```
+
+Zum Modellvergleich kann das AIC verwendet werden:
+
+```{r pig-example-aic}
+AIC(mod_pois, mod_nb, mod_pig)
+```
+
 
 ## Generalized Poisson (GP) {#mod-gp}
 
@@ -177,6 +229,15 @@ Auch hier kann ein Likelihood-Ratio Test auf $\delta = 0$ durchgeführt werden, 
 
 ```
 
+Eine alternative Darstellung unter Verwendung von Parametern $\mu$ und $sigma$ findet sich in @stasinopoulos2007GeneralizedAdditive, der Grundlage für das R-package `gamlss` (*"Generalized additive models for location, scale and shape"*):
+
+```{definition defgpois2, name = "Generalized Poisson (GAMLSS)"}
+\begin{equation*}
+f(y\ |\ \mu,\sigma)= \left(\frac{\mu}{(1+\sigma+\mu)}\right)^y \frac{(1+\sigma y)^{(y-1)}}{y!} \exp\left(-\mu \frac{(1+\sigma y)}{(1+\sigma+\mu)}\right)
+\end{equation*}
+
+Für $y=0,1,2,\ldots$ mit $\mu > 0$ und $\sigma > 0$.
+```
 
 **Software**:  
 
@@ -258,10 +319,8 @@ Siehe auch
 - @shmueli2005UsefulDistribution
 
 
-# Weitere Modelle
 
 ## Diagnostische Modelle
-
 
 ### Heterogenous Negative Binomial (NBH) {#mod-nbh}
 

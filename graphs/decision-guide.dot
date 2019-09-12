@@ -7,7 +7,7 @@ graph [layout = dot]
 ################################
 node [shape = rectangle,
       style = filled,
-      color = grey,
+      color = black,
       fontname = "Roboto"]
 edge [fontname = "Roboto"]
 
@@ -30,14 +30,14 @@ node [fillcolor = orange]
 
 edge [color = grey]
 start -> checkdisp [label = ""]
-checkdisp -> ud [label = "D < 1"]
-checkdisp -> pois [label = "D ≈ 1"]
-checkdisp -> od [label = "D > 1"]
+checkdisp -> ud [label = "D < 1", color = yellow]
+checkdisp -> pois [label = "D ≈ 1", color = lightblue]
+checkdisp -> od [label = "D > 1", color = red]
 
 node []
 # se_adjust [label = "Adjust SE", color = lightblue]
 nb2 [label = "NB2\n(Common default)", fillcolor = red]
-pig [label = "PIG\nIf very skewed to the right", fillcolor = red]
+pig [label = "PIG\nIf very skewed left\nclumped around 1, 2", fillcolor = red]
 cmp [label = "COMP", fillcolor = orange]
 gpois [label = "GP", fillcolor = orange]
 
