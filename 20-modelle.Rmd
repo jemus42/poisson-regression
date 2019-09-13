@@ -39,7 +39,7 @@ Für eine ausführliche Beschreibung, siehe @hilbeModelingCountData2014 (p. 126f
 
 Die Wahrscheinlichkeitsfunktion mit der $\alpha$-Parametriserung:
 
-```{definition defnb2, name = "Negative Binimialverteilung 2, alpha"}
+```{definition defnb2alpha, name = "Negative Binimialverteilung 2, alpha"}
 Nach [@hilbeModelingCountData2014 p. 130]:
 
 Für $Y \sim NB(\mu, \alpha)$ gilt
@@ -54,7 +54,7 @@ Mit $\mathbb{E}(Y) = \mu$ und $\mathrm{Var}(Y) = \mu + \alpha \mu^2$
 
 Eine Alternative unter Verwendung von $\theta = \frac{1}{\alpha}$:
 
-```{definition defNB, name = "Negative Binomialverteilung 2, theta"}
+```{definition defnb2theta, name = "Negative Binomialverteilung 2, theta"}
 Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675):
 
 Für $Y \sim NB(\mu, \theta)$ gilt
