@@ -140,7 +140,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{Stand: 12. September 2019 21:47 Uhr (CEST)}
+    \date{Stand: 13. September 2019 16:08 Uhr (CEST)}
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -402,7 +402,7 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die pr
 \toprule
 N & Missing & Mittelwert & Varianz & Range\\
 \midrule
-100 & 10 & 4.4 & 6.15 & [0, 13]\\
+100 & 10 & 5.38 & 5.74 & [0, 11]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -797,7 +797,7 @@ Für eine ausführliche Beschreibung, siehe \citet{hilbeModelingCountData2014} (
 Die Wahrscheinlichkeitsfunktion mit der \(\alpha\)-Parametriserung:
 
 \BeginKnitrBlock{definition}[Negative Binimialverteilung 2, alpha]
-\protect\hypertarget{def:defnb2}{}{\label{def:defnb2} \iffalse (Negative Binimialverteilung 2, alpha) \fi{} }Nach \citep[ p.~130]{hilbeModelingCountData2014}:
+\protect\hypertarget{def:defnb2alpha}{}{\label{def:defnb2alpha} \iffalse (Negative Binimialverteilung 2, alpha) \fi{} }Nach \citep[ p.~130]{hilbeModelingCountData2014}:
 
 Für \(Y \sim NB(\mu, \alpha)\) gilt
 
@@ -811,7 +811,7 @@ Mit \(\mathbb{E}(Y) = \mu\) und \(\mathrm{Var}(Y) = \mu + \alpha \mu^2\)
 Eine Alternative unter Verwendung von \(\theta = \frac{1}{\alpha}\):
 
 \BeginKnitrBlock{definition}[Negative Binomialverteilung 2, theta]
-\protect\hypertarget{def:defNB}{}{\label{def:defNB} \iffalse (Negative Binomialverteilung 2, theta) \fi{} }Nach \citet{perumean-chaneyZeroinflatedOverdispersedWhat2013} (p.~1675):
+\protect\hypertarget{def:defnb2theta}{}{\label{def:defnb2theta} \iffalse (Negative Binomialverteilung 2, theta) \fi{} }Nach \citet{perumean-chaneyZeroinflatedOverdispersedWhat2013} (p.~1675):
 
 Für \(Y \sim NB(\mu, \theta)\) gilt
 
@@ -2431,7 +2431,7 @@ language & en\_US.UTF-8\\
 collate & en\_US.UTF-8\\
 ctype & en\_US.UTF-8\\
 tz & UTC\\
-date & 2019-09-12\\
+date & 2019-09-13\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2482,8 +2482,8 @@ Hier liegen temporär Opfer der Umstrukturierung, bis sie ein passendes zu Hause
   Die erwartete Anzahl an Nullen (unter Poisson) ist \(\exp(-\bar{x}) \cdot n\)
 \end{itemize}
 
-\hypertarget{beispiel-nach-hilbemodelingcountdata2014-p.211ff}{%
-\subsubsection{\texorpdfstring{Beispiel nach \citet{hilbeModelingCountData2014}, p.~211ff}{Beispiel nach @hilbeModelingCountData2014, p.~211ff}}\label{beispiel-nach-hilbemodelingcountdata2014-p.211ff}}
+\hypertarget{beispiel-nach-hilbe-2014-p.211ff}{%
+\subsubsection{Beispiel nach Hilbe (2014 p.~211ff)}\label{beispiel-nach-hilbe-2014-p.211ff}}
 
 (Eigentlich kompliziertes Beispiel, weil 0 counts nicht möglich sind, müsste man truncated drangehen)
 
