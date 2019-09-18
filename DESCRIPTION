@@ -18,7 +18,8 @@ Imports:
     pander,
     purrr,
     sessioninfo,
-    VGAM
+    VGAM,
+    pscl
 Remotes: 
     hrbrmstr/firasans
 Encoding: UTF-8

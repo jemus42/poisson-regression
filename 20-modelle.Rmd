@@ -45,7 +45,7 @@ Nach [@hilbeModelingCountData2014 p. 130]:
 Für $Y \sim NB(\mu, \alpha)$ gilt
 
 \begin{equation*}
-P(Y = y_i) = \begin{pmatrix} y_i + \frac{1}{\alpha} - 1 \\ \frac{1}{\alpha} - 1\end{pmatrix} \left(\frac{1}{a + \alpha \mu_i}\right)^{\frac{1}{\alpha}} \left(\frac{\alpha \mu_i}{1+\alpha\mu_i}\right)
+  P(Y = y_i) = \begin{pmatrix} y_i + \frac{1}{\alpha} - 1 \\ \frac{1}{\alpha} - 1\end{pmatrix} \left(\frac{1}{a + \alpha \mu_i}\right)^{\frac{1}{\alpha}} \left(\frac{\alpha \mu_i}{1+\alpha\mu_i}\right)
 \end{equation*}
 
 Mit $\mathbb{E}(Y) = \mu$ und $\mathrm{Var}(Y) = \mu + \alpha \mu^2$
@@ -59,9 +59,9 @@ Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675):
 
 Für $Y \sim NB(\mu, \theta)$ gilt
   
-\begin{equation}
+\begin{equation*}
 P(Y = y) = \frac{\Gamma(\theta + y)}{\Gamma(\theta) \Gamma(y+1)} \frac{\theta^\theta \mu^y}{(\theta + \mu)^{(\theta + y)}}, \quad y = 0, 1, 2, \ldots
-\end{equation}
+\end{equation*}
 
 Mit $\mathbb{E}(Y) = \mu$ und $\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}$
 ```
@@ -74,19 +74,19 @@ Meist wird der Parameter als $\alpha$ bezeichnet, mit der Interpretation (relati
   
 $$\mathrm{Var}(Y) = \mu + \alpha \mu^2$$
 
-\begin{align}
+\begin{align*}
   \alpha &= 0 &&\Longrightarrow \text{ Äquivalent zur Poissonverteilung} \\
   \alpha &> 0 &&\Longrightarrow \text{ Overdispersion}
-\end{align}
+\end{align*}
 
 Je nach Quelle (und unter Anderem in R (z.B. `MASS::glm.nb`)) wird die inverse Variante $\theta = \frac 1 \alpha$ verwendet, womit gilt:
 
 $$\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}$$
 
-\begin{align}
+\begin{align*}
   \theta &> 0 &&\Longrightarrow \text{ Overdispersion} \\
   \theta &\to \infty &&\Longrightarrow \text{ Äquivalent zur Poissonverteilung}
-\end{align}
+\end{align*}
 
 Siehe dazu auch @hilbeModelingCountData2014 (p. 131).
 
@@ -420,3 +420,30 @@ P(Y = 0) &= \pi + (1 - \pi) \cdot \frac{\theta^\theta}{(\theta + \mu)^\theta}  \
 P(Y = y) &= (1 - \pi) \cdot \frac{\Gamma(\theta+y)}{\Gamma(\theta) \Gamma(y + 1)} \frac{\theta^\theta \mu^y}{(\theta + \mu)^{(\theta + y)}}, \quad y = 1, 2, 3, \ldots
 \end{align*}
 ```
+
+Ein Anwendungsbeispiel der ZIP findet sich auf der Seite der UCLA ([SAS](https://stats.idre.ucla.edu/sas/dae/zero-inflatedpoisson-regression/), [R](https://stats.idre.ucla.edu/r/dae/zip/), zusätzlich gibt es einmal [annotated Output (SAS)](https://stats.idre.ucla.edu/sas/output/zero-inflated-poisson-regression/)), wobei der `fish`-Datensatz verwendet wird.
+
+In diesem Datensatz beobachten wir Nullen mit zwei unterschiedlichen Ursprüngen: Zum Einen haben wir die Nullen der Personen, die geangelt haben, aber keine Fische fingen – und zum Anderen haben wir die Nullen der Personen, die *nicht angelten*, und daher garantiert auch keine Fische fingen ("*certain zeros*") (vgl. auch Abschnitt \@ref(zi-modelling)).  
+
+Ein ZIP-Modell erlaubt uns hier also beide Komponenten zu berücksichtigen – sowohl die Personen, die erfolglos angelten, als auch die Personen, die gar nicht angelten.
+
+```{r zip-fish}
+# ZP basierend auf fish-Daten, Modell aus UCLA-Tutorialseite
+m_zip <- pscl::zeroinfl(count ~ child + camper | persons, data = fish)
+
+summary(m_zip)
+
+# Exponentierte Koeffizienten
+tibble::enframe(exp(coef(m_zip)), name = "coefficient")
+```
+
+Wir erhalten zwei Sets an Koeffizienten:
+
+**Count-model**: Das count model (`count_`), i.e. Poisson. Hier modellieren wir die Anzahl der gefangen Fische ohne Berücksichtigung der *excess zeros*. Diese Koeffizienten werden analog einer herkömmlichen Poisson-Regression interpretiert.
+
+**Inflation-model**: Die binomiale Komponente (`zeros_`) für die *excess zeros*, womit wir die Wahrscheinlichkeit von "certain zeros" modellieren. Diese Koeffizienten werden analog einer logistischen Regression interpretiert.  
+Aus dem UCLA DAE:
+
+> **persons**: If a group were to increase its persons value by one, the odds that it would be in the "Certain Zero" group would decrease by a factor of exp(-0.5643) = 0.5687581. In other words, the more people in a group, the less likely the group is a certain zero.
+
+> **Intercept**: If all of the predictor variables in the model are evaluated at zero, the odds of being a "Certain Zero" is exp(1.2974) = 3.659769.  This means that the predicted odds of a group with zero persons is  3.659769 (though remember that evaluating persons at zero is out of the range of plausible values–every group must have at least one person). 

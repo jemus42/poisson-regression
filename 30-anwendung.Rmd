@@ -75,27 +75,10 @@ Der Plot veranschaulicht den eher suboptimalen model fit unter diesen Umständen
 
 ## Overdispersion: Erkennung und Handhabung {#overdisp-diag}
 
-Der *Score-Test* wird nicht unbedingt empfohlen, findet sich aber in der Literatur:
+Es gibt mehrere Möglichkeiten Poisson-overdispersion zu erkennen, wobei die Pearson-Dispersionsstatistik in der Regel der erste Schritt ist.  
+Im Folgenden werden zusätzlich einige formale Tests aufgeführt.
 
-```{definition, name = "Score-Test auf Overdispersion"}
-Nach @hilbeModelingCountData2014 (p. 85f):
-  
-Sei $Y$ die abhängige Variable und $y_i$ die $i-te$ Beobachtung, mit $\hat{\mu}_i$ als gefitteter Wert eines Poisson-Modells, dann wird der z-Score wie folgt berechnet:
-
-\begin{equation}
-  z_i = \frac{(y_i - \hat{\mu})^2 -y}{\hat{\mu} \sqrt{2}}
-\end{equation}
-  
-Zur Evaluation von $z$ wird z.B. ein Intercept-only Regressionsmodell mit $z$ als abhängiger Variable gefitted, mit der Nullhypothese "Es liegt keine Overdispersion vor".
-
-Dabei gelten folgende Annahmen:
-  
-1. Die Stichprobe ist *groß*
-2. $z$ ist t-verteilt
-
-```
-
-
+### Lagrange Mulitplier Test
 
 ```{definition, name = "Lagrange Multiplier Test"}
 Nach @hilbeModelingCountData2014 (p. 85f):
@@ -261,7 +244,7 @@ tibble(
 ```
 
 
-### Vergleich von Zero-Inflated models {-}
+### Vergleich von Zero-Inflated models {#zi-compare}
 
 Zum Vergleich zwischen Zählmodellen und ihren zero-inflated Gegenstücken (e.g. Poisson vs. ZIP oder NB vs. ZINB) wird in der Literatur häufig der Vuong-Test [@vuongLikelihoodRatioTests1989; @desmarais2013TestingZero] verwendet. Dieser Test ist explizit für den Vergleich von **un**geschachtelten Modellen entworfen (im Gegensatz zu z.B. dem Likelihood Ratio test). @wilson2015MisuseVuong kritisiert dieses Vorgehen mit der Begründung (und Demonstration), dass zero-inflated Modelle _nicht_ ungeschachtelt mit ihren ursprünglichen Zähmodellen sind. Auch @perumean-chaneyZeroinflatedOverdispersedWhat2013 und @hilbeModelingCountData2014, die in diesem Dokument mehrfach zitiert werden, verwenden den Vuong-Test auf diese Weise. 
 
@@ -272,7 +255,7 @@ Das Paper (@wilson2015MisuseVuong) ist recht kurz und definitiv einen Blick Wert
 > --- @wilson2015MisuseVuong, p. 52
 
 
-### Modellierung {-}
+### Modellierung {#zi-modelling}
 
 Für die Modellierung von zero-inflated Daten stehen primär zwei Möglichkeiten zur Verfügung (vgl. auch @hilbeModelingCountData2014, p. 19):
 
@@ -281,8 +264,9 @@ Für die Modellierung von zero-inflated Daten stehen primär zwei Möglichkeiten
 2. *Hurdle models*: Getrennte Modellierung von Nullen und positiven counts in zwei separaten Modellen (siehe Abschnitt \@ref(mod-hurdle)).
 
 Ob hurdle model oder zero-inflated model die bessere Wahl ist hängt mitunter davon ab, welche Annahmen über die _Ursache der Nullen_ getroffen werden können.  
-Wenn es eine echte Trennung der Mechanismen (*"separation of mechanisms"*) gibt, die die Nullen und die positiven counts verursachen, dann wäre ein hurdle model eher angemessen.  
-Wenn sich die Nullen überlappen, es also keine getrennten Prozesse zu geben scheint, dann wären zero-inflated models angemessen [@hilbeModelingCountData2014, p. 209].
+Wenn es eine echte Trennung der Mechanismen (*"separation of mechanisms"*) gibt, die die Nullen und die positiven counts verursachen, dann wäre ein hurdle model eher angemessen. IDas würde allerdings auch annehmen, dass alle Nullen *die gleiche* Ursache haben.
+
+Wenn sich die Nullen überlappen, es also keine getrennten Prozesse zu geben scheint, dann wären zero-inflated models angemessen [@hilbeModelingCountData2014, p. 209]. 
 
 Als Veranschaulichung für zwei sich überlappende Mechanismen können wir das *fish*-Beispiel auf [dieser UCLA-Tutorialseite verwenden](https://stats.idre.ucla.edu/sas/output/zero-inflated-poisson-regression/). Hier ist die Anzahl der gefangenen Fische an einem Wochenende in einem Park die Zählvariable.
 
