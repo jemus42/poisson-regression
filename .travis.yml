@@ -82,7 +82,7 @@ deploy:
     target_branch: gh-pages
   - provider: script
     skip_cleanup: true
-    script: rsync -r --quiet $TRAVIS_BUILD_DIR/book -e 'ssh -p 54321' travis@pearson.tadaa-data.de:/srv/poisson-regression
+    script: rsync -r --quiet $TRAVIS_BUILD_DIR/poisson-regression -e 'ssh -p 54321' travis@pearson.tadaa-data.de:/srv/poisson-regression
     on:
       branch: master
 
