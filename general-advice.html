@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Kapitel 4 Anwendung | Poisson-Regression und ihre Leiden</title>
+  <title>D.1 General Advice | Poisson-Regression und ihre Leiden</title>
   <meta name="description" content="Because count data is hard" />
   <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Kapitel 4 Anwendung | Poisson-Regression und ihre Leiden" />
+  <meta property="og:title" content="D.1 General Advice | Poisson-Regression und ihre Leiden" />
   <meta property="og:type" content="book" />
   
   <meta property="og:image" content="includes/images/poiscovr-orly.png" />
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="jemus42/poisson-regression" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Kapitel 4 Anwendung | Poisson-Regression und ihre Leiden" />
+  <meta name="twitter:title" content="D.1 General Advice | Poisson-Regression und ihre Leiden" />
   
   <meta name="twitter:description" content="Because count data is hard" />
   <meta name="twitter:image" content="includes/images/poiscovr-orly.png" />
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="mod-zi.html"/>
-<link rel="next" href="overdisp-diag.html"/>
+<link rel="prev" href="unsorted.html"/>
+<link rel="next" href="beispiel-nach-hilbe-2014-p-211ff.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -220,215 +220,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="anwendung" class="section level1">
-<h1><span class="header-section-number">Kapitel 4</span> Anwendung</h1>
-<p>Als Beispiel verwenden wir hier <code>rwm1984</code>, ein Subset des Datensatz <code>rwm5yr</code> (vgl. Abschnitt <a href="data.html#data">1.1</a>, <code>?COUNT::rwm1984</code>), der Angaben zur Anzahl der Arztbesuche pro Person mit zusätzlichen demographischen Merkmalen enthält. Für unser Beispielmodell verwenden wir folgende Variablen:</p>
+<div id="general-advice" class="section level2">
+<h2><span class="header-section-number">D.1</span> General Advice</h2>
 <ul>
-<li><code>docvis</code>: Abhängige Variable, Anzahl der Arztbesuche im Jahr (0-121)</li>
-<li><code>outwork</code>: Arbeitslos (1), arbeitend (0)</li>
-<li><code>age</code>: Alter (25 - 64)</li>
+<li>Starte mit einem Poisson-Modell und baue darauf auf</li>
+<li>Benutze robuste Varianzschätzer (e.g. sandwich, Bootstrap-SEs sind meist den Aufwand nicht wert) – entweder sie helfen, oder sie schaden nicht.</li>
+<li>Das gängigste Problem ist overdispersion, aber nicht jede overdispersion ist gleich.</li>
+<li>Die erwartete Anzahl an Nullen (unter Poisson) ist <span class="math inline">\(\exp(-\bar{x}) \cdot n\)</span></li>
 </ul>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="anwendung.html#cb33-1"></a><span class="co"># Daten</span></span>
-<span id="cb33-2"><a href="anwendung.html#cb33-2"></a><span class="kw">data</span>(rwm1984, <span class="dt">package =</span> <span class="st">&quot;COUNT&quot;</span>)</span>
-<span id="cb33-3"><a href="anwendung.html#cb33-3"></a></span>
-<span id="cb33-4"><a href="anwendung.html#cb33-4"></a><span class="co"># Model fit</span></span>
-<span id="cb33-5"><a href="anwendung.html#cb33-5"></a>mod_rwm &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</span>
-<span id="cb33-6"><a href="anwendung.html#cb33-6"></a></span>
-<span id="cb33-7"><a href="anwendung.html#cb33-7"></a><span class="co"># Summary display</span></span>
-<span id="cb33-8"><a href="anwendung.html#cb33-8"></a><span class="kw">pander</span>(<span class="kw">summary</span>(mod_rwm))</span></code></pre></div>
-<table style="width:90%;">
-<colgroup>
-<col width="25%" />
-<col width="15%" />
-<col width="18%" />
-<col width="13%" />
-<col width="18%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center"> </th>
-<th align="center">Estimate</th>
-<th align="center">Std. Error</th>
-<th align="center">z value</th>
-<th align="center">Pr(&gt;|z|)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center"><strong>(Intercept)</strong></td>
-<td align="center">-0.03352</td>
-<td align="center">0.03918</td>
-<td align="center">-0.8554</td>
-<td align="center">0.3923</td>
-</tr>
-<tr class="even">
-<td align="center"><strong>outwork</strong></td>
-<td align="center">0.4079</td>
-<td align="center">0.01884</td>
-<td align="center">21.65</td>
-<td align="center">6.481e-104</td>
-</tr>
-<tr class="odd">
-<td align="center"><strong>age</strong></td>
-<td align="center">0.02208</td>
-<td align="center">0.0008377</td>
-<td align="center">26.36</td>
-<td align="center">3.73e-153</td>
-</tr>
-</tbody>
-</table>
-<p>(Dispersion parameter for poisson family taken to be 1 )</p>
-<table style="width:69%;">
-<colgroup>
-<col width="29%" />
-<col width="40%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td align="center">Null deviance:</td>
-<td align="center">25791 on 3873 degrees of
-freedom</td>
-</tr>
-<tr class="even">
-<td align="center">Residual deviance:</td>
-<td align="center">24190 on 3871 degrees of
-freedom</td>
-</tr>
-</tbody>
-</table>
-<p>Das erste was wir zur Evaluation unseres Modells tun können, ohne direkt andere Modelle zum vergleich heranzuziehen, ist die beobachteten Counts und die auf Basis des Modells erwarteten Counts zu vergleichen, um ein grobes Gefühl für die Situation zu erhalten (Code frei adaptiert nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span>, p. 88f):</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="anwendung.html#cb34-1"></a><span class="co"># Beobachtete und erwartete counts</span></span>
-<span id="cb34-2"><a href="anwendung.html#cb34-2"></a>observed_v_expected &lt;-<span class="st"> </span>rwm1984 <span class="op">%&gt;%</span></span>
-<span id="cb34-3"><a href="anwendung.html#cb34-3"></a><span class="st">  </span><span class="kw">count</span>(docvis, <span class="dt">name =</span> <span class="st">&quot;observed&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb34-4"><a href="anwendung.html#cb34-4"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
-<span id="cb34-5"><a href="anwendung.html#cb34-5"></a>    <span class="dt">expected =</span> purrr<span class="op">::</span><span class="kw">map_dbl</span>(docvis, <span class="op">~</span>{</span>
-<span id="cb34-6"><a href="anwendung.html#cb34-6"></a>                  <span class="kw">dpois</span>(.x, <span class="kw">fitted</span>(mod_rwm)) <span class="op">%&gt;%</span></span>
-<span id="cb34-7"><a href="anwendung.html#cb34-7"></a><span class="st">                    </span><span class="kw">sum</span>() <span class="op">%&gt;%</span></span>
-<span id="cb34-8"><a href="anwendung.html#cb34-8"></a><span class="st">                    </span><span class="kw">round</span>(<span class="dv">2</span>)</span>
-<span id="cb34-9"><a href="anwendung.html#cb34-9"></a>                }),</span>
-<span id="cb34-10"><a href="anwendung.html#cb34-10"></a>    <span class="dt">difference =</span> observed <span class="op">-</span><span class="st"> </span>expected</span>
-<span id="cb34-11"><a href="anwendung.html#cb34-11"></a>  ) </span>
-<span id="cb34-12"><a href="anwendung.html#cb34-12"></a></span>
-<span id="cb34-13"><a href="anwendung.html#cb34-13"></a>observed_v_expected <span class="op">%&gt;%</span></span>
-<span id="cb34-14"><a href="anwendung.html#cb34-14"></a><span class="st">  </span><span class="kw">head</span>(<span class="dv">5</span>) <span class="op">%&gt;%</span></span>
-<span id="cb34-15"><a href="anwendung.html#cb34-15"></a><span class="st">  </span><span class="kw">pander</span>(<span class="dt">caption =</span> <span class="st">&quot;Observed and expected counts&quot;</span>)</span></code></pre></div>
-<table style="width:61%;">
-<caption>Observed and expected counts</caption>
-<colgroup>
-<col width="12%" />
-<col width="15%" />
-<col width="15%" />
-<col width="18%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">docvis</th>
-<th align="center">observed</th>
-<th align="center">expected</th>
-<th align="center">difference</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">0</td>
-<td align="center">1611</td>
-<td align="center">264.8</td>
-<td align="center">1346</td>
-</tr>
-<tr class="even">
-<td align="center">1</td>
-<td align="center">448</td>
-<td align="center">627.1</td>
-<td align="center">-179.1</td>
-</tr>
-<tr class="odd">
-<td align="center">2</td>
-<td align="center">440</td>
-<td align="center">796</td>
-<td align="center">-356</td>
-</tr>
-<tr class="even">
-<td align="center">3</td>
-<td align="center">353</td>
-<td align="center">731.6</td>
-<td align="center">-378.6</td>
-</tr>
-<tr class="odd">
-<td align="center">4</td>
-<td align="center">213</td>
-<td align="center">554.6</td>
-<td align="center">-341.6</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="anwendung.html#cb35-1"></a><span class="co"># Mittelwert und Varianz der jeweiligen counts</span></span>
-<span id="cb35-2"><a href="anwendung.html#cb35-2"></a><span class="co"># (für &quot;expected&quot; gilt Varianz := Mittelwert)</span></span>
-<span id="cb35-3"><a href="anwendung.html#cb35-3"></a><span class="kw">tribble</span>(</span>
-<span id="cb35-4"><a href="anwendung.html#cb35-4"></a>  <span class="op">~</span>Counts,   <span class="op">~</span>Mean,                 <span class="op">~</span>Variance,</span>
-<span id="cb35-5"><a href="anwendung.html#cb35-5"></a>  <span class="st">&quot;observed&quot;</span>, <span class="kw">mean</span>(rwm1984<span class="op">$</span>docvis), <span class="kw">var</span>(rwm1984<span class="op">$</span>docvis),</span>
-<span id="cb35-6"><a href="anwendung.html#cb35-6"></a>  <span class="st">&quot;expected&quot;</span>, <span class="kw">mean</span>(<span class="kw">fitted</span>(mod)),    <span class="kw">mean</span>(<span class="kw">fitted</span>(mod))</span>
-<span id="cb35-7"><a href="anwendung.html#cb35-7"></a>) <span class="op">%&gt;%</span></span>
-<span id="cb35-8"><a href="anwendung.html#cb35-8"></a><span class="st">  </span><span class="kw">pander</span>(<span class="dt">caption =</span> <span class="st">&quot;Mean &amp; variance of observed and expected counts&quot;</span>)</span></code></pre></div>
-<table style="width:42%;">
-<caption>Mean &amp; variance of observed and expected counts</caption>
-<colgroup>
-<col width="15%" />
-<col width="11%" />
-<col width="15%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">Counts</th>
-<th align="center">Mean</th>
-<th align="center">Variance</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">observed</td>
-<td align="center">3.163</td>
-<td align="center">39.39</td>
-</tr>
-<tr class="even">
-<td align="center">expected</td>
-<td align="center">5.401</td>
-<td align="center">5.401</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="anwendung.html#cb36-1"></a><span class="co"># Plot: observed vs. expected counts</span></span>
-<span id="cb36-2"><a href="anwendung.html#cb36-2"></a>observed_v_expected <span class="op">%&gt;%</span></span>
-<span id="cb36-3"><a href="anwendung.html#cb36-3"></a><span class="st">  </span><span class="kw">filter</span>(docvis <span class="op">&lt;=</span><span class="st"> </span><span class="dv">12</span>) <span class="op">%&gt;%</span></span>
-<span id="cb36-4"><a href="anwendung.html#cb36-4"></a><span class="st">  </span><span class="kw">gather</span>(type, count, observed, expected) <span class="op">%&gt;%</span></span>
-<span id="cb36-5"><a href="anwendung.html#cb36-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> docvis, <span class="dt">y =</span> count, <span class="dt">fill =</span> type, <span class="dt">color =</span> type)) <span class="op">+</span></span>
-<span id="cb36-6"><a href="anwendung.html#cb36-6"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">shape =</span> <span class="dv">21</span>, <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">stroke =</span> <span class="fl">.5</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span></span>
-<span id="cb36-7"><a href="anwendung.html#cb36-7"></a><span class="st">  </span><span class="kw">geom_path</span>(<span class="dt">linetype =</span> <span class="st">&quot;dotted&quot;</span>, <span class="dt">size =</span> <span class="fl">.25</span>) <span class="op">+</span></span>
-<span id="cb36-8"><a href="anwendung.html#cb36-8"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">2</span>)) <span class="op">+</span></span>
-<span id="cb36-9"><a href="anwendung.html#cb36-9"></a><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>, <span class="dt">aesthetics =</span> <span class="kw">c</span>(<span class="st">&quot;color&quot;</span>, <span class="st">&quot;fill&quot;</span>), <span class="dt">name =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span></span>
-<span id="cb36-10"><a href="anwendung.html#cb36-10"></a><span class="st">  </span><span class="kw">labs</span>(</span>
-<span id="cb36-11"><a href="anwendung.html#cb36-11"></a>    <span class="dt">title =</span> <span class="st">&quot;rwm1984: Poisson Modell&quot;</span>,</span>
-<span id="cb36-12"><a href="anwendung.html#cb36-12"></a>    <span class="dt">subtitle =</span> <span class="st">&quot;Observed und expected counts bei overdispersion&quot;</span>,</span>
-<span id="cb36-13"><a href="anwendung.html#cb36-13"></a>    <span class="dt">caption =</span> <span class="st">&quot;Output begrenzt auf docvs &lt;= 12&quot;</span>,</span>
-<span id="cb36-14"><a href="anwendung.html#cb36-14"></a>    <span class="dt">x =</span> <span class="st">&quot;Anzahl der Arztbesuche (docvis)&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span></span>
-<span id="cb36-15"><a href="anwendung.html#cb36-15"></a>  ) <span class="op">+</span></span>
-<span id="cb36-16"><a href="anwendung.html#cb36-16"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
-<p><img src="poisson-regression_files/figure-html/diag_compare_expected-1.png" width="768" style="display: block; margin: auto;" /></p>
-<p>Anhand der ersten Tabelle können wir recht schnell erkennen, dass wir hier <em>deutlich</em> mehr Nullen beobachten als das Modell vorhersagt – mehr dazu in Abschnitt <a href="zeros.html#zeros">4.2</a>.<br />
-Der Plot veranschaulicht den eher suboptimalen model fit unter diesen Umständen (overdispersion und (bzw. bedingt durch) zero-inflation).</p> 
-</div>
-<h3>Literatur</h3>
-<div id="refs" class="references">
-<div id="ref-hilbeModelingCountData2014">
-<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065">https://doi.org/10.1017/CBO9781139236065</a>.</p>
-</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="mod-zi.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="overdisp-diag.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="unsorted.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="beispiel-nach-hilbe-2014-p-211ff.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

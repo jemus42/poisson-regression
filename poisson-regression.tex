@@ -140,7 +140,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{Stand: 18. September 2019 18:49 Uhr (CEST)}
+    \date{Stand: 18. September 2019 19:36 Uhr (CEST)}
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -408,7 +408,7 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die pr
 \toprule
 N & Missing & Mittelwert & Varianz & Range\\
 \midrule
-100 & 10 & 4.73 & 5.05 & [0, 12]\\
+100 & 10 & 5.18 & 5.92 & [0, 13]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2316,10 +2316,14 @@ Sowohl der Quelltext als auch das Output (sprich, dieses Dokument in mehreren Fo
 \cmidrule{1-3}
  & GitHub Pages & https://jemus42.github.io/poisson-regression\\
 \cmidrule{2-3}
-\multirow{-2}{*}{\raggedright\arraybackslash Result} & Self-Hosted & https://lukas.tadaa-data.de/poisson/\\
+ & Self-Hosted (automated build) & https://poisson.tadaa-data.de/\\
+\cmidrule{2-3}
+\multirow{-3}{*}{\raggedright\arraybackslash Result} & Self-Hosted (manual build) & https://lukas.tadaa-data.de/poisson/\\
 \bottomrule
 \end{tabular}
 \end{table}
+
+Wobei automatische builds von \href{https://travis-ci.org/jemus42/poisson-regression}{Travis CI} übernommen werden, und das Resultat an die entsprechenden Zielorte gepusht wird. Die \enquote{manuelle} Version auf \texttt{https://lukas.tadaa-data.de/poisson/} existiert primär zum schnellen Testen -- die finalen Zielorte sollen GitHub Pages und (vermutlich) \texttt{https://poisson.tadaa-data.de} sein.
 
 \hypertarget{erganzungen}{%
 \section{Ergänzungen}\label{erganzungen}}
@@ -2565,7 +2569,7 @@ VGAM & 1.1-1 & CRAN (R 3.6.1)\\
 Hier liegen temporär Opfer der Umstrukturierung, bis sie ein passendes zu Hause gefunden haben, oder auf die farm upstate umziehen.
 
 \hypertarget{general-advice}{%
-\subsubsection{General Advice}\label{general-advice}}
+\subsection{General Advice}\label{general-advice}}
 
 \begin{itemize}
 \tightlist
@@ -2580,7 +2584,7 @@ Hier liegen temporär Opfer der Umstrukturierung, bis sie ein passendes zu Hause
 \end{itemize}
 
 \hypertarget{beispiel-nach-hilbe-2014-p.-211ff}{%
-\subsubsection{Beispiel nach Hilbe (2014 p.~211ff)}\label{beispiel-nach-hilbe-2014-p.-211ff}}
+\subsection{Beispiel nach Hilbe (2014 p.~211ff)}\label{beispiel-nach-hilbe-2014-p.-211ff}}
 
 (Eigentlich kompliziertes Beispiel, weil 0 counts nicht möglich sind, müsste man truncated drangehen)
 
