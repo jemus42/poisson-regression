@@ -10,12 +10,15 @@ tibble::tribble(
   "Code", "Gitea (self-hosted)", "https://git.tadaa-data.de/lukas/poisson-regression",
   "Code", "GitHub", "https://github.com/jemus42/poisson-regression",
   "Result", "GitHub Pages", "https://jemus42.github.io/poisson-regression",
-  "Result", "Self-Hosted", "https://lukas.tadaa-data.de/poisson/"
+  "Result", "Self-Hosted (automated build)", "https://poisson.tadaa-data.de/",
+  "Result", "Self-Hosted (manual build)", "https://lukas.tadaa-data.de/poisson/"
 ) %>%
   kable(booktabs = TRUE) %>%
   kable_styling(position = "center", bootstrap_options = c("hover")) %>%
   collapse_rows(columns = 1)
 ```
+
+Wobei automatische builds von [Travis CI](https://travis-ci.org/jemus42/poisson-regression) übernommen werden, und das Resultat an die entsprechenden Zielorte gepusht wird. Die "manuelle" Version auf `https://lukas.tadaa-data.de/poisson/` existiert primär zum schnellen Testen – die finalen Zielorte sollen GitHub Pages und (vermutlich) `https://poisson.tadaa-data.de` sein.
 
 
 # Ergänzungen
@@ -190,14 +193,14 @@ sinfo$packages %>%
 
 Hier liegen temporär Opfer der Umstrukturierung, bis sie ein passendes zu Hause gefunden haben, oder auf die farm upstate umziehen.
 
-### General Advice
+## General Advice
 
 - Starte mit einem Poisson-Modell und baue darauf auf
 - Benutze robuste Varianzschätzer (e.g. sandwich, Bootstrap-SEs sind meist den Aufwand nicht wert) – entweder sie helfen, oder sie schaden nicht.
 - Das gängigste Problem ist overdispersion, aber nicht jede overdispersion ist gleich.
 - Die erwartete Anzahl an Nullen (unter Poisson) ist $\exp(-\bar{x}) \cdot n$
 
-### Beispiel nach Hilbe (2014 p. 211ff)
+## Beispiel nach Hilbe (2014 p. 211ff)
 
 (Eigentlich kompliziertes Beispiel, weil 0 counts nicht möglich sind, müsste man truncated drangehen)
 
