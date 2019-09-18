@@ -62,9 +62,9 @@
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -73,16 +73,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -91,9 +91,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -196,7 +196,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="D" data-path="unsorted.html"><a href="unsorted.html"><i class="fa fa-check"></i><b>D</b> Unsorted</a><ul>
 <li class="chapter" data-level="D.0.1" data-path="unsorted.html"><a href="unsorted.html#general-advice"><i class="fa fa-check"></i><b>D.0.1</b> General Advice</a></li>
-<li class="chapter" data-level="D.0.2" data-path="unsorted.html"><a href="unsorted.html#beispiel-nach-hilbe-2014-p.211ff"><i class="fa fa-check"></i><b>D.0.2</b> Beispiel nach Hilbe (2014 p. 211ff)</a></li>
+<li class="chapter" data-level="D.0.2" data-path="unsorted.html"><a href="unsorted.html#beispiel-nach-hilbe-2014-p.-211ff"><i class="fa fa-check"></i><b>D.0.2</b> Beispiel nach Hilbe (2014 p. 211ff)</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="literatur.html"><a href="literatur.html"><i class="fa fa-check"></i>Literatur</a></li>
 <li class="divider"></li>
@@ -233,8 +233,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Erwartungswert und Varianz sind identisch (<em>equidispersion</em>), i.e. ein größerer Erwartungswert impliziert auch eine größere Varianz (siehe <a href="dispersion.html#dispersion">2.2</a>).</li>
 <li>Die <span class="math inline">\(\chi^2\)</span>-Statistik hat einen Wert nahe 1, i.e. beobachtete und erwartete Varianzen der response sind gleich (Dispersionsindex).</li>
 </ol>
-<p>(Nach Tabelle in <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, braucht noch Deduplizierung)</p>
-<p>Alternative Formulierung nach <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>)</span> (p. 64):</p>
+<p>(Nach Tabelle in <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span>, braucht noch Deduplizierung)</p>
+<p>Alternative Formulierung nach <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010" role="doc-biblioref">2010</a>)</span> (p. 64):</p>
 <ol style="list-style-type: decimal">
 <li><span class="math inline">\(f(y\ |\ \mu) = \frac{e^{-\mu} \mu^y}{y!} \quad \mu &gt; 0, y = 0, 1, 2, \ldots\)</span>.</li>
 <li><span class="math inline">\(\mu = \exp(\mathbf{x}&#39; \boldsymbol{\beta})\)</span>.</li>
@@ -244,7 +244,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3>Literatur</h3>
 <div id="refs" class="references">
 <div id="ref-hilbeModelingCountData2014">
-<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065" class="uri">https://doi.org/10.1017/CBO9781139236065</a>.</p>
+<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065">https://doi.org/10.1017/CBO9781139236065</a>.</p>
 </div>
 <div id="ref-winkelmannEconometricAnalysisCount2010">
 <p>Winkelmann, Rainer. 2010. <em>Econometric Analysis of Count Data</em>. 5th ed. Berlin: Springer Berlin.</p>

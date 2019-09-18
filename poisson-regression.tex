@@ -140,7 +140,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{Stand: 18. September 2019 16:57 Uhr (CEST)}
+    \date{Stand: 18. September 2019 18:49 Uhr (CEST)}
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -408,7 +408,7 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die pr
 \toprule
 N & Missing & Mittelwert & Varianz & Range\\
 \midrule
-100 & 10 & 4.91 & 4.19 & [1, 10]\\
+100 & 10 & 4.73 & 5.05 & [0, 12]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -655,7 +655,7 @@ In \texttt{R} kann die Pearson-Dispersion wie folgt berechnet werden:
 \end{Highlighting}
 \end{Shaded}
 
-\ldots{}wofür wir in Abschnitt \ref{helperfuns} eine Hilfsfunktion \texttt{dispersion()} definiert haben.
+\ldots wofür wir in Abschnitt \ref{helperfuns} eine Hilfsfunktion \texttt{dispersion()} definiert haben.
 
 \hypertarget{overdispersion}{%
 \subsubsection{Overdispersion}\label{overdispersion}}
@@ -752,7 +752,7 @@ Im Allgemeinen wird für diese Situation die \href{https://stats.stackexchange.c
 Weiterhin taucht im Kontext von hurdle models (siehe \ref{mod-hurdle}) folgende Bemerkung auf:
 
 \begin{quote}
-{[}\ldots{}{]} that underdispersion occurs if \textbf{zeros are less frequent than the parent distribution would predict}.
+{[}\ldots{]} that underdispersion occurs if \textbf{zeros are less frequent than the parent distribution would predict}.
 The higher the expected value of the Poisson distribution, the lower the predicted probability of zero outcome and the lower the scope for underdispersion.
 -- \citep[p.~180 (eigene Hervorhebung)]{winkelmannEconometricAnalysisCount2010}
 \end{quote}
@@ -876,7 +876,7 @@ Die \textbf{NB1}, oder auch \emph{lineare} Negative Binomialverteilung hat die V
 \mathrm{Var}(Y) = \mu + \alpha \mu
 \end{equation*}
 
-\ldots{}und die gängigere \textbf{NB2}, oder auch \emph{quadratische} Negative Binomialverteilung hat (wie oben beschrieben) die Varianz
+\ldots und die gängigere \textbf{NB2}, oder auch \emph{quadratische} Negative Binomialverteilung hat (wie oben beschrieben) die Varianz
 
 \begin{equation*}
 \mathrm{Var}(Y) = \mu + \alpha \mu^2
@@ -1242,7 +1242,7 @@ Although the logistic regression is a limiting case \((\nu \to \infty)\), in pra
 \begin{itemize}
 \tightlist
 \item
-  \enquote{Low cost}, i.e. \enquote{nur} ein zusätzlicher Parameter
+  \enquote{Low cost}, i.e.~\enquote{nur} ein zusätzlicher Parameter
 \item
   Einfach zu handhaben (wenn in GLM mit MLE statt MCMC estimation)
 \item
@@ -1430,7 +1430,7 @@ Siehe auch \citet{hilbeModelingCountData2014} (p.~155) -- wo der Autor zwar den 
 \hypertarget{mod-zi}{%
 \subsection{\texorpdfstring{Zero-Inflated Models (\emph{mixture models})}{Zero-Inflated Models (mixture models)}}\label{mod-zi}}
 
-Zero-inflated Modelle sind \emph{mixtures}, das heißt, sie entstehen durch Mischung zweier Wahrscheinlichkeitsfunktionen. In der Regel wird eine Nullverteilung mit einer regulären Zählverteilung (Poisson, NB, PIG, \ldots{}) \enquote{gemischt}, abhängig von einem \emph{mixture parameter} \(\pi \in [0,1]\), der z.B. logistisch modelliert wird. Die Nullen im Modell werden dementsprechend durch beide Verteilungen (Nullverteilung, Zählverteilung) beschrieben -- im Gegensatz zu \emph{hurdle models} (vgl. \ref{mod-hurdle}), die Nullen logistisch und die positiven counts über eine \emph{truncated} distribution modellieren würden.
+Zero-inflated Modelle sind \emph{mixtures}, das heißt, sie entstehen durch Mischung zweier Wahrscheinlichkeitsfunktionen. In der Regel wird eine Nullverteilung mit einer regulären Zählverteilung (Poisson, NB, PIG, \ldots) \enquote{gemischt}, abhängig von einem \emph{mixture parameter} \(\pi \in [0,1]\), der z.B. logistisch modelliert wird. Die Nullen im Modell werden dementsprechend durch beide Verteilungen (Nullverteilung, Zählverteilung) beschrieben -- im Gegensatz zu \emph{hurdle models} (vgl. \ref{mod-hurdle}), die Nullen logistisch und die positiven counts über eine \emph{truncated} distribution modellieren würden.
 
 Zero-inflated distributions wie ZIP und ZINB wurden hergeleitet als zweiteilige mixture distributions. Die allgemeine Form für mixture distributions ist
 
@@ -1626,7 +1626,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 z value\strut
 \end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering
-Pr(\textgreater{}\textbar{}z\textbar{})\strut
+Pr(\textgreater\textbar z\textbar)\strut
 \end{minipage}\tabularnewline
 \midrule
 \endhead
@@ -2044,7 +2044,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 z value\strut
 \end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering
-Pr(\textgreater{}\textbar{}z\textbar{})\strut
+Pr(\textgreater\textbar z\textbar)\strut
 \end{minipage}\tabularnewline
 \midrule
 \endfirsthead
@@ -2058,7 +2058,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 z value\strut
 \end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering
-Pr(\textgreater{}\textbar{}z\textbar{})\strut
+Pr(\textgreater\textbar z\textbar)\strut
 \end{minipage}\tabularnewline
 \midrule
 \endhead
@@ -2116,7 +2116,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 t value\strut
 \end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\centering
-Pr(\textgreater{}\textbar{}t\textbar{})\strut
+Pr(\textgreater\textbar t\textbar)\strut
 \end{minipage}\tabularnewline
 \midrule
 \endfirsthead
@@ -2130,7 +2130,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 t value\strut
 \end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\centering
-Pr(\textgreater{}\textbar{}t\textbar{})\strut
+Pr(\textgreater\textbar t\textbar)\strut
 \end{minipage}\tabularnewline
 \midrule
 \endhead
@@ -2185,7 +2185,7 @@ In diesem Fall \enquote{lohnt} sich dieser Ansatz zwar eher nicht, da wir neben 
 
 Sandwich estimators sind in erster Linie für nicht unabhängige bzw. korrellierte Daten gedacht, zum Beispiel für Daten, die innerhalb mehrere Haushalte, Krankenhäuser, Städte etc. gesammelt wurden.
 
-Robuste Varianzschätzer können (und je nach Quelle: \emph{sollten}) standardmäßig für Count-response Daten verwendet werden, da die resultierenden Schätzer im Falle tatsächlich unkorrellierter Daten äquivalent zu den Standardfehlern des ursprünglichen Modells sind (i.e. \enquote{schadet nicht}).
+Robuste Varianzschätzer können (und je nach Quelle: \emph{sollten}) standardmäßig für Count-response Daten verwendet werden, da die resultierenden Schätzer im Falle tatsächlich unkorrellierter Daten äquivalent zu den Standardfehlern des ursprünglichen Modells sind (i.e.~\enquote{schadet nicht}).
 
 Bootstrapped SEs wiederum erfordern mehr Aufwand, ähneln aber den robusten SEs sowieso sehr stark, weshalb sich der Aufwand ggf. nicht wirklich lohnt.
 
@@ -2202,7 +2202,7 @@ Siehe \citet{hilbeModelingCountData2014} (p.~99f) für eine ausführlichere Besc
 
 Problem: \enquote{Excess zeros}, i.e.~das Modell sagt für \(P(y_i = 0\ |\ x_i)\) eine deutlich kleinere Wahrscheinlichkeit vor, als in gegebenen Daten tatsächlich vorliegen.
 
-Zero-inflation hängt eng mit overdispersion zusammen. Sie \emph{kann} Ursache für overdispersion sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechend auf \emph{ZI}-fokussiertes Modell (ZIP, ZINB\ldots{}) verwendet werden \emph{muss} -- ggf. lässt sich die overdispersion bereits durch ein anderes geeignetes Modell \enquote{auffangen}. Zum Beispiel zeigt \citet{winkelmannEconometricAnalysisCount2010}, dass die \emph{NB} allgemein eine größere Anzahl an Nullen erwartet als die Poisson.
+Zero-inflation hängt eng mit overdispersion zusammen. Sie \emph{kann} Ursache für overdispersion sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechend auf \emph{ZI}-fokussiertes Modell (ZIP, ZINB\ldots) verwendet werden \emph{muss} -- ggf. lässt sich die overdispersion bereits durch ein anderes geeignetes Modell \enquote{auffangen}. Zum Beispiel zeigt \citet{winkelmannEconometricAnalysisCount2010}, dass die \emph{NB} allgemein eine größere Anzahl an Nullen erwartet als die Poisson.
 
 \begin{center}\includegraphics{poisson-regression_files/figure-latex/excess_zeros_viz-1} \end{center}
 
@@ -2278,7 +2278,7 @@ N & Missing & Mittelwert & Varianz & Range\\
 
 Die Anzahl der Nullen ist hier auffallend groß -- allerdings beobachten wir hier auch zwei unterschiedliche Mechanismen, die sich überlappen: Eine Gruppe kann das ganze Wochenende geangelt haben, während eine andere Gruppe gar nicht geangelt hat -- beide Gruppen werden jedoch am Ende nach der Anzahl ihrer gefangenen Fische befragt, weshalb wir in den Daten Nullen mit unterschiedlichem \enquote{Ursprung} erhalten
 
-Da es hier nicht angemessen wäre, die Nullen und die positiven counts getrennt zu Modellieren, würden wir hier ein \emph{zero-inflated} Modell (z.B ZIP, ZINB, \ldots{}) verwenden.
+Da es hier nicht angemessen wäre, die Nullen und die positiven counts getrennt zu Modellieren, würden wir hier ein \emph{zero-inflated} Modell (z.B ZIP, ZINB, \ldots) verwenden.
 
 \hypertarget{entscheidungshilfen}{%
 \section{Entscheidungshilfen}\label{entscheidungshilfen}}
@@ -2579,8 +2579,8 @@ Hier liegen temporär Opfer der Umstrukturierung, bis sie ein passendes zu Hause
   Die erwartete Anzahl an Nullen (unter Poisson) ist \(\exp(-\bar{x}) \cdot n\)
 \end{itemize}
 
-\hypertarget{beispiel-nach-hilbe-2014-p.211ff}{%
-\subsubsection{Beispiel nach Hilbe (2014 p.~211ff)}\label{beispiel-nach-hilbe-2014-p.211ff}}
+\hypertarget{beispiel-nach-hilbe-2014-p.-211ff}{%
+\subsubsection{Beispiel nach Hilbe (2014 p.~211ff)}\label{beispiel-nach-hilbe-2014-p.-211ff}}
 
 (Eigentlich kompliziertes Beispiel, weil 0 counts nicht möglich sind, müsste man truncated drangehen)
 
@@ -2645,7 +2645,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 z value\strut
 \end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\centering
-Pr(\textgreater{}\textbar{}z\textbar{})\strut
+Pr(\textgreater\textbar z\textbar)\strut
 \end{minipage}\tabularnewline
 \midrule
 \endfirsthead
@@ -2659,7 +2659,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 z value\strut
 \end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\centering
-Pr(\textgreater{}\textbar{}z\textbar{})\strut
+Pr(\textgreater\textbar z\textbar)\strut
 \end{minipage}\tabularnewline
 \midrule
 \endhead
@@ -2780,7 +2780,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 z value\strut
 \end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering
-Pr(\textgreater{}\textbar{}z\textbar{})\strut
+Pr(\textgreater\textbar z\textbar)\strut
 \end{minipage}\tabularnewline
 \midrule
 \endfirsthead
@@ -2794,7 +2794,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 z value\strut
 \end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering
-Pr(\textgreater{}\textbar{}z\textbar{})\strut
+Pr(\textgreater\textbar z\textbar)\strut
 \end{minipage}\tabularnewline
 \midrule
 \endhead

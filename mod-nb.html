@@ -62,9 +62,9 @@
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -73,16 +73,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -91,9 +91,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -196,7 +196,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="D" data-path="unsorted.html"><a href="unsorted.html"><i class="fa fa-check"></i><b>D</b> Unsorted</a><ul>
 <li class="chapter" data-level="D.0.1" data-path="unsorted.html"><a href="unsorted.html#general-advice"><i class="fa fa-check"></i><b>D.0.1</b> General Advice</a></li>
-<li class="chapter" data-level="D.0.2" data-path="unsorted.html"><a href="unsorted.html#beispiel-nach-hilbe-2014-p.211ff"><i class="fa fa-check"></i><b>D.0.2</b> Beispiel nach Hilbe (2014 p. 211ff)</a></li>
+<li class="chapter" data-level="D.0.2" data-path="unsorted.html"><a href="unsorted.html#beispiel-nach-hilbe-2014-p.-211ff"><i class="fa fa-check"></i><b>D.0.2</b> Beispiel nach Hilbe (2014 p. 211ff)</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="literatur.html"><a href="literatur.html"><i class="fa fa-check"></i>Literatur</a></li>
 <li class="divider"></li>
@@ -223,20 +223,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="mod-nb" class="section level2">
 <h2><span class="header-section-number">3.1</span> Negativ Binomial (NB)</h2>
 <p>Die Negative Binomialverteilung (<em>NB</em>) kann als zweiparametrische Erweiterung der <em>Poisson</em> betrachtet werden, wobei die Varianz (separat vom Erwartungswert) als Gamma-verteilte Zufallsvariable betrachtet wird (<em>Poisson-Gamma Mischmodell</em>).<br />
-Für eine ausführliche Beschreibung, siehe <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 126ff).</p>
+Für eine ausführliche Beschreibung, siehe <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span> (p. 126ff).</p>
 <p>Die Wahrscheinlichkeitsfunktion mit der <span class="math inline">\(\alpha\)</span>-Parametriserung:</p>
 
 <div class="definition">
-<p><span id="def:defnb2alpha" class="definition"><strong>Definition 3.1  (Negative Binimialverteilung 2, alpha)  </strong></span>Nach <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a> p. 130)</span>:</p>
+<p><span id="def:defnb2alpha" class="definition"><strong>Definition 3.1  (Negative Binimialverteilung 2, alpha)  </strong></span>Nach <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a> p. 130)</span>:</p>
 <p>Für <span class="math inline">\(Y \sim NB(\mu, \alpha)\)</span> gilt</p>
+<p><span class="math display">\[\begin{equation*}
+  P(Y = y_i) = \begin{pmatrix} y_i + \frac{1}{\alpha} - 1 \\ \frac{1}{\alpha} - 1\end{pmatrix} \left(\frac{1}{a + \alpha \mu_i}\right)^{\frac{1}{\alpha}} \left(\frac{\alpha \mu_i}{1+\alpha\mu_i}\right)
+\end{equation*}\]</span></p>
 <p>Mit <span class="math inline">\(\mathbb{E}(Y) = \mu\)</span> und <span class="math inline">\(\mathrm{Var}(Y) = \mu + \alpha \mu^2\)</span></p>
 </div>
 
 <p>Eine Alternative unter Verwendung von <span class="math inline">\(\theta = \frac{1}{\alpha}\)</span>:</p>
 
 <div class="definition">
-<p><span id="def:defnb2theta" class="definition"><strong>Definition 3.2  (Negative Binomialverteilung 2, theta)  </strong></span>Nach <span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">2013</a>)</span> (p. 1675):</p>
+<p><span id="def:defnb2theta" class="definition"><strong>Definition 3.2  (Negative Binomialverteilung 2, theta)  </strong></span>Nach <span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013" role="doc-biblioref">2013</a>)</span> (p. 1675):</p>
 <p>Für <span class="math inline">\(Y \sim NB(\mu, \theta)\)</span> gilt</p>
+<p><span class="math display">\[\begin{equation*}
+P(Y = y) = \frac{\Gamma(\theta + y)}{\Gamma(\theta) \Gamma(y+1)} \frac{\theta^\theta \mu^y}{(\theta + \mu)^{(\theta + y)}}, \quad y = 0, 1, 2, \ldots
+\end{equation*}\]</span></p>
 Mit <span class="math inline">\(\mathbb{E}(Y) = \mu\)</span> und <span class="math inline">\(\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}\)</span>
 </div>
 
@@ -246,33 +252,47 @@ Mit <span class="math inline">\(\mathbb{E}(Y) = \mu\)</span> und <span class="ma
 <p><span id="def:nbdisppar" class="definition"><strong>Definition 3.3  (NB-Dispersionsparameter)  </strong></span>
 Meist wird der Parameter als <span class="math inline">\(\alpha\)</span> bezeichnet, mit der Interpretation (relativ zum Poisson-Modell):</p>
 <p><span class="math display">\[\mathrm{Var}(Y) = \mu + \alpha \mu^2\]</span></p>
+<p><span class="math display">\[\begin{align*}
+  \alpha &amp;= 0 &amp;&amp;\Longrightarrow \text{ Äquivalent zur Poissonverteilung} \\
+  \alpha &amp;&gt; 0 &amp;&amp;\Longrightarrow \text{ Overdispersion}
+\end{align*}\]</span></p>
 <p>Je nach Quelle (und unter Anderem in R (z.B. <code>MASS::glm.nb</code>)) wird die inverse Variante <span class="math inline">\(\theta = \frac 1 \alpha\)</span> verwendet, womit gilt:</p>
 <p><span class="math display">\[\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}\]</span></p>
-<p>Siehe dazu auch <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 131).</p>
+<p><span class="math display">\[\begin{align*}
+  \theta &amp;&gt; 0 &amp;&amp;\Longrightarrow \text{ Overdispersion} \\
+  \theta &amp;\to \infty &amp;&amp;\Longrightarrow \text{ Äquivalent zur Poissonverteilung}
+\end{align*}\]</span></p>
+<p>Siehe dazu auch <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span> (p. 131).</p>
 </div>
 
-<p>Das GLM sieht keinen weiteren zu schätzenden Parameter vor, weshalb <span class="math inline">\(\theta\)</span> bzw. <span class="math inline">\(\alpha\)</span> in der Praxis separat geschätzt wird.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
+<p>Das GLM sieht keinen weiteren zu schätzenden Parameter vor, weshalb <span class="math inline">\(\theta\)</span> bzw. <span class="math inline">\(\alpha\)</span> in der Praxis separat geschätzt wird.<a href="literatur.html#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
 <p>Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob <span class="math inline">\(\alpha\)</span> oder <span class="math inline">\(\theta\)</span> verwendet wird, ist sein Vorzeichen: Er ist <em>immer</em> positiv, das heißt die Varianz der NB ist entweder <em>größer oder gleich</em> der Poisson, oder mit anderen Worten:</p>
 <blockquote>
 <p>“The negative binomial model adjusts for Poisson overdispersion; it <strong>cannot be used to model underdispersed</strong> Poisson data”</p>
-<p>— <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a> (p. 11), eigene Hervorhebung)</span></p>
+<p>— <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a> (p. 11), eigene Hervorhebung)</span></p>
 </blockquote>
 <p>Je nach Software/Algorithmus ist es auch möglich, dass ein NB-fit nicht möglich ist, wenn <span class="math inline">\(\alpha \approx 0\)</span> (die Verteilung zu nah an Poisson) bzw. die Daten Poisson-underdispersed sind.</p>
 <p>Weiterhin gibt es zwei verschiedene Formulierungen der Negativen Binomialverteilung, NB1 und NB2, deren Nummerierung auf den Exponenten im zweiten Term ihrer Varianzen zurückzuführen ist:</p>
 
 <div class="definition">
-<p><span id="def:defNB1NB2" class="definition"><strong>Definition 3.4  (NB1 und NB2)  </strong></span>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 126f):</p>
+<p><span id="def:defNB1NB2" class="definition"><strong>Definition 3.4  (NB1 und NB2)  </strong></span>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span> (p. 126f):</p>
 <p>Die <strong>NB1</strong>, oder auch <em>lineare</em> Negative Binomialverteilung hat die Varianz</p>
+<p><span class="math display">\[\begin{equation*}
+\mathrm{Var}(Y) = \mu + \alpha \mu
+\end{equation*}\]</span></p>
 <p>…und die gängigere <strong>NB2</strong>, oder auch <em>quadratische</em> Negative Binomialverteilung hat (wie oben beschrieben) die Varianz</p>
+<p><span class="math display">\[\begin{equation*}
+\mathrm{Var}(Y) = \mu + \alpha \mu^2
+\end{equation*}\]</span></p>
 </div>
 
 <p>Beide Varianten können mittels MLE geschätzt werden, wobei NB2 zusätzlich im Kontext des GLM via <a href="https://en.wikipedia.org/wiki/Iteratively_reweighted_least_squares">IRLS</a> geschätzt werden kann.</p>
-<p>Als link wird <span class="math inline">\(\log \mu\)</span> verwendet, wobei der <em>canonical link</em> eigentlich <span class="math inline">\(\log\left(\frac{\alpha\mu}{1 + \alpha\mu}\right)\)</span> ist.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
+<p>Als link wird <span class="math inline">\(\log \mu\)</span> verwendet, wobei der <em>canonical link</em> eigentlich <span class="math inline">\(\log\left(\frac{\alpha\mu}{1 + \alpha\mu}\right)\)</span> ist.<a href="literatur.html#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
 <p>Für ein gut angepasstes NB-Modell gilt analog eines Poisson-Modells, dass die Dispersionsstatistik approximativ 1 ist (siehe <a href="dispersion.html#def:def-pearsondisp">2.5</a>).</p>
 <p>Zur Anwendung in R gibt es zwei Möglichkeiten: <code>MASS::glm.nb</code> oder <code>msme::nbinomial</code>, wobei letztere mehrere Optionen zur Parametrisierung hat und zusätzlich die Dispersionsstatistik ausgibt:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">mod_nb &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">glm.nb</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age,</a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">                       <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="kw">summary</span>(mod_nb)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="mod-nb.html#cb12-1"></a>mod_nb &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">glm.nb</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age,</span>
+<span id="cb12-2"><a href="mod-nb.html#cb12-2"></a>                       <span class="dt">data =</span> rwm1984)</span>
+<span id="cb12-3"><a href="mod-nb.html#cb12-3"></a><span class="kw">summary</span>(mod_nb)</span></code></pre></div>
 <pre><code>#&gt; 
 #&gt; Call:
 #&gt; MASS::glm.nb(formula = docvis ~ outwork + age, data = rwm1984, 
@@ -303,9 +323,9 @@ Meist wird der Parameter als <span class="math inline">\(\alpha\)</span> bezeich
 #&gt;           Std. Err.:  0.0135 
 #&gt; 
 #&gt;  2 x log-likelihood:  -16665.5250</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">mod_nb2 &lt;-<span class="st"> </span>msme<span class="op">::</span><span class="kw">nbinomial</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age,</a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">                           <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="kw">summary</span>(mod_nb2)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="mod-nb.html#cb14-1"></a>mod_nb2 &lt;-<span class="st"> </span>msme<span class="op">::</span><span class="kw">nbinomial</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age,</span>
+<span id="cb14-2"><a href="mod-nb.html#cb14-2"></a>                           <span class="dt">data =</span> rwm1984)</span>
+<span id="cb14-3"><a href="mod-nb.html#cb14-3"></a><span class="kw">summary</span>(mod_nb2)</span></code></pre></div>
 <pre><code>#&gt; 
 #&gt; Call:
 #&gt; ml_glm2(formula1 = formula1, formula2 = formula2, data = data, 
@@ -339,18 +359,11 @@ Meist wird der Parameter als <span class="math inline">\(\alpha\)</span> bezeich
 <h3>Literatur</h3>
 <div id="refs" class="references">
 <div id="ref-hilbeModelingCountData2014">
-<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065" class="uri">https://doi.org/10.1017/CBO9781139236065</a>.</p>
+<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065">https://doi.org/10.1017/CBO9781139236065</a>.</p>
 </div>
 <div id="ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">
-<p>Perumean-Chaney, Suzanne E., Charity Morgan, David McDowall, und Inmaculada Aban. 2013. „Zero-Inflated and Overdispersed: What’s One to Do?“ <em>Journal of Statistical Computation and Simulation</em> 83 (9): 1671–83. <a href="https://doi.org/10.1080/00949655.2012.668550" class="uri">https://doi.org/10.1080/00949655.2012.668550</a>.</p>
+<p>Perumean-Chaney, Suzanne E., Charity Morgan, David McDowall, und Inmaculada Aban. 2013. „Zero-Inflated and Overdispersed: What’s One to Do?“ <em>Journal of Statistical Computation and Simulation</em> 83 (9): 1671–83. <a href="https://doi.org/10.1080/00949655.2012.668550">https://doi.org/10.1080/00949655.2012.668550</a>.</p>
 </div>
-</div>
-<div class="footnotes">
-<hr />
-<ol start="3">
-<li id="fn3"><p>Das ist auch der Grund, warum in R nicht <code>glm()</code> verwendet werden kann, sondern eine separate Implementation mit expliziter Schätzung von <span class="math inline">\(\theta\)</span> benötigt wird (<code>MASS::glm.nb</code>)<a href="mod-nb.html#fnref3" class="footnote-back">↩</a></p></li>
-<li id="fn4"><p>Daher können Standardfehler nicht wie für canonical models üblich via OIM (<em>observed information matrix</em>) geschätzt werden, sondern via EIM (<em>expected information matrix</em>). Die EIM-Methode liefert weniger genaue Resultate für kleine Stichproben (n &lt; 30). So jedenfalls <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>.<a href="mod-nb.html#fnref4" class="footnote-back">↩</a></p></li>
-</ol>
 </div>
             </section>
 

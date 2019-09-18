@@ -62,9 +62,9 @@
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -73,16 +73,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -91,9 +91,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -196,7 +196,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="D" data-path="unsorted.html"><a href="unsorted.html"><i class="fa fa-check"></i><b>D</b> Unsorted</a><ul>
 <li class="chapter" data-level="D.0.1" data-path="unsorted.html"><a href="unsorted.html#general-advice"><i class="fa fa-check"></i><b>D.0.1</b> General Advice</a></li>
-<li class="chapter" data-level="D.0.2" data-path="unsorted.html"><a href="unsorted.html#beispiel-nach-hilbe-2014-p.211ff"><i class="fa fa-check"></i><b>D.0.2</b> Beispiel nach Hilbe (2014 p. 211ff)</a></li>
+<li class="chapter" data-level="D.0.2" data-path="unsorted.html"><a href="unsorted.html#beispiel-nach-hilbe-2014-p.-211ff"><i class="fa fa-check"></i><b>D.0.2</b> Beispiel nach Hilbe (2014 p. 211ff)</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="literatur.html"><a href="literatur.html"><i class="fa fa-check"></i>Literatur</a></li>
 <li class="divider"></li>
@@ -228,8 +228,12 @@ Im Folgenden werden zusätzlich einige formale Tests aufgeführt.</p>
 <h3><span class="header-section-number">4.1.1</span> Lagrange Mulitplier Test</h3>
 
 <div class="definition">
-<p><span id="def:unnamed-chunk-3" class="definition"><strong>Definition 4.1  (Lagrange Multiplier Test)  </strong></span>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 85f):</p>
+<p><span id="def:unnamed-chunk-3" class="definition"><strong>Definition 4.1  (Lagrange Multiplier Test)  </strong></span>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span> (p. 85f):</p>
 <p>Eine <span class="math inline">\(\chi^2\)</span>-Teststatistik mit einem Freiheitsgrad.</p>
+<p><span class="math display">\[\begin{equation}
+  \chi^2 = \frac{\left( \sum_{i=1}^n \hat{\mu}_i^2 - n \bar{y} \right)^2}
+                {2 \sum_{i=1}^n \hat{\mu}_i^2}
+\end{equation}\]</span></p>
 </div>
 
 <p>Eine rudimentäre R-Implementation findet sich in Abschnitt <a href="software-funs.html#helperfuns">1.2.2</a>.</p>
@@ -255,22 +259,22 @@ Mit <span class="math inline">\(\mathcal{L}_F\)</span> als log-likelihood des vo
 
 <blockquote>
 <p>It is important, though, to remember that the BLR test has a lower limiting case for the value of <span class="math inline">\(\alpha\)</span>, which is what is being tested. Given that the standard parameterization of the negative binomial variance function is <span class="math inline">\(\mu + \alpha \mu^2\)</span> , when <span class="math inline">\(\alpha = 0\)</span>, the variance reduces to <span class="math inline">\(\mu\)</span>.</p>
-<p>— <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 115</p>
+<p>— <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span>, p. 115</p>
 </blockquote>
-<p>Der resultierende Wert ist <span class="math inline">\(\chi^2_{(1)}\)</span>-verteilt. Der resultierende p-Wert muss zusätzlich halbiert werden <span class="citation">(siehe Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>, p. 115)</span>.</p>
+<p>Der resultierende Wert ist <span class="math inline">\(\chi^2_{(1)}\)</span>-verteilt. Der resultierende p-Wert muss zusätzlich halbiert werden <span class="citation">(siehe Hilbe <a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>, p. 115)</span>.</p>
 <blockquote>
 <p>Since the distribution being tested can go no lower than 0, that is the boundary. Only one half of the full distribution is used. Therefore the Chi2 (sic!) test is divided by 2</p>
-<p>— <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 115</p>
+<p>— <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span>, p. 115</p>
 </blockquote>
 <p>Am Beispiel der <code>rwm1984</code>-Daten:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="co"># Poisson-Modell</span></a>
-<a class="sourceLine" id="cb37-2" data-line-number="2">mod_p &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb37-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb37-4" data-line-number="4"><span class="co"># NB-Modell</span></a>
-<a class="sourceLine" id="cb37-5" data-line-number="5">mod_nb &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">glm.nb</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb37-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb37-7" data-line-number="7"><span class="co"># BLR: Recht eindeutig.</span></a>
-<a class="sourceLine" id="cb37-8" data-line-number="8">lmtest<span class="op">::</span><span class="kw">lrtest</span>(mod_p, mod_nb)</a></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="overdisp-diag.html#cb37-1"></a><span class="co"># Poisson-Modell</span></span>
+<span id="cb37-2"><a href="overdisp-diag.html#cb37-2"></a>mod_p &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</span>
+<span id="cb37-3"><a href="overdisp-diag.html#cb37-3"></a></span>
+<span id="cb37-4"><a href="overdisp-diag.html#cb37-4"></a><span class="co"># NB-Modell</span></span>
+<span id="cb37-5"><a href="overdisp-diag.html#cb37-5"></a>mod_nb &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">glm.nb</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> rwm1984)</span>
+<span id="cb37-6"><a href="overdisp-diag.html#cb37-6"></a></span>
+<span id="cb37-7"><a href="overdisp-diag.html#cb37-7"></a><span class="co"># BLR: Recht eindeutig.</span></span>
+<span id="cb37-8"><a href="overdisp-diag.html#cb37-8"></a>lmtest<span class="op">::</span><span class="kw">lrtest</span>(mod_p, mod_nb)</span></code></pre></div>
 <div class="kable-table">
 
 <table>
@@ -331,11 +335,11 @@ NA
 </tbody>
 </table>
 </div>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="co"># Bei gegebenem BLR-Wert von 4.2 ließe sich der p-Wert wie folgt berechnen:</span></a>
-<a class="sourceLine" id="cb38-2" data-line-number="2"><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="overdisp-diag.html#cb38-1"></a><span class="co"># Bei gegebenem BLR-Wert von 4.2 ließe sich der p-Wert wie folgt berechnen:</span></span>
+<span id="cb38-2"><a href="overdisp-diag.html#cb38-2"></a><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></span></code></pre></div>
 <pre><code>#&gt; [1] 0.02021199</code></pre>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="co"># Oder</span></a>
-<a class="sourceLine" id="cb40-2" data-line-number="2">(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>)) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="overdisp-diag.html#cb40-1"></a><span class="co"># Oder</span></span>
+<span id="cb40-2"><a href="overdisp-diag.html#cb40-2"></a>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>)) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></span></code></pre></div>
 <pre><code>#&gt; [1] 0.02021199</code></pre>
 </div>
 <div id="umgang-mit-overdispersion" class="section level3">
@@ -351,22 +355,22 @@ NA
 <h5>Quasipoisson: Skalierung der Standardfehler</h5>
 <p>Hier werden lediglich die Standardfehler der Koeffizienten eines Poisson-Modells adjustiert, die bei overdispersion i.d.R. unterschätzt werden – die eigentliche Parameterschätzung wird nicht beeinflusst:</p>
 <p><span class="math display">\[\mathrm{SE}(\beta_k) \cdot \sqrt{D}\]</span>
-Wobei <span class="math inline">\(D\)</span> der Pearson-Dispersionsindex ist (vgl. <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 92ff), den wir in <a href="dispersion.html#def:def-pearsondisp">2.5</a> als <span class="math inline">\(\frac{\chi^2_{\mathrm{Pearson}}}{\mathrm{df}}\)</span> definiert hatten.</p>
+Wobei <span class="math inline">\(D\)</span> der Pearson-Dispersionsindex ist (vgl. <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span>, p. 92ff), den wir in <a href="dispersion.html#def:def-pearsondisp">2.5</a> als <span class="math inline">\(\frac{\chi^2_{\mathrm{Pearson}}}{\mathrm{df}}\)</span> definiert hatten.</p>
 <p>Ein möglicher Nachteil jedoch: Es wird zuerst ein reguläres Poisson-Modell gefittet, Standardfehler und Dispersionsindex bestimmt, und dann dasselbe Modell mit skalierten Standardfehlern erneut gefittet – dementsprechend ist diese Methode vermutlich für größere Datensätze eher ineffizient.</p>
 <p>Einmal auf unser voriges Beispiel anhand der <code>rwm5yr</code>-Daten angewandt:</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="co"># Urprüngliches Model</span></a>
-<a class="sourceLine" id="cb42-2" data-line-number="2">mod &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb42-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb42-4" data-line-number="4">mod_qp &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">quasipoisson</span>(), <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb42-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb42-6" data-line-number="6"><span class="kw">dispersion</span>(mod)</a></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="overdisp-diag.html#cb42-1"></a><span class="co"># Urprüngliches Model</span></span>
+<span id="cb42-2"><a href="overdisp-diag.html#cb42-2"></a>mod &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</span>
+<span id="cb42-3"><a href="overdisp-diag.html#cb42-3"></a></span>
+<span id="cb42-4"><a href="overdisp-diag.html#cb42-4"></a>mod_qp &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">quasipoisson</span>(), <span class="dt">data =</span> rwm1984)</span>
+<span id="cb42-5"><a href="overdisp-diag.html#cb42-5"></a></span>
+<span id="cb42-6"><a href="overdisp-diag.html#cb42-6"></a><span class="kw">dispersion</span>(mod)</span></code></pre></div>
 <pre><code>#&gt; X-squared(3871) = 43909.62
 #&gt; Pearson Dispersion = 11.343</code></pre>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="kw">dispersion</span>(mod_qp)</a></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="overdisp-diag.html#cb44-1"></a><span class="kw">dispersion</span>(mod_qp)</span></code></pre></div>
 <pre><code>#&gt; X-squared(3871) = 43909.62
 #&gt; Pearson Dispersion = 11.343</code></pre>
 <p>An der Dispersion hat sich nichts geändert, nur an den Standardfehlern der Koeffizienten (in folgenden Tabellen auf log-Skala):</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="kw">pander</span>(mod, <span class="dt">caption =</span> <span class="st">&quot;Poisson-Modell&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="overdisp-diag.html#cb46-1"></a><span class="kw">pander</span>(mod, <span class="dt">caption =</span> <span class="st">&quot;Poisson-Modell&quot;</span>)</span></code></pre></div>
 <table style="width:90%;">
 <caption>Poisson-Modell</caption>
 <colgroup>
@@ -409,7 +413,7 @@ Wobei <span class="math inline">\(D\)</span> der Pearson-Dispersionsindex ist (v
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1"><span class="kw">pander</span>(mod_qp, <span class="dt">caption =</span> <span class="st">&quot;Quasipoisson-Modell&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="overdisp-diag.html#cb47-1"></a><span class="kw">pander</span>(mod_qp, <span class="dt">caption =</span> <span class="st">&quot;Quasipoisson-Modell&quot;</span>)</span></code></pre></div>
 <table style="width:89%;">
 <caption>Quasipoisson-Modell</caption>
 <colgroup>
@@ -455,19 +459,19 @@ Wobei <span class="math inline">\(D\)</span> der Pearson-Dispersionsindex ist (v
 <p>In diesem Fall “lohnt” sich dieser Ansatz zwar eher nicht, da wir neben overdispersion noch ein Problem mit zero-inflation haben, aber in manchen Fällen kann Quasipoisson-Methode ausreichen.</p>
 <blockquote>
 <p>“Scaling is an easy, quick-and-dirty method of adjusting standard errors for overdispersion. However, when data are highly correlated or clustered, model slopes or coefficients usually need to be adjusted as well. Scaling does not accommodate that need, but simulations demonstrate that it is quite useful for models with little to moderate overdispersion.”</p>
-<p>— <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 96)</p>
+<p>— <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span> (p. 96)</p>
 </blockquote>
 </div>
 <div id="sandwich" class="section level4">
 <h4><span class="header-section-number">4.1.3.1</span> Robuste Varianzschätzer (Sandwich Estimators)</h4>
 <p>(Andere Namen: Huber &amp; White standard errors, empirical standard errors)</p>
 <p>Sandwich estimators sind in erster Linie für nicht unabhängige bzw. korrellierte Daten gedacht, zum Beispiel für Daten, die innerhalb mehrere Haushalte, Krankenhäuser, Städte etc. gesammelt wurden.</p>
-<p>Robuste Varianzschätzer können (und je nach Quelle: <em>sollten</em>) standardmäßig für Count-response Daten verwendet werden, da die resultierenden Schätzer im Falle tatsächlich unkorrellierter Daten äquivalent zu den Standardfehlern des ursprünglichen Modells sind (i.e. “schadet nicht”).</p>
+<p>Robuste Varianzschätzer können (und je nach Quelle: <em>sollten</em>) standardmäßig für Count-response Daten verwendet werden, da die resultierenden Schätzer im Falle tatsächlich unkorrellierter Daten äquivalent zu den Standardfehlern des ursprünglichen Modells sind (i.e. “schadet nicht”).</p>
 <p>Bootstrapped SEs wiederum erfordern mehr Aufwand, ähneln aber den robusten SEs sowieso sehr stark, weshalb sich der Aufwand ggf. nicht wirklich lohnt.</p>
-<p>Siehe <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 99f) für eine ausführlichere Beschreibung. Zudem gibt der Autor explizit den Rat:</p>
+<p>Siehe <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span> (p. 99f) für eine ausführlichere Beschreibung. Zudem gibt der Autor explizit den Rat:</p>
 <blockquote>
 <p>“Unless your Poisson or negative binomial model is well fitted and meets its respective distributional assumptions, use robust or empirical standard errors as a default”</p>
-<p>— <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 133)</p>
+<p>— <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span> (p. 133)</p>
 </blockquote>
 </div>
 </div>
@@ -475,7 +479,7 @@ Wobei <span class="math inline">\(D\)</span> der Pearson-Dispersionsindex ist (v
 <h3>Literatur</h3>
 <div id="refs" class="references">
 <div id="ref-hilbeModelingCountData2014">
-<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065" class="uri">https://doi.org/10.1017/CBO9781139236065</a>.</p>
+<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065">https://doi.org/10.1017/CBO9781139236065</a>.</p>
 </div>
 </div>
             </section>
