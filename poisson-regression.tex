@@ -140,7 +140,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{Stand: 18. September 2019 15:31 Uhr (CEST)}
+    \date{Stand: 18. September 2019 16:57 Uhr (CEST)}
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -408,7 +408,7 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die pr
 \toprule
 N & Missing & Mittelwert & Varianz & Range\\
 \midrule
-100 & 10 & 4.83 & 6.03 & [1, 14]\\
+100 & 10 & 4.91 & 4.19 & [1, 10]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1458,6 +1458,8 @@ Mit zu modellierendem Erwartungswert
 Wobei \(\pi\) in der Regel binomial, bzw. mittels logistischer Regression geschätzt wird.
 \EndKnitrBlock{definition}
 
+Und im Speziellen, anhand der Beispiele ZIP und ZINB:
+
 \BeginKnitrBlock{definition}[Zero-Inflated Poisson Verteilung (ZIP)]
 \protect\hypertarget{def:defzip}{}{\label{def:defzip} \iffalse (Zero-Inflated Poisson Verteilung (ZIP)) \fi{} }Nach \citet{perumean-chaneyZeroinflatedOverdispersedWhat2013} (p.~1675)
 
@@ -1475,6 +1477,9 @@ P(Y = 0) &= \pi + (1 - \pi) \cdot \frac{\theta^\theta}{(\theta + \mu)^\theta}  \
 P(Y = y) &= (1 - \pi) \cdot \frac{\Gamma(\theta+y)}{\Gamma(\theta) \Gamma(y + 1)} \frac{\theta^\theta \mu^y}{(\theta + \mu)^{(\theta + y)}}, \quad y = 1, 2, 3, \ldots
 \end{align*}
 \EndKnitrBlock{definition}
+
+\hypertarget{interpretation}{%
+\subsubsection{Interpretation}\label{interpretation}}
 
 Ein Anwendungsbeispiel der ZIP findet sich auf der Seite der UCLA (\href{https://stats.idre.ucla.edu/sas/dae/zero-inflatedpoisson-regression/}{SAS}, \href{https://stats.idre.ucla.edu/r/dae/zip/}{R}, zusätzlich gibt es einmal \href{https://stats.idre.ucla.edu/sas/output/zero-inflated-poisson-regression/}{annotated Output (SAS)}), wobei der \texttt{fish}-Datensatz verwendet wird.
 
@@ -1543,12 +1548,44 @@ Wir erhalten zwei Sets an Koeffizienten:
 Aus dem UCLA DAE:
 
 \begin{quote}
-\textbf{persons}: If a group were to increase its persons value by one, the odds that it would be in the \enquote{Certain Zero} group would decrease by a factor of exp(-0.5643) = 0.5687581. In other words, the more people in a group, the less likely the group is a certain zero.
+\textbf{persons}: If a group were to increase its persons value by one, \textbf{the odds that it would be in the \enquote{Certain Zero} group} would decrease by a factor of exp(-0.5643) = 0.5687581. In other words, the more people in a group, the less likely the group is a certain zero.
 \end{quote}
 
 \begin{quote}
 \textbf{Intercept}: If all of the predictor variables in the model are evaluated at zero, the odds of being a \enquote{Certain Zero} is exp(1.2974) = 3.659769. This means that the predicted odds of a group with zero persons is 3.659769 (though remember that evaluating persons at zero is out of the range of plausible values--every group must have at least one person).
 \end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nsim <-}\StringTok{ }\DecValTok{10}\OperatorTok{^}\DecValTok{4}
+\NormalTok{meansim <-}\StringTok{ }\DecValTok{2}
+
+\NormalTok{tibble}\OperatorTok{::}\KeywordTok{tibble}\NormalTok{(}
+  \DataTypeTok{counts =} \KeywordTok{rpois}\NormalTok{(}\DataTypeTok{n =}\NormalTok{ nsim, }\DataTypeTok{lambda =}\NormalTok{ meansim),}
+\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{count}\NormalTok{(counts, }\DataTypeTok{name =} \StringTok{"Poisson"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}
+    \DataTypeTok{Zeros =} \KeywordTok{floor}\NormalTok{(Poisson}\OperatorTok{/}\DecValTok{2}\NormalTok{),}
+    \DataTypeTok{Zeros =} \KeywordTok{ifelse}\NormalTok{(counts }\OperatorTok{>}\StringTok{ }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, Zeros)}
+\NormalTok{  ) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gather}\NormalTok{(source, freq, Poisson, Zeros) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{source =}\NormalTok{ forcats}\OperatorTok{::}\KeywordTok{fct_rev}\NormalTok{(source),}
+         \DataTypeTok{freq =}\NormalTok{ freq}\OperatorTok{/}\NormalTok{nsim) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ counts, }\DataTypeTok{y =}\NormalTok{ freq, }\DataTypeTok{fill =}\NormalTok{ source)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_col}\NormalTok{(}\DataTypeTok{alpha =} \FloatTok{.75}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_x_continuous}\NormalTok{(}\DataTypeTok{breaks =} \KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{12}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_fill_brewer}\NormalTok{(}\DataTypeTok{palette =} \StringTok{"Set1"}\NormalTok{, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\DataTypeTok{Zeros =} \StringTok{"Certain Zeros"}\NormalTok{, }\DataTypeTok{Poisson =} \StringTok{"Poisson-Modell"}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}
+    \DataTypeTok{title =} \StringTok{"Schaubild: Zero-Inflated Poisson"}\NormalTok{,}
+    \DataTypeTok{subtitle =} \StringTok{"Nullen in den Daten: Certain zeros + count zeros"}\NormalTok{,}
+    \DataTypeTok{x =} \StringTok{"Count"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Anteil an Gesamtsichtprobe"}\NormalTok{, }\DataTypeTok{fill =} \StringTok{""}\NormalTok{,}
+    \DataTypeTok{caption =} \StringTok{"Simulierte Daten"}
+\NormalTok{  ) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{"bottom"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{poisson-regression_files/figure-latex/zi-principle-plot-1} \end{center}
 
 \hypertarget{anwendung}{%
 \section{Anwendung}\label{anwendung}}
@@ -1821,7 +1858,7 @@ expected\strut
 \begin{center}\includegraphics{poisson-regression_files/figure-latex/diag_compare_expected-1} \end{center}
 
 Anhand der ersten Tabelle können wir recht schnell erkennen, dass wir hier \emph{deutlich} mehr Nullen beobachten als das Modell vorhersagt -- mehr dazu in Abschnitt \ref{zeros}.\\
-Der Plot veranschaulicht den eher suboptimalen model fit unter diesen Umständen (overdispersion \& zero-inflation).
+Der Plot veranschaulicht den eher suboptimalen model fit unter diesen Umständen (overdispersion und (bzw. bedingt durch) zero-inflation).
 
 \hypertarget{overdisp-diag}{%
 \subsection{Overdispersion: Erkennung und Handhabung}\label{overdisp-diag}}

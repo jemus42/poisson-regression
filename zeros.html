@@ -165,7 +165,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.5.1" data-path="diagnostische-modelle.html"><a href="diagnostische-modelle.html#mod-nbh"><i class="fa fa-check"></i><b>3.5.1</b> Heterogenous Negative Binomial (NBH)</a></li>
 <li class="chapter" data-level="3.5.2" data-path="diagnostische-modelle.html"><a href="diagnostische-modelle.html#mod-nbp"><i class="fa fa-check"></i><b>3.5.2</b> Negative binomial-P (NB-P)</a></li>
 </ul></li>
-<li class="chapter" data-level="3.6" data-path="mod-zi.html"><a href="mod-zi.html"><i class="fa fa-check"></i><b>3.6</b> Zero-Inflated Models (<em>mixture models</em>)</a></li>
+<li class="chapter" data-level="3.6" data-path="mod-zi.html"><a href="mod-zi.html"><i class="fa fa-check"></i><b>3.6</b> Zero-Inflated Models (<em>mixture models</em>)</a><ul>
+<li class="chapter" data-level="3.6.1" data-path="mod-zi.html"><a href="mod-zi.html#interpretation"><i class="fa fa-check"></i><b>3.6.1</b> Interpretation</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="anwendung.html"><a href="anwendung.html"><i class="fa fa-check"></i><b>4</b> Anwendung</a><ul>
 <li class="chapter" data-level="4.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html"><i class="fa fa-check"></i><b>4.1</b> Overdispersion: Erkennung und Handhabung</a><ul>
@@ -243,8 +245,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 Wenn es eine echte Trennung der Mechanismen (<em>“separation of mechanisms”</em>) gibt, die die Nullen und die positiven counts verursachen, dann wäre ein hurdle model eher angemessen. IDas würde allerdings auch annehmen, dass alle Nullen <em>die gleiche</em> Ursache haben.</p>
 <p>Wenn sich die Nullen überlappen, es also keine getrennten Prozesse zu geben scheint, dann wären zero-inflated models angemessen <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>, p. 209)</span>.</p>
 <p>Als Veranschaulichung für zwei sich überlappende Mechanismen können wir das <em>fish</em>-Beispiel auf <a href="https://stats.idre.ucla.edu/sas/output/zero-inflated-poisson-regression/">dieser UCLA-Tutorialseite verwenden</a>. Hier ist die Anzahl der gefangenen Fische an einem Wochenende in einem Park die Zählvariable.</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1"><span class="co"># Mittelwert &amp; Varianz von &#39;count&#39;</span></a>
-<a class="sourceLine" id="cb47-2" data-line-number="2"><span class="kw">describe_counts</span>(fish<span class="op">$</span>count)</a></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1"><span class="co"># Mittelwert &amp; Varianz von &#39;count&#39;</span></a>
+<a class="sourceLine" id="cb48-2" data-line-number="2"><span class="kw">describe_counts</span>(fish<span class="op">$</span>count)</a></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -285,17 +287,17 @@ Range
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1"><span class="co"># Barchart für counts &lt;= 50, Spannweite sehr groß</span></a>
-<a class="sourceLine" id="cb48-2" data-line-number="2">fish <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb48-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(count <span class="op">&lt;=</span><span class="st"> </span><span class="dv">50</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb48-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> count)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb48-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">alpha =</span> <span class="fl">.75</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb48-6" data-line-number="6"><span class="st">  </span><span class="kw">scale_x_continuous</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb48-7" data-line-number="7"><span class="st">  </span><span class="kw">labs</span>(</a>
-<a class="sourceLine" id="cb48-8" data-line-number="8">    <span class="dt">title =</span> <span class="st">&quot;&#39;fish&#39;: Anzahl gefangener Fische&quot;</span>,</a>
-<a class="sourceLine" id="cb48-9" data-line-number="9">    <span class="dt">subtitle =</span> <span class="st">&quot;Limitiert auf counts unter 50&quot;</span>,</a>
-<a class="sourceLine" id="cb48-10" data-line-number="10">    <span class="dt">x =</span> <span class="st">&quot;Anzahl gefangener Fischer&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span></a>
-<a class="sourceLine" id="cb48-11" data-line-number="11">  )</a></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1"><span class="co"># Barchart für counts &lt;= 50, Spannweite sehr groß</span></a>
+<a class="sourceLine" id="cb49-2" data-line-number="2">fish <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb49-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(count <span class="op">&lt;=</span><span class="st"> </span><span class="dv">50</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb49-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> count)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb49-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">alpha =</span> <span class="fl">.75</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb49-6" data-line-number="6"><span class="st">  </span><span class="kw">scale_x_continuous</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb49-7" data-line-number="7"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb49-8" data-line-number="8">    <span class="dt">title =</span> <span class="st">&quot;&#39;fish&#39;: Anzahl gefangener Fische&quot;</span>,</a>
+<a class="sourceLine" id="cb49-9" data-line-number="9">    <span class="dt">subtitle =</span> <span class="st">&quot;Limitiert auf counts unter 50&quot;</span>,</a>
+<a class="sourceLine" id="cb49-10" data-line-number="10">    <span class="dt">x =</span> <span class="st">&quot;Anzahl gefangener Fischer&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span></a>
+<a class="sourceLine" id="cb49-11" data-line-number="11">  )</a></code></pre></div>
 <p><img src="poisson-regression_files/figure-html/fishing_zeros-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Die Anzahl der Nullen ist hier auffallend groß – allerdings beobachten wir hier auch zwei unterschiedliche Mechanismen, die sich überlappen: Eine Gruppe kann das ganze Wochenende geangelt haben, während eine andere Gruppe gar nicht geangelt hat – beide Gruppen werden jedoch am Ende nach der Anzahl ihrer gefangenen Fische befragt, weshalb wir in den Daten Nullen mit unterschiedlichem “Ursprung” erhalten</p>
 <p>Da es hier nicht angemessen wäre, die Nullen und die positiven counts getrennt zu Modellieren, würden wir hier ein <em>zero-inflated</em> Modell (z.B ZIP, ZINB, …) verwenden.</p>

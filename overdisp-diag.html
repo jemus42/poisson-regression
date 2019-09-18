@@ -165,7 +165,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.5.1" data-path="diagnostische-modelle.html"><a href="diagnostische-modelle.html#mod-nbh"><i class="fa fa-check"></i><b>3.5.1</b> Heterogenous Negative Binomial (NBH)</a></li>
 <li class="chapter" data-level="3.5.2" data-path="diagnostische-modelle.html"><a href="diagnostische-modelle.html#mod-nbp"><i class="fa fa-check"></i><b>3.5.2</b> Negative binomial-P (NB-P)</a></li>
 </ul></li>
-<li class="chapter" data-level="3.6" data-path="mod-zi.html"><a href="mod-zi.html"><i class="fa fa-check"></i><b>3.6</b> Zero-Inflated Models (<em>mixture models</em>)</a></li>
+<li class="chapter" data-level="3.6" data-path="mod-zi.html"><a href="mod-zi.html"><i class="fa fa-check"></i><b>3.6</b> Zero-Inflated Models (<em>mixture models</em>)</a><ul>
+<li class="chapter" data-level="3.6.1" data-path="mod-zi.html"><a href="mod-zi.html#interpretation"><i class="fa fa-check"></i><b>3.6.1</b> Interpretation</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="anwendung.html"><a href="anwendung.html"><i class="fa fa-check"></i><b>4</b> Anwendung</a><ul>
 <li class="chapter" data-level="4.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html"><i class="fa fa-check"></i><b>4.1</b> Overdispersion: Erkennung und Handhabung</a><ul>
@@ -261,14 +263,14 @@ Mit <span class="math inline">\(\mathcal{L}_F\)</span> als log-likelihood des vo
 <p>— <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 115</p>
 </blockquote>
 <p>Am Beispiel der <code>rwm1984</code>-Daten:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="co"># Poisson-Modell</span></a>
-<a class="sourceLine" id="cb36-2" data-line-number="2">mod_p &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb36-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb36-4" data-line-number="4"><span class="co"># NB-Modell</span></a>
-<a class="sourceLine" id="cb36-5" data-line-number="5">mod_nb &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">glm.nb</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb36-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb36-7" data-line-number="7"><span class="co"># BLR: Recht eindeutig.</span></a>
-<a class="sourceLine" id="cb36-8" data-line-number="8">lmtest<span class="op">::</span><span class="kw">lrtest</span>(mod_p, mod_nb)</a></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="co"># Poisson-Modell</span></a>
+<a class="sourceLine" id="cb37-2" data-line-number="2">mod_p &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb37-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb37-4" data-line-number="4"><span class="co"># NB-Modell</span></a>
+<a class="sourceLine" id="cb37-5" data-line-number="5">mod_nb &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">glm.nb</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb37-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb37-7" data-line-number="7"><span class="co"># BLR: Recht eindeutig.</span></a>
+<a class="sourceLine" id="cb37-8" data-line-number="8">lmtest<span class="op">::</span><span class="kw">lrtest</span>(mod_p, mod_nb)</a></code></pre></div>
 <div class="kable-table">
 
 <table>
@@ -329,11 +331,11 @@ NA
 </tbody>
 </table>
 </div>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="co"># Bei gegebenem BLR-Wert von 4.2 ließe sich der p-Wert wie folgt berechnen:</span></a>
-<a class="sourceLine" id="cb37-2" data-line-number="2"><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="co"># Bei gegebenem BLR-Wert von 4.2 ließe sich der p-Wert wie folgt berechnen:</span></a>
+<a class="sourceLine" id="cb38-2" data-line-number="2"><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
 <pre><code>#&gt; [1] 0.02021199</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1"><span class="co"># Oder</span></a>
-<a class="sourceLine" id="cb39-2" data-line-number="2">(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>)) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="co"># Oder</span></a>
+<a class="sourceLine" id="cb40-2" data-line-number="2">(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>)) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
 <pre><code>#&gt; [1] 0.02021199</code></pre>
 </div>
 <div id="umgang-mit-overdispersion" class="section level3">
@@ -352,19 +354,19 @@ NA
 Wobei <span class="math inline">\(D\)</span> der Pearson-Dispersionsindex ist (vgl. <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 92ff), den wir in <a href="dispersion.html#def:def-pearsondisp">2.5</a> als <span class="math inline">\(\frac{\chi^2_{\mathrm{Pearson}}}{\mathrm{df}}\)</span> definiert hatten.</p>
 <p>Ein möglicher Nachteil jedoch: Es wird zuerst ein reguläres Poisson-Modell gefittet, Standardfehler und Dispersionsindex bestimmt, und dann dasselbe Modell mit skalierten Standardfehlern erneut gefittet – dementsprechend ist diese Methode vermutlich für größere Datensätze eher ineffizient.</p>
 <p>Einmal auf unser voriges Beispiel anhand der <code>rwm5yr</code>-Daten angewandt:</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="co"># Urprüngliches Model</span></a>
-<a class="sourceLine" id="cb41-2" data-line-number="2">mod &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb41-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb41-4" data-line-number="4">mod_qp &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">quasipoisson</span>(), <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb41-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb41-6" data-line-number="6"><span class="kw">dispersion</span>(mod)</a></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="co"># Urprüngliches Model</span></a>
+<a class="sourceLine" id="cb42-2" data-line-number="2">mod &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb42-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb42-4" data-line-number="4">mod_qp &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">quasipoisson</span>(), <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb42-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb42-6" data-line-number="6"><span class="kw">dispersion</span>(mod)</a></code></pre></div>
 <pre><code>#&gt; X-squared(3871) = 43909.62
 #&gt; Pearson Dispersion = 11.343</code></pre>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="kw">dispersion</span>(mod_qp)</a></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="kw">dispersion</span>(mod_qp)</a></code></pre></div>
 <pre><code>#&gt; X-squared(3871) = 43909.62
 #&gt; Pearson Dispersion = 11.343</code></pre>
 <p>An der Dispersion hat sich nichts geändert, nur an den Standardfehlern der Koeffizienten (in folgenden Tabellen auf log-Skala):</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="kw">pander</span>(mod, <span class="dt">caption =</span> <span class="st">&quot;Poisson-Modell&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="kw">pander</span>(mod, <span class="dt">caption =</span> <span class="st">&quot;Poisson-Modell&quot;</span>)</a></code></pre></div>
 <table style="width:90%;">
 <caption>Poisson-Modell</caption>
 <colgroup>
@@ -407,7 +409,7 @@ Wobei <span class="math inline">\(D\)</span> der Pearson-Dispersionsindex ist (v
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="kw">pander</span>(mod_qp, <span class="dt">caption =</span> <span class="st">&quot;Quasipoisson-Modell&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1"><span class="kw">pander</span>(mod_qp, <span class="dt">caption =</span> <span class="st">&quot;Quasipoisson-Modell&quot;</span>)</a></code></pre></div>
 <table style="width:89%;">
 <caption>Quasipoisson-Modell</caption>
 <colgroup>

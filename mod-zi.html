@@ -165,7 +165,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.5.1" data-path="diagnostische-modelle.html"><a href="diagnostische-modelle.html#mod-nbh"><i class="fa fa-check"></i><b>3.5.1</b> Heterogenous Negative Binomial (NBH)</a></li>
 <li class="chapter" data-level="3.5.2" data-path="diagnostische-modelle.html"><a href="diagnostische-modelle.html#mod-nbp"><i class="fa fa-check"></i><b>3.5.2</b> Negative binomial-P (NB-P)</a></li>
 </ul></li>
-<li class="chapter" data-level="3.6" data-path="mod-zi.html"><a href="mod-zi.html"><i class="fa fa-check"></i><b>3.6</b> Zero-Inflated Models (<em>mixture models</em>)</a></li>
+<li class="chapter" data-level="3.6" data-path="mod-zi.html"><a href="mod-zi.html"><i class="fa fa-check"></i><b>3.6</b> Zero-Inflated Models (<em>mixture models</em>)</a><ul>
+<li class="chapter" data-level="3.6.1" data-path="mod-zi.html"><a href="mod-zi.html#interpretation"><i class="fa fa-check"></i><b>3.6.1</b> Interpretation</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="anwendung.html"><a href="anwendung.html"><i class="fa fa-check"></i><b>4</b> Anwendung</a><ul>
 <li class="chapter" data-level="4.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html"><i class="fa fa-check"></i><b>4.1</b> Overdispersion: Erkennung und Handhabung</a><ul>
@@ -234,6 +236,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 Wobei <span class="math inline">\(\pi\)</span> in der Regel binomial, bzw. mittels logistischer Regression geschätzt wird.
 </div>
 
+<p>Und im Speziellen, anhand der Beispiele ZIP und ZINB:</p>
 
 <div class="definition">
 <p><span id="def:defzip" class="definition"><strong>Definition 3.10  (Zero-Inflated Poisson Verteilung (ZIP))  </strong></span>Nach <span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">2013</a>)</span> (p. 1675)</p>
@@ -252,6 +255,8 @@ P(Y = y) &amp;= (1 - \pi) \cdot \frac{\Gamma(\theta+y)}{\Gamma(\theta) \Gamma(y 
 \end{align*}\]</span>
 </div>
 
+<div id="interpretation" class="section level3">
+<h3><span class="header-section-number">3.6.1</span> Interpretation</h3>
 <p>Ein Anwendungsbeispiel der ZIP findet sich auf der Seite der UCLA (<a href="https://stats.idre.ucla.edu/sas/dae/zero-inflatedpoisson-regression/">SAS</a>, <a href="https://stats.idre.ucla.edu/r/dae/zip/">R</a>, zusätzlich gibt es einmal <a href="https://stats.idre.ucla.edu/sas/output/zero-inflated-poisson-regression/">annotated Output (SAS)</a>), wobei der <code>fish</code>-Datensatz verwendet wird.</p>
 <p>In diesem Datensatz beobachten wir Nullen mit zwei unterschiedlichen Ursprüngen: Zum Einen haben wir die Nullen der Personen, die geangelt haben, aber keine Fische fingen – und zum Anderen haben wir die Nullen der Personen, die <em>nicht angelten</em>, und daher garantiert auch keine Fische fingen (“<em>certain zeros</em>”) (vgl. auch Abschnitt <a href="zeros.html#zi-modelling">4.2.2</a>).</p>
 <p>Ein ZIP-Modell erlaubt uns hier also beide Komponenten zu berücksichtigen – sowohl die Personen, die erfolglos angelten, als auch die Personen, die gar nicht angelten.</p>
@@ -346,12 +351,39 @@ zero_persons
 <p><strong>Inflation-model</strong>: Die binomiale Komponente (<code>zeros_</code>) für die <em>excess zeros</em>, womit wir die Wahrscheinlichkeit von “certain zeros” modellieren. Diese Koeffizienten werden analog einer logistischen Regression interpretiert.<br />
 Aus dem UCLA DAE:</p>
 <blockquote>
-<p><strong>persons</strong>: If a group were to increase its persons value by one, the odds that it would be in the “Certain Zero” group would decrease by a factor of exp(-0.5643) = 0.5687581. In other words, the more people in a group, the less likely the group is a certain zero.</p>
+<p><strong>persons</strong>: If a group were to increase its persons value by one, <strong>the odds that it would be in the “Certain Zero” group</strong> would decrease by a factor of exp(-0.5643) = 0.5687581. In other words, the more people in a group, the less likely the group is a certain zero.</p>
 </blockquote>
 <blockquote>
 <p><strong>Intercept</strong>: If all of the predictor variables in the model are evaluated at zero, the odds of being a “Certain Zero” is exp(1.2974) = 3.659769. This means that the predicted odds of a group with zero persons is 3.659769 (though remember that evaluating persons at zero is out of the range of plausible values–every group must have at least one person).</p>
 </blockquote>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1">nsim &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="dv">4</span></a>
+<a class="sourceLine" id="cb32-2" data-line-number="2">meansim &lt;-<span class="st"> </span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb32-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb32-4" data-line-number="4">tibble<span class="op">::</span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb32-5" data-line-number="5">  <span class="dt">counts =</span> <span class="kw">rpois</span>(<span class="dt">n =</span> nsim, <span class="dt">lambda =</span> meansim),</a>
+<a class="sourceLine" id="cb32-6" data-line-number="6">) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb32-7" data-line-number="7"><span class="st">  </span><span class="kw">count</span>(counts, <span class="dt">name =</span> <span class="st">&quot;Poisson&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb32-8" data-line-number="8"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb32-9" data-line-number="9">    <span class="dt">Zeros =</span> <span class="kw">floor</span>(Poisson<span class="op">/</span><span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb32-10" data-line-number="10">    <span class="dt">Zeros =</span> <span class="kw">ifelse</span>(counts <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, Zeros)</a>
+<a class="sourceLine" id="cb32-11" data-line-number="11">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb32-12" data-line-number="12"><span class="st">  </span><span class="kw">gather</span>(source, freq, Poisson, Zeros) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb32-13" data-line-number="13"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">source =</span> forcats<span class="op">::</span><span class="kw">fct_rev</span>(source),</a>
+<a class="sourceLine" id="cb32-14" data-line-number="14">         <span class="dt">freq =</span> freq<span class="op">/</span>nsim) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb32-15" data-line-number="15"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> counts, <span class="dt">y =</span> freq, <span class="dt">fill =</span> source)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb32-16" data-line-number="16"><span class="st">  </span><span class="kw">geom_col</span>(<span class="dt">alpha =</span> <span class="fl">.75</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb32-17" data-line-number="17"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">12</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb32-18" data-line-number="18"><span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>, <span class="dt">labels =</span> <span class="kw">c</span>(<span class="dt">Zeros =</span> <span class="st">&quot;Certain Zeros&quot;</span>, <span class="dt">Poisson =</span> <span class="st">&quot;Poisson-Modell&quot;</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb32-19" data-line-number="19"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb32-20" data-line-number="20">    <span class="dt">title =</span> <span class="st">&quot;Schaubild: Zero-Inflated Poisson&quot;</span>,</a>
+<a class="sourceLine" id="cb32-21" data-line-number="21">    <span class="dt">subtitle =</span> <span class="st">&quot;Nullen in den Daten: Certain zeros + count zeros&quot;</span>,</a>
+<a class="sourceLine" id="cb32-22" data-line-number="22">    <span class="dt">x =</span> <span class="st">&quot;Count&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Anteil an Gesamtsichtprobe&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb32-23" data-line-number="23">    <span class="dt">caption =</span> <span class="st">&quot;Simulierte Daten&quot;</span></a>
+<a class="sourceLine" id="cb32-24" data-line-number="24">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb32-25" data-line-number="25"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</a></code></pre></div>
+<p><img src="poisson-regression_files/figure-html/zi-principle-plot-1.png" width="768" style="display: block; margin: auto;" /></p>
 
+</div>
 </div>
 <!-- </div> -->
 <h3>Literatur</h3>
