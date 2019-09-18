@@ -402,6 +402,7 @@ Mit zu modellierendem Erwartungswert
 Wobei $\pi$ in der Regel binomial, bzw. mittels logistischer Regression geschätzt wird.
 ```
 
+Und im Speziellen, anhand der Beispiele ZIP und ZINB:
 
 ```{definition defzip, name = "Zero-Inflated Poisson Verteilung (ZIP)"}
 Nach @perumean-chaneyZeroinflatedOverdispersedWhat2013 (p. 1675)
@@ -420,6 +421,8 @@ P(Y = 0) &= \pi + (1 - \pi) \cdot \frac{\theta^\theta}{(\theta + \mu)^\theta}  \
 P(Y = y) &= (1 - \pi) \cdot \frac{\Gamma(\theta+y)}{\Gamma(\theta) \Gamma(y + 1)} \frac{\theta^\theta \mu^y}{(\theta + \mu)^{(\theta + y)}}, \quad y = 1, 2, 3, \ldots
 \end{align*}
 ```
+
+### Interpretation
 
 Ein Anwendungsbeispiel der ZIP findet sich auf der Seite der UCLA ([SAS](https://stats.idre.ucla.edu/sas/dae/zero-inflatedpoisson-regression/), [R](https://stats.idre.ucla.edu/r/dae/zip/), zusätzlich gibt es einmal [annotated Output (SAS)](https://stats.idre.ucla.edu/sas/output/zero-inflated-poisson-regression/)), wobei der `fish`-Datensatz verwendet wird.
 
@@ -444,6 +447,36 @@ Wir erhalten zwei Sets an Koeffizienten:
 **Inflation-model**: Die binomiale Komponente (`zeros_`) für die *excess zeros*, womit wir die Wahrscheinlichkeit von "certain zeros" modellieren. Diese Koeffizienten werden analog einer logistischen Regression interpretiert.  
 Aus dem UCLA DAE:
 
-> **persons**: If a group were to increase its persons value by one, the odds that it would be in the "Certain Zero" group would decrease by a factor of exp(-0.5643) = 0.5687581. In other words, the more people in a group, the less likely the group is a certain zero.
+> **persons**: If a group were to increase its persons value by one, **the odds that it would be in the "Certain Zero" group** would decrease by a factor of exp(-0.5643) = 0.5687581. In other words, the more people in a group, the less likely the group is a certain zero.
 
 > **Intercept**: If all of the predictor variables in the model are evaluated at zero, the odds of being a "Certain Zero" is exp(1.2974) = 3.659769.  This means that the predicted odds of a group with zero persons is  3.659769 (though remember that evaluating persons at zero is out of the range of plausible values–every group must have at least one person). 
+
+
+```{r zi-principle-plot}
+nsim <- 10^4
+meansim <- 2
+
+tibble::tibble(
+  counts = rpois(n = nsim, lambda = meansim),
+) %>%
+  count(counts, name = "Poisson") %>%
+  mutate(
+    Zeros = floor(Poisson/2),
+    Zeros = ifelse(counts > 0, 0, Zeros)
+  ) %>%
+  gather(source, freq, Poisson, Zeros) %>%
+  mutate(source = forcats::fct_rev(source),
+         freq = freq/nsim) %>%
+  ggplot(aes(x = counts, y = freq, fill = source)) +
+  geom_col(alpha = .75) +
+  scale_x_continuous(breaks = seq(0, 12)) +
+  scale_fill_brewer(palette = "Set1", labels = c(Zeros = "Certain Zeros", Poisson = "Poisson-Modell")) +
+  labs(
+    title = "Schaubild: Zero-Inflated Poisson",
+    subtitle = "Nullen in den Daten: Certain zeros + count zeros",
+    x = "Count", y = "Anteil an Gesamtsichtprobe", fill = "",
+    caption = "Simulierte Daten"
+  ) +
+  theme(legend.position = "bottom")
+```
+

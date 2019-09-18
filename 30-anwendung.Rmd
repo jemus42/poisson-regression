@@ -70,7 +70,7 @@ observed_v_expected %>%
 ```
 
 Anhand der ersten Tabelle können wir recht schnell erkennen, dass wir hier *deutlich* mehr Nullen beobachten als das Modell vorhersagt – mehr dazu in Abschnitt \@ref(zeros).  
-Der Plot veranschaulicht den eher suboptimalen model fit unter diesen Umständen (overdispersion & zero-inflation).
+Der Plot veranschaulicht den eher suboptimalen model fit unter diesen Umständen (overdispersion und (bzw. bedingt durch) zero-inflation).
 
 
 ## Overdispersion: Erkennung und Handhabung {#overdisp-diag}
