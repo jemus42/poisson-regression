@@ -51,6 +51,13 @@
 <script src="libs/viz-0.3/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
 <script src="libs/grViz-binding-1.0.1/grViz.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { fonts: ["Asana-Math"] },
+    MathMenu: { showFontMenu: true },
+    menuSettings: { zoom: "Click" }
+  });
+</script>
 <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed|Roboto+Slab&display=swap" rel="stylesheet">
 
 
@@ -162,14 +169,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="anwendung.html"><a href="anwendung.html"><i class="fa fa-check"></i><b>4</b> Anwendung</a><ul>
 <li class="chapter" data-level="4.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html"><i class="fa fa-check"></i><b>4.1</b> Overdispersion: Erkennung und Handhabung</a><ul>
-<li class="chapter" data-level="4.1.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#boundary-likelihood-ratio-test-blr"><i class="fa fa-check"></i><b>4.1.1</b> (Boundary) Likelihood Ratio Test (BLR)</a></li>
-<li class="chapter" data-level="4.1.2" data-path="overdisp-diag.html"><a href="overdisp-diag.html#umgang-mit-overdispersion"><i class="fa fa-check"></i><b>4.1.2</b> Umgang mit Overdispersion</a><ul>
-<li class="chapter" data-level="4.1.2.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#sandwich"><i class="fa fa-check"></i><b>4.1.2.1</b> Robuste Varianzschätzer (Sandwich Estimators)</a></li>
+<li class="chapter" data-level="4.1.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#lagrange-mulitplier-test"><i class="fa fa-check"></i><b>4.1.1</b> Lagrange Mulitplier Test</a></li>
+<li class="chapter" data-level="4.1.2" data-path="overdisp-diag.html"><a href="overdisp-diag.html#boundary-likelihood-ratio-test-blr"><i class="fa fa-check"></i><b>4.1.2</b> (Boundary) Likelihood Ratio Test (BLR)</a></li>
+<li class="chapter" data-level="4.1.3" data-path="overdisp-diag.html"><a href="overdisp-diag.html#umgang-mit-overdispersion"><i class="fa fa-check"></i><b>4.1.3</b> Umgang mit Overdispersion</a><ul>
+<li class="chapter" data-level="4.1.3.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#sandwich"><i class="fa fa-check"></i><b>4.1.3.1</b> Robuste Varianzschätzer (Sandwich Estimators)</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4.2" data-path="zeros.html"><a href="zeros.html"><i class="fa fa-check"></i><b>4.2</b> Zero-Inflation (ZI)</a><ul>
-<li class="chapter" data-level="" data-path="zeros.html"><a href="zeros.html#vergleich-von-zero-inflated-models"><i class="fa fa-check"></i>Vergleich von Zero-Inflated models</a></li>
-<li class="chapter" data-level="" data-path="zeros.html"><a href="zeros.html#modellierung"><i class="fa fa-check"></i>Modellierung</a></li>
+<li class="chapter" data-level="4.2.1" data-path="zeros.html"><a href="zeros.html#zi-compare"><i class="fa fa-check"></i><b>4.2.1</b> Vergleich von Zero-Inflated models</a></li>
+<li class="chapter" data-level="4.2.2" data-path="zeros.html"><a href="zeros.html#zi-modelling"><i class="fa fa-check"></i><b>4.2.2</b> Modellierung</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="entscheidungshilfen.html"><a href="entscheidungshilfen.html"><i class="fa fa-check"></i><b>5</b> Entscheidungshilfen</a></li>
@@ -217,7 +225,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><span class="math inline">\(y \in \mathbb{N}_0\)</span>, insbesondere: <span class="math inline">\(Y\)</span> muss 0 enthalten <em>können</em> (siehe auch <a href="trunc-cens.html#trunc-cens">B.2</a> <a href="trunc-cens.html#trunc-cens">Truncation und Censoring</a>)</li>
 <li>Beobachtungen sind <em>unabhängig</em>, i.e. weder longitudinal noch gepoolt.
 <ul>
-<li>Möglicher Test durch Vergleich der Modell-SE und der SE adjustiert durch robuste sandwich-estimators (siehe <a href="overdisp-diag.html#sandwich">4.1.2.1</a>): Große Unterschiede implizieren korrelierte Daten</li>
+<li>Möglicher Test durch Vergleich der Modell-SE und der SE adjustiert durch robuste sandwich-estimators (siehe <a href="overdisp-diag.html#sandwich">4.1.3.1</a>): Große Unterschiede implizieren korrelierte Daten</li>
 </ul></li>
 <li>Balanced: Die Zellen sind in etwa so besetzt wie es aufgrund der Poissonverteilung erwartet wird.</li>
 <li>Erwartungswert und Varianz sind identisch (<em>equidispersion</em>), i.e. ein größerer Erwartungswert impliziert auch eine größere Varianz (siehe <a href="dispersion.html#dispersion">2.2</a>).</li>

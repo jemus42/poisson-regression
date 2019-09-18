@@ -51,6 +51,13 @@
 <script src="libs/viz-0.3/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
 <script src="libs/grViz-binding-1.0.1/grViz.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { fonts: ["Asana-Math"] },
+    MathMenu: { showFontMenu: true },
+    menuSettings: { zoom: "Click" }
+  });
+</script>
 <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed|Roboto+Slab&display=swap" rel="stylesheet">
 
 
@@ -162,14 +169,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="anwendung.html"><a href="anwendung.html"><i class="fa fa-check"></i><b>4</b> Anwendung</a><ul>
 <li class="chapter" data-level="4.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html"><i class="fa fa-check"></i><b>4.1</b> Overdispersion: Erkennung und Handhabung</a><ul>
-<li class="chapter" data-level="4.1.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#boundary-likelihood-ratio-test-blr"><i class="fa fa-check"></i><b>4.1.1</b> (Boundary) Likelihood Ratio Test (BLR)</a></li>
-<li class="chapter" data-level="4.1.2" data-path="overdisp-diag.html"><a href="overdisp-diag.html#umgang-mit-overdispersion"><i class="fa fa-check"></i><b>4.1.2</b> Umgang mit Overdispersion</a><ul>
-<li class="chapter" data-level="4.1.2.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#sandwich"><i class="fa fa-check"></i><b>4.1.2.1</b> Robuste Varianzschätzer (Sandwich Estimators)</a></li>
+<li class="chapter" data-level="4.1.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#lagrange-mulitplier-test"><i class="fa fa-check"></i><b>4.1.1</b> Lagrange Mulitplier Test</a></li>
+<li class="chapter" data-level="4.1.2" data-path="overdisp-diag.html"><a href="overdisp-diag.html#boundary-likelihood-ratio-test-blr"><i class="fa fa-check"></i><b>4.1.2</b> (Boundary) Likelihood Ratio Test (BLR)</a></li>
+<li class="chapter" data-level="4.1.3" data-path="overdisp-diag.html"><a href="overdisp-diag.html#umgang-mit-overdispersion"><i class="fa fa-check"></i><b>4.1.3</b> Umgang mit Overdispersion</a><ul>
+<li class="chapter" data-level="4.1.3.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#sandwich"><i class="fa fa-check"></i><b>4.1.3.1</b> Robuste Varianzschätzer (Sandwich Estimators)</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4.2" data-path="zeros.html"><a href="zeros.html"><i class="fa fa-check"></i><b>4.2</b> Zero-Inflation (ZI)</a><ul>
-<li class="chapter" data-level="" data-path="zeros.html"><a href="zeros.html#vergleich-von-zero-inflated-models"><i class="fa fa-check"></i>Vergleich von Zero-Inflated models</a></li>
-<li class="chapter" data-level="" data-path="zeros.html"><a href="zeros.html#modellierung"><i class="fa fa-check"></i>Modellierung</a></li>
+<li class="chapter" data-level="4.2.1" data-path="zeros.html"><a href="zeros.html#zi-compare"><i class="fa fa-check"></i><b>4.2.1</b> Vergleich von Zero-Inflated models</a></li>
+<li class="chapter" data-level="4.2.2" data-path="zeros.html"><a href="zeros.html#zi-modelling"><i class="fa fa-check"></i><b>4.2.2</b> Modellierung</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="entscheidungshilfen.html"><a href="entscheidungshilfen.html"><i class="fa fa-check"></i><b>5</b> Entscheidungshilfen</a></li>
@@ -233,7 +241,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>In diesem Fall entspricht das Resultat eines hurdle models zwei separat gefitteten Modellen (e.g. Pois + Logit), die getrennt interpretierbar sind (im Gegensatz zu zero-inflated models!).</p>
 
 <div class="definition">
-<p><span id="def:unnamed-chunk-5" class="definition"><strong>Definition B.1  (Hurdle Model)  </strong></span>Nach <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>)</span>, p. 179f:</p>
+<p><span id="def:unnamed-chunk-4" class="definition"><strong>Definition B.1  (Hurdle Model)  </strong></span>Nach <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>)</span>, p. 179f:</p>
 <p>Sei <span class="math inline">\(g_1(0)\)</span> die Wahrscheinlichkeit des Outcomes <span class="math inline">\(0\)</span> und <span class="math inline">\(g_1(k), k = 1, 2, 3, \ldots\)</span> die Wahrscheinlichkeitsfunktion für natürliche Zahlen, dann ist die Wahrscheinlichkeitsfunktion eines <em>hurdle-at-zero</em> Modells:</p>
 <p>Bzw. nach <span class="citation">Mullahy (<a href="#ref-mullahy1986SpecificationTesting">1986</a>)</span> mit <span class="math inline">\(f_1\)</span> und <span class="math inline">\(f_2\)</span> als PMFs für natürliche Zahlen</p>
 <p>Wobei</p>

@@ -51,6 +51,13 @@
 <script src="libs/viz-0.3/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
 <script src="libs/grViz-binding-1.0.1/grViz.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { fonts: ["Asana-Math"] },
+    MathMenu: { showFontMenu: true },
+    menuSettings: { zoom: "Click" }
+  });
+</script>
 <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed|Roboto+Slab&display=swap" rel="stylesheet">
 
 
@@ -162,14 +169,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="anwendung.html"><a href="anwendung.html"><i class="fa fa-check"></i><b>4</b> Anwendung</a><ul>
 <li class="chapter" data-level="4.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html"><i class="fa fa-check"></i><b>4.1</b> Overdispersion: Erkennung und Handhabung</a><ul>
-<li class="chapter" data-level="4.1.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#boundary-likelihood-ratio-test-blr"><i class="fa fa-check"></i><b>4.1.1</b> (Boundary) Likelihood Ratio Test (BLR)</a></li>
-<li class="chapter" data-level="4.1.2" data-path="overdisp-diag.html"><a href="overdisp-diag.html#umgang-mit-overdispersion"><i class="fa fa-check"></i><b>4.1.2</b> Umgang mit Overdispersion</a><ul>
-<li class="chapter" data-level="4.1.2.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#sandwich"><i class="fa fa-check"></i><b>4.1.2.1</b> Robuste Varianzschätzer (Sandwich Estimators)</a></li>
+<li class="chapter" data-level="4.1.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#lagrange-mulitplier-test"><i class="fa fa-check"></i><b>4.1.1</b> Lagrange Mulitplier Test</a></li>
+<li class="chapter" data-level="4.1.2" data-path="overdisp-diag.html"><a href="overdisp-diag.html#boundary-likelihood-ratio-test-blr"><i class="fa fa-check"></i><b>4.1.2</b> (Boundary) Likelihood Ratio Test (BLR)</a></li>
+<li class="chapter" data-level="4.1.3" data-path="overdisp-diag.html"><a href="overdisp-diag.html#umgang-mit-overdispersion"><i class="fa fa-check"></i><b>4.1.3</b> Umgang mit Overdispersion</a><ul>
+<li class="chapter" data-level="4.1.3.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#sandwich"><i class="fa fa-check"></i><b>4.1.3.1</b> Robuste Varianzschätzer (Sandwich Estimators)</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4.2" data-path="zeros.html"><a href="zeros.html"><i class="fa fa-check"></i><b>4.2</b> Zero-Inflation (ZI)</a><ul>
-<li class="chapter" data-level="" data-path="zeros.html"><a href="zeros.html#vergleich-von-zero-inflated-models"><i class="fa fa-check"></i>Vergleich von Zero-Inflated models</a></li>
-<li class="chapter" data-level="" data-path="zeros.html"><a href="zeros.html#modellierung"><i class="fa fa-check"></i>Modellierung</a></li>
+<li class="chapter" data-level="4.2.1" data-path="zeros.html"><a href="zeros.html#zi-compare"><i class="fa fa-check"></i><b>4.2.1</b> Vergleich von Zero-Inflated models</a></li>
+<li class="chapter" data-level="4.2.2" data-path="zeros.html"><a href="zeros.html#zi-modelling"><i class="fa fa-check"></i><b>4.2.2</b> Modellierung</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="entscheidungshilfen.html"><a href="entscheidungshilfen.html"><i class="fa fa-check"></i><b>5</b> Entscheidungshilfen</a></li>
@@ -212,32 +220,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="overdisp-diag" class="section level2">
 <h2><span class="header-section-number">4.1</span> Overdispersion: Erkennung und Handhabung</h2>
-<p>Der <em>Score-Test</em> wird nicht unbedingt empfohlen, findet sich aber in der Literatur:</p>
+<p>Es gibt mehrere Möglichkeiten Poisson-overdispersion zu erkennen, wobei die Pearson-Dispersionsstatistik in der Regel der erste Schritt ist.<br />
+Im Folgenden werden zusätzlich einige formale Tests aufgeführt.</p>
+<div id="lagrange-mulitplier-test" class="section level3">
+<h3><span class="header-section-number">4.1.1</span> Lagrange Mulitplier Test</h3>
 
 <div class="definition">
-<p><span id="def:unnamed-chunk-3" class="definition"><strong>Definition 4.1  (Score-Test auf Overdispersion)  </strong></span>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 85f):</p>
-<p>Sei <span class="math inline">\(Y\)</span> die abhängige Variable und <span class="math inline">\(y_i\)</span> die <span class="math inline">\(i-te\)</span> Beobachtung, mit <span class="math inline">\(\hat{\mu}_i\)</span> als gefitteter Wert eines Poisson-Modells, dann wird der z-Score wie folgt berechnet:</p>
-<p>Zur Evaluation von <span class="math inline">\(z\)</span> wird z.B. ein Intercept-only Regressionsmodell mit <span class="math inline">\(z\)</span> als abhängiger Variable gefitted, mit der Nullhypothese “Es liegt keine Overdispersion vor”.</p>
-<p>Dabei gelten folgende Annahmen:</p>
-<ol style="list-style-type: decimal">
-<li>Die Stichprobe ist <em>groß</em></li>
-<li><span class="math inline">\(z\)</span> ist t-verteilt</li>
-</ol>
-</div>
-
-
-<div class="definition">
-<p><span id="def:unnamed-chunk-4" class="definition"><strong>Definition 4.2  (Lagrange Multiplier Test)  </strong></span>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 85f):</p>
+<p><span id="def:unnamed-chunk-3" class="definition"><strong>Definition 4.1  (Lagrange Multiplier Test)  </strong></span>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 85f):</p>
 <p>Eine <span class="math inline">\(\chi^2\)</span>-Teststatistik mit einem Freiheitsgrad.</p>
 </div>
 
 <p>Eine rudimentäre R-Implementation findet sich in Abschnitt <a href="software-funs.html#helperfuns">1.2.2</a>.</p>
+</div>
 <div id="boundary-likelihood-ratio-test-blr" class="section level3">
-<h3><span class="header-section-number">4.1.1</span> (Boundary) Likelihood Ratio Test (BLR)</h3>
+<h3><span class="header-section-number">4.1.2</span> (Boundary) Likelihood Ratio Test (BLR)</h3>
 <p>Zum vergleich von zwei geschachtelten (<em>nested</em>) Modellen kann der <em>Likelihood Ratio Test</em> verwendet werden:</p>
 
 <div class="definition">
-<p><span id="def:LRT" class="definition"><strong>Definition 4.3  (Likelihood Ratio Test)  </strong></span><span class="math display">\[\begin{equation}
+<p><span id="def:LRT" class="definition"><strong>Definition 4.2  (Likelihood Ratio Test)  </strong></span><span class="math display">\[\begin{equation}
  LR = -2 (\mathcal{L}_R - \mathcal{L}_F)
 \end{equation}\]</span></p>
 Mit <span class="math inline">\(\mathcal{L}_F\)</span> als log-likelihood des vollen (oder “größeren”) Modells, und <span class="math inline">\(\mathcal{L}_R\)</span> als log-likelihood des reduzierteren Modells.
@@ -246,7 +246,7 @@ Mit <span class="math inline">\(\mathcal{L}_F\)</span> als log-likelihood des vo
 <p>Eine Variante des Tests kann verwendet werden, um den Dispersionsparameter <span class="math inline">\(\alpha\)</span> eines NB-Modells zu testen. Da eine NB-Verteilung für <span class="math inline">\(\alpha = 0\)</span> äquivalent zur Poisson ist (siehe Abschnitt <a href="mod-nb.html#mod-nb">3.1</a>), kann ein Poisson-Modell als reduzierte Variante eines NB-Modells betrachtet werden. In diesem Fall verwendet man den <em>Boundary Likelhihood Ratio</em> test:</p>
 
 <div class="definition">
-<span id="def:BLR" class="definition"><strong>Definition 4.4  (Boundary Likelihood Ratio Test)  </strong></span><span class="math display">\[\begin{equation}
+<span id="def:BLR" class="definition"><strong>Definition 4.3  (Boundary Likelihood Ratio Test)  </strong></span><span class="math display">\[\begin{equation}
  BLR = -2 (\mathcal{L}_\mathrm{Poisson} - \mathcal{L}_\mathrm{NB})
 \end{equation}\]</span>
 </div>
@@ -261,14 +261,14 @@ Mit <span class="math inline">\(\mathcal{L}_F\)</span> als log-likelihood des vo
 <p>— <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 115</p>
 </blockquote>
 <p>Am Beispiel der <code>rwm1984</code>-Daten:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="co"># Poisson-Modell</span></a>
-<a class="sourceLine" id="cb33-2" data-line-number="2">mod_p &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb33-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb33-4" data-line-number="4"><span class="co"># NB-Modell</span></a>
-<a class="sourceLine" id="cb33-5" data-line-number="5">mod_nb &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">glm.nb</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb33-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb33-7" data-line-number="7"><span class="co"># BLR: Recht eindeutig.</span></a>
-<a class="sourceLine" id="cb33-8" data-line-number="8">lmtest<span class="op">::</span><span class="kw">lrtest</span>(mod_p, mod_nb)</a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="co"># Poisson-Modell</span></a>
+<a class="sourceLine" id="cb36-2" data-line-number="2">mod_p &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb36-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb36-4" data-line-number="4"><span class="co"># NB-Modell</span></a>
+<a class="sourceLine" id="cb36-5" data-line-number="5">mod_nb &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">glm.nb</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb36-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb36-7" data-line-number="7"><span class="co"># BLR: Recht eindeutig.</span></a>
+<a class="sourceLine" id="cb36-8" data-line-number="8">lmtest<span class="op">::</span><span class="kw">lrtest</span>(mod_p, mod_nb)</a></code></pre></div>
 <div class="kable-table">
 
 <table>
@@ -329,15 +329,15 @@ NA
 </tbody>
 </table>
 </div>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="co"># Bei gegebenem BLR-Wert von 4.2 ließe sich der p-Wert wie folgt berechnen:</span></a>
-<a class="sourceLine" id="cb34-2" data-line-number="2"><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="co"># Bei gegebenem BLR-Wert von 4.2 ließe sich der p-Wert wie folgt berechnen:</span></a>
+<a class="sourceLine" id="cb37-2" data-line-number="2"><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
 <pre><code>#&gt; [1] 0.02021199</code></pre>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="co"># Oder</span></a>
-<a class="sourceLine" id="cb36-2" data-line-number="2">(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>)) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1"><span class="co"># Oder</span></a>
+<a class="sourceLine" id="cb39-2" data-line-number="2">(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pchisq</span>(<span class="fl">4.2</span>, <span class="dt">df =</span> <span class="dv">1</span>)) <span class="op">/</span><span class="st"> </span><span class="dv">2</span></a></code></pre></div>
 <pre><code>#&gt; [1] 0.02021199</code></pre>
 </div>
 <div id="umgang-mit-overdispersion" class="section level3">
-<h3><span class="header-section-number">4.1.2</span> Umgang mit Overdispersion</h3>
+<h3><span class="header-section-number">4.1.3</span> Umgang mit Overdispersion</h3>
 <p>Zur expliziten Modellierung des Dispersionparameters kann ein NBH Modell (<a href="diagnostische-modelle.html#mod-nbh">3.5.1</a>) genutzt werden, falls die Quelle der overdispersion von besonderem Interesse ist.</p>
 <p>Abseits davon bleiben 2 grobe Strategien :</p>
 <ol style="list-style-type: decimal">
@@ -352,19 +352,19 @@ NA
 Wobei <span class="math inline">\(D\)</span> der Pearson-Dispersionsindex ist (vgl. <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 92ff), den wir in <a href="dispersion.html#def:def-pearsondisp">2.5</a> als <span class="math inline">\(\frac{\chi^2_{\mathrm{Pearson}}}{\mathrm{df}}\)</span> definiert hatten.</p>
 <p>Ein möglicher Nachteil jedoch: Es wird zuerst ein reguläres Poisson-Modell gefittet, Standardfehler und Dispersionsindex bestimmt, und dann dasselbe Modell mit skalierten Standardfehlern erneut gefittet – dementsprechend ist diese Methode vermutlich für größere Datensätze eher ineffizient.</p>
 <p>Einmal auf unser voriges Beispiel anhand der <code>rwm5yr</code>-Daten angewandt:</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="co"># Urprüngliches Model</span></a>
-<a class="sourceLine" id="cb38-2" data-line-number="2">mod &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb38-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb38-4" data-line-number="4">mod_qp &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">quasipoisson</span>(), <span class="dt">data =</span> rwm1984)</a>
-<a class="sourceLine" id="cb38-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb38-6" data-line-number="6"><span class="kw">dispersion</span>(mod)</a></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="co"># Urprüngliches Model</span></a>
+<a class="sourceLine" id="cb41-2" data-line-number="2">mod &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">poisson</span>(), <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb41-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb41-4" data-line-number="4">mod_qp &lt;-<span class="st"> </span><span class="kw">glm</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age, <span class="dt">family =</span> <span class="kw">quasipoisson</span>(), <span class="dt">data =</span> rwm1984)</a>
+<a class="sourceLine" id="cb41-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb41-6" data-line-number="6"><span class="kw">dispersion</span>(mod)</a></code></pre></div>
 <pre><code>#&gt; X-squared(3871) = 43909.62
 #&gt; Pearson Dispersion = 11.343</code></pre>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="kw">dispersion</span>(mod_qp)</a></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="kw">dispersion</span>(mod_qp)</a></code></pre></div>
 <pre><code>#&gt; X-squared(3871) = 43909.62
 #&gt; Pearson Dispersion = 11.343</code></pre>
 <p>An der Dispersion hat sich nichts geändert, nur an den Standardfehlern der Koeffizienten (in folgenden Tabellen auf log-Skala):</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="kw">pander</span>(mod, <span class="dt">caption =</span> <span class="st">&quot;Poisson-Modell&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="kw">pander</span>(mod, <span class="dt">caption =</span> <span class="st">&quot;Poisson-Modell&quot;</span>)</a></code></pre></div>
 <table style="width:90%;">
 <caption>Poisson-Modell</caption>
 <colgroup>
@@ -407,7 +407,7 @@ Wobei <span class="math inline">\(D\)</span> der Pearson-Dispersionsindex ist (v
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="kw">pander</span>(mod_qp, <span class="dt">caption =</span> <span class="st">&quot;Quasipoisson-Modell&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="kw">pander</span>(mod_qp, <span class="dt">caption =</span> <span class="st">&quot;Quasipoisson-Modell&quot;</span>)</a></code></pre></div>
 <table style="width:89%;">
 <caption>Quasipoisson-Modell</caption>
 <colgroup>
@@ -457,7 +457,7 @@ Wobei <span class="math inline">\(D\)</span> der Pearson-Dispersionsindex ist (v
 </blockquote>
 </div>
 <div id="sandwich" class="section level4">
-<h4><span class="header-section-number">4.1.2.1</span> Robuste Varianzschätzer (Sandwich Estimators)</h4>
+<h4><span class="header-section-number">4.1.3.1</span> Robuste Varianzschätzer (Sandwich Estimators)</h4>
 <p>(Andere Namen: Huber &amp; White standard errors, empirical standard errors)</p>
 <p>Sandwich estimators sind in erster Linie für nicht unabhängige bzw. korrellierte Daten gedacht, zum Beispiel für Daten, die innerhalb mehrere Haushalte, Krankenhäuser, Städte etc. gesammelt wurden.</p>
 <p>Robuste Varianzschätzer können (und je nach Quelle: <em>sollten</em>) standardmäßig für Count-response Daten verwendet werden, da die resultierenden Schätzer im Falle tatsächlich unkorrellierter Daten äquivalent zu den Standardfehlern des ursprünglichen Modells sind (i.e. “schadet nicht”).</p>

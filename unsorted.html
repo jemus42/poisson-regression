@@ -51,6 +51,13 @@
 <script src="libs/viz-0.3/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
 <script src="libs/grViz-binding-1.0.1/grViz.js"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { fonts: ["Asana-Math"] },
+    MathMenu: { showFontMenu: true },
+    menuSettings: { zoom: "Click" }
+  });
+</script>
 <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed|Roboto+Slab&display=swap" rel="stylesheet">
 
 
@@ -162,14 +169,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="anwendung.html"><a href="anwendung.html"><i class="fa fa-check"></i><b>4</b> Anwendung</a><ul>
 <li class="chapter" data-level="4.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html"><i class="fa fa-check"></i><b>4.1</b> Overdispersion: Erkennung und Handhabung</a><ul>
-<li class="chapter" data-level="4.1.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#boundary-likelihood-ratio-test-blr"><i class="fa fa-check"></i><b>4.1.1</b> (Boundary) Likelihood Ratio Test (BLR)</a></li>
-<li class="chapter" data-level="4.1.2" data-path="overdisp-diag.html"><a href="overdisp-diag.html#umgang-mit-overdispersion"><i class="fa fa-check"></i><b>4.1.2</b> Umgang mit Overdispersion</a><ul>
-<li class="chapter" data-level="4.1.2.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#sandwich"><i class="fa fa-check"></i><b>4.1.2.1</b> Robuste Varianzschätzer (Sandwich Estimators)</a></li>
+<li class="chapter" data-level="4.1.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#lagrange-mulitplier-test"><i class="fa fa-check"></i><b>4.1.1</b> Lagrange Mulitplier Test</a></li>
+<li class="chapter" data-level="4.1.2" data-path="overdisp-diag.html"><a href="overdisp-diag.html#boundary-likelihood-ratio-test-blr"><i class="fa fa-check"></i><b>4.1.2</b> (Boundary) Likelihood Ratio Test (BLR)</a></li>
+<li class="chapter" data-level="4.1.3" data-path="overdisp-diag.html"><a href="overdisp-diag.html#umgang-mit-overdispersion"><i class="fa fa-check"></i><b>4.1.3</b> Umgang mit Overdispersion</a><ul>
+<li class="chapter" data-level="4.1.3.1" data-path="overdisp-diag.html"><a href="overdisp-diag.html#sandwich"><i class="fa fa-check"></i><b>4.1.3.1</b> Robuste Varianzschätzer (Sandwich Estimators)</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4.2" data-path="zeros.html"><a href="zeros.html"><i class="fa fa-check"></i><b>4.2</b> Zero-Inflation (ZI)</a><ul>
-<li class="chapter" data-level="" data-path="zeros.html"><a href="zeros.html#vergleich-von-zero-inflated-models"><i class="fa fa-check"></i>Vergleich von Zero-Inflated models</a></li>
-<li class="chapter" data-level="" data-path="zeros.html"><a href="zeros.html#modellierung"><i class="fa fa-check"></i>Modellierung</a></li>
+<li class="chapter" data-level="4.2.1" data-path="zeros.html"><a href="zeros.html#zi-compare"><i class="fa fa-check"></i><b>4.2.1</b> Vergleich von Zero-Inflated models</a></li>
+<li class="chapter" data-level="4.2.2" data-path="zeros.html"><a href="zeros.html#zi-modelling"><i class="fa fa-check"></i><b>4.2.2</b> Modellierung</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="entscheidungshilfen.html"><a href="entscheidungshilfen.html"><i class="fa fa-check"></i><b>5</b> Entscheidungshilfen</a></li>
@@ -227,9 +235,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>(Eigentlich kompliziertes Beispiel, weil 0 counts nicht möglich sind, müsste man truncated drangehen)</p>
 <p>Grundlage ist der Datensatz <code>azprocedure</code> (siehe Abschnitt <a href="data.html#data">1.1</a>) zur Dauer des Krankenhausaufenthalts.</p>
 <p>Zuerst werfen wir einen Blick auf die Daten und fitten ein reguläres Poissonmodell.</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1"><span class="kw">data</span>(azprocedure, <span class="dt">package =</span> <span class="st">&quot;COUNT&quot;</span>)</a>
-<a class="sourceLine" id="cb48-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb48-3" data-line-number="3"><span class="kw">describe_counts</span>(azprocedure<span class="op">$</span>los)</a></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1"><span class="kw">data</span>(azprocedure, <span class="dt">package =</span> <span class="st">&quot;COUNT&quot;</span>)</a>
+<a class="sourceLine" id="cb51-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb51-3" data-line-number="3"><span class="kw">describe_counts</span>(azprocedure<span class="op">$</span>los)</a></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -270,21 +278,21 @@ Range
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1"><span class="co"># Barchart: So grob poissonverteilt?</span></a>
-<a class="sourceLine" id="cb49-2" data-line-number="2"><span class="kw">ggplot</span>(<span class="dt">data =</span> azprocedure, <span class="kw">aes</span>(<span class="dt">x =</span> los)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb49-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">alpha =</span> <span class="fl">.75</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb49-4" data-line-number="4"><span class="st">  </span><span class="kw">labs</span>(</a>
-<a class="sourceLine" id="cb49-5" data-line-number="5">    <span class="dt">title =</span> <span class="st">&quot;Hospital length of stay (LOS)&quot;</span>,</a>
-<a class="sourceLine" id="cb49-6" data-line-number="6">    <span class="dt">subtitle =</span> <span class="st">&quot;azprocedure data (Hilbe 2014)&quot;</span>,</a>
-<a class="sourceLine" id="cb49-7" data-line-number="7">    <span class="dt">x =</span> <span class="st">&quot;LOS&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span> </a>
-<a class="sourceLine" id="cb49-8" data-line-number="8">  )</a></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" data-line-number="1"><span class="co"># Barchart: So grob poissonverteilt?</span></a>
+<a class="sourceLine" id="cb52-2" data-line-number="2"><span class="kw">ggplot</span>(<span class="dt">data =</span> azprocedure, <span class="kw">aes</span>(<span class="dt">x =</span> los)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb52-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">alpha =</span> <span class="fl">.75</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb52-4" data-line-number="4"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb52-5" data-line-number="5">    <span class="dt">title =</span> <span class="st">&quot;Hospital length of stay (LOS)&quot;</span>,</a>
+<a class="sourceLine" id="cb52-6" data-line-number="6">    <span class="dt">subtitle =</span> <span class="st">&quot;azprocedure data (Hilbe 2014)&quot;</span>,</a>
+<a class="sourceLine" id="cb52-7" data-line-number="7">    <span class="dt">x =</span> <span class="st">&quot;LOS&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span> </a>
+<a class="sourceLine" id="cb52-8" data-line-number="8">  )</a></code></pre></div>
 <p><img src="poisson-regression_files/figure-html/underdisp-azprocedure-over-1.png" width="768" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1"><span class="co"># Model fit</span></a>
-<a class="sourceLine" id="cb50-2" data-line-number="2">model_azproc &lt;-<span class="st"> </span><span class="kw">glm</span>(los <span class="op">~</span><span class="st"> </span>procedure <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>admit, </a>
-<a class="sourceLine" id="cb50-3" data-line-number="3">                    <span class="dt">data =</span> azprocedure, <span class="dt">family =</span> <span class="kw">poisson</span>())</a>
-<a class="sourceLine" id="cb50-4" data-line-number="4"> </a>
-<a class="sourceLine" id="cb50-5" data-line-number="5"><span class="co"># Model output (ohne exponentierte Koeffizienten)</span></a>
-<a class="sourceLine" id="cb50-6" data-line-number="6"><span class="kw">pander</span>(model_azproc)</a></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" data-line-number="1"><span class="co"># Model fit</span></a>
+<a class="sourceLine" id="cb53-2" data-line-number="2">model_azproc &lt;-<span class="st"> </span><span class="kw">glm</span>(los <span class="op">~</span><span class="st"> </span>procedure <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>admit, </a>
+<a class="sourceLine" id="cb53-3" data-line-number="3">                    <span class="dt">data =</span> azprocedure, <span class="dt">family =</span> <span class="kw">poisson</span>())</a>
+<a class="sourceLine" id="cb53-4" data-line-number="4"> </a>
+<a class="sourceLine" id="cb53-5" data-line-number="5"><span class="co"># Model output (ohne exponentierte Koeffizienten)</span></a>
+<a class="sourceLine" id="cb53-6" data-line-number="6"><span class="kw">pander</span>(model_azproc)</a></code></pre></div>
 <table style="width:89%;">
 <caption>Fitting generalized (poisson/log) linear model: los ~ procedure + sex + admit</caption>
 <colgroup>
@@ -334,15 +342,15 @@ Range
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1"><span class="co"># Pearson Dispersion:</span></a>
-<a class="sourceLine" id="cb51-2" data-line-number="2"><span class="kw">dispersion</span>(model_azproc)</a></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" data-line-number="1"><span class="co"># Pearson Dispersion:</span></a>
+<a class="sourceLine" id="cb54-2" data-line-number="2"><span class="kw">dispersion</span>(model_azproc)</a></code></pre></div>
 <pre><code>#&gt; X-squared(3585) = 11588.08
 #&gt; Pearson Dispersion = 3.232</code></pre>
 <p>Der Dispersionsindex lässt auf overdispersion schließen.<br />
 Betrachten wir ein Subset der Daten, indem wir nur Beobachtungen mit <span class="math inline">\(\mathtt{LOS} \le 8\)</span> betrachten, erhalten wir ein anderes Bild:</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" data-line-number="1">azprocedure_subset &lt;-<span class="st"> </span><span class="kw">subset</span>(azprocedure, los <span class="op">&lt;=</span><span class="st"> </span><span class="dv">8</span>)</a>
-<a class="sourceLine" id="cb53-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb53-3" data-line-number="3"><span class="kw">describe_counts</span>(azprocedure_subset<span class="op">$</span>los)</a></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" data-line-number="1">azprocedure_subset &lt;-<span class="st"> </span><span class="kw">subset</span>(azprocedure, los <span class="op">&lt;=</span><span class="st"> </span><span class="dv">8</span>)</a>
+<a class="sourceLine" id="cb56-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb56-3" data-line-number="3"><span class="kw">describe_counts</span>(azprocedure_subset<span class="op">$</span>los)</a></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -383,19 +391,19 @@ Range
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" data-line-number="1"><span class="co"># Barchart</span></a>
-<a class="sourceLine" id="cb54-2" data-line-number="2"><span class="kw">ggplot</span>(<span class="dt">data =</span> azprocedure_subset, <span class="kw">aes</span>(<span class="dt">x =</span> los)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb54-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">alpha =</span> <span class="fl">.75</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb54-4" data-line-number="4"><span class="st">  </span><span class="kw">labs</span>(</a>
-<a class="sourceLine" id="cb54-5" data-line-number="5">    <span class="dt">title =</span> <span class="st">&quot;Hospital length of stay (LOS)&quot;</span>,</a>
-<a class="sourceLine" id="cb54-6" data-line-number="6">    <span class="dt">subtitle =</span> <span class="st">&quot;Subset (LOS &lt;= 8) der azprocedure data (Hilbe 2014)&quot;</span>,</a>
-<a class="sourceLine" id="cb54-7" data-line-number="7">    <span class="dt">x =</span> <span class="st">&quot;LOS&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span> </a>
-<a class="sourceLine" id="cb54-8" data-line-number="8">  )</a></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1"><span class="co"># Barchart</span></a>
+<a class="sourceLine" id="cb57-2" data-line-number="2"><span class="kw">ggplot</span>(<span class="dt">data =</span> azprocedure_subset, <span class="kw">aes</span>(<span class="dt">x =</span> los)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">alpha =</span> <span class="fl">.75</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-4" data-line-number="4"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb57-5" data-line-number="5">    <span class="dt">title =</span> <span class="st">&quot;Hospital length of stay (LOS)&quot;</span>,</a>
+<a class="sourceLine" id="cb57-6" data-line-number="6">    <span class="dt">subtitle =</span> <span class="st">&quot;Subset (LOS &lt;= 8) der azprocedure data (Hilbe 2014)&quot;</span>,</a>
+<a class="sourceLine" id="cb57-7" data-line-number="7">    <span class="dt">x =</span> <span class="st">&quot;LOS&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span> </a>
+<a class="sourceLine" id="cb57-8" data-line-number="8">  )</a></code></pre></div>
 <p><img src="poisson-regression_files/figure-html/underdisp-azprocedure_under-1.png" width="768" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" data-line-number="1">model_azproc_u &lt;-<span class="st"> </span><span class="kw">glm</span>(los <span class="op">~</span><span class="st"> </span>procedure <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>admit, </a>
-<a class="sourceLine" id="cb55-2" data-line-number="2">                      <span class="dt">data =</span> azprocedure_subset, <span class="dt">family =</span> <span class="kw">poisson</span>())</a>
-<a class="sourceLine" id="cb55-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb55-4" data-line-number="4"><span class="kw">pander</span>(model_azproc_u)</a></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1">model_azproc_u &lt;-<span class="st"> </span><span class="kw">glm</span>(los <span class="op">~</span><span class="st"> </span>procedure <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>admit, </a>
+<a class="sourceLine" id="cb58-2" data-line-number="2">                      <span class="dt">data =</span> azprocedure_subset, <span class="dt">family =</span> <span class="kw">poisson</span>())</a>
+<a class="sourceLine" id="cb58-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb58-4" data-line-number="4"><span class="kw">pander</span>(model_azproc_u)</a></code></pre></div>
 <table style="width:90%;">
 <caption>Fitting generalized (poisson/log) linear model: los ~ procedure + sex + admit</caption>
 <colgroup>
@@ -445,20 +453,20 @@ Range
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" data-line-number="1"><span class="kw">dispersion</span>(model_azproc_u)</a></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" data-line-number="1"><span class="kw">dispersion</span>(model_azproc_u)</a></code></pre></div>
 <pre><code>#&gt; X-squared(1978) = 1562.75
 #&gt; Pearson Dispersion = 0.790</code></pre>
 <p>In diesem Fall haben wir es mit underdispersion zu tun, also versuchen wir es mal mit der GP:</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1"><span class="kw">library</span>(VGAM)</a>
-<a class="sourceLine" id="cb58-2" data-line-number="2"><span class="kw">library</span>(gamlss)</a>
-<a class="sourceLine" id="cb58-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb58-4" data-line-number="4">mod_gp_vgam &lt;-<span class="st"> </span><span class="kw">vglm</span>(los <span class="op">~</span><span class="st"> </span>procedure <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>admit, <span class="dt">data =</span> azprocedure_subset, <span class="dt">family =</span> <span class="kw">genpoisson</span>())</a>
-<a class="sourceLine" id="cb58-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb58-6" data-line-number="6">mod_gp_gamlss &lt;-<span class="st"> </span><span class="kw">gamlss</span>(los <span class="op">~</span><span class="st"> </span>procedure <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>admit, <span class="dt">data =</span> azprocedure_subset, <span class="dt">family =</span> <span class="kw">GPO</span>())</a></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1"><span class="kw">library</span>(VGAM)</a>
+<a class="sourceLine" id="cb61-2" data-line-number="2"><span class="kw">library</span>(gamlss)</a>
+<a class="sourceLine" id="cb61-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb61-4" data-line-number="4">mod_gp_vgam &lt;-<span class="st"> </span><span class="kw">vglm</span>(los <span class="op">~</span><span class="st"> </span>procedure <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>admit, <span class="dt">data =</span> azprocedure_subset, <span class="dt">family =</span> <span class="kw">genpoisson</span>())</a>
+<a class="sourceLine" id="cb61-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb61-6" data-line-number="6">mod_gp_gamlss &lt;-<span class="st"> </span><span class="kw">gamlss</span>(los <span class="op">~</span><span class="st"> </span>procedure <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>admit, <span class="dt">data =</span> azprocedure_subset, <span class="dt">family =</span> <span class="kw">GPO</span>())</a></code></pre></div>
 <pre><code>#&gt; GAMLSS-RS iteration 1: Global Deviance = 7969.342 
 #&gt; GAMLSS-RS iteration 2: Global Deviance = 7961.567 
 #&gt; GAMLSS-RS iteration 3: Global Deviance = 7961.567</code></pre>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" data-line-number="1"><span class="kw">summary</span>(mod_gp_vgam)</a></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1"><span class="kw">summary</span>(mod_gp_vgam)</a></code></pre></div>
 <pre><code>#&gt; 
 #&gt; Call:
 #&gt; vglm(formula = los ~ procedure + sex + admit, family = genpoisson(), 
@@ -486,7 +494,7 @@ Range
 #&gt; Number of Fisher scoring iterations: 6 
 #&gt; 
 #&gt; No Hauck-Donner effect found in any of the estimates</code></pre>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" data-line-number="1"><span class="kw">summary</span>(mod_gp_gamlss)</a></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" data-line-number="1"><span class="kw">summary</span>(mod_gp_gamlss)</a></code></pre></div>
 <pre><code>#&gt; ******************************************************************
 #&gt; Family:  c(&quot;GPO&quot;, &quot;Generalised Poisson&quot;) 
 #&gt; 

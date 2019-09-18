@@ -140,7 +140,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{Stand: 13. September 2019 16:08 Uhr (CEST)}
+    \date{Stand: 18. September 2019 15:31 Uhr (CEST)}
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -298,6 +298,12 @@ Die Datensätze des UCLA IDRE können wie folgt eingelesen werden:
 \begin{Highlighting}[]
 \NormalTok{fish <-}\StringTok{ }\NormalTok{haven}\OperatorTok{::}\KeywordTok{read_sas}\NormalTok{(}\StringTok{"https://stats.idre.ucla.edu/stat/sas/code/fish.sas7bdat"}\NormalTok{)}
 
+\NormalTok{fish <-}\StringTok{ }\KeywordTok{within}\NormalTok{(fish, \{}
+\NormalTok{    nofish <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(nofish)}
+\NormalTok{    livebait <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(livebait)}
+\NormalTok{    camper <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(camper)}
+\NormalTok{\})}
+
 \CommentTok{# Cache locally}
 \KeywordTok{saveRDS}\NormalTok{(fish, }\StringTok{"data/fish.rds"}\NormalTok{)}
 
@@ -402,7 +408,7 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die pr
 \toprule
 N & Missing & Mittelwert & Varianz & Range\\
 \midrule
-100 & 10 & 5.38 & 5.74 & [0, 11]\\
+100 & 10 & 4.83 & 6.03 & [1, 14]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -770,11 +776,11 @@ Alle hier aufgeführten Modelle (inklusive der zero-inflation models) können al
 
 Tabelle \ref{tab:modelstable} zeigt eine Reihe von Verteilungen mit entsprechend parametrisierter Varianz abhängig vom Erwartungswert \(\mu\) und einem Dispersionsparameter \(\alpha\).
 
-\begin{table}[t]
+\begin{table}
 
 \caption{\label{tab:modelstable} Ein Überblick einiger Modelle mit Varianzparametrisierung (nach @hilbeModelingCountData2014, p. 12).}
 \centering
-\begin{tabular}{lll}
+\begin{tabular}[t]{lll}
 \toprule
 Model & Mean & Variance\\
 \midrule
@@ -802,7 +808,7 @@ Die Wahrscheinlichkeitsfunktion mit der \(\alpha\)-Parametriserung:
 Für \(Y \sim NB(\mu, \alpha)\) gilt
 
 \begin{equation*}
-P(Y = y_i) = \begin{pmatrix} y_i + \frac{1}{\alpha} - 1 \\ \frac{1}{\alpha} - 1\end{pmatrix} \left(\frac{1}{a + \alpha \mu_i}\right)^{\frac{1}{\alpha}} \left(\frac{\alpha \mu_i}{1+\alpha\mu_i}\right)
+  P(Y = y_i) = \begin{pmatrix} y_i + \frac{1}{\alpha} - 1 \\ \frac{1}{\alpha} - 1\end{pmatrix} \left(\frac{1}{a + \alpha \mu_i}\right)^{\frac{1}{\alpha}} \left(\frac{\alpha \mu_i}{1+\alpha\mu_i}\right)
 \end{equation*}
 
 Mit \(\mathbb{E}(Y) = \mu\) und \(\mathrm{Var}(Y) = \mu + \alpha \mu^2\)
@@ -815,9 +821,9 @@ Eine Alternative unter Verwendung von \(\theta = \frac{1}{\alpha}\):
 
 Für \(Y \sim NB(\mu, \theta)\) gilt
 
-\begin{equation}
+\begin{equation*}
 P(Y = y) = \frac{\Gamma(\theta + y)}{\Gamma(\theta) \Gamma(y+1)} \frac{\theta^\theta \mu^y}{(\theta + \mu)^{(\theta + y)}}, \quad y = 0, 1, 2, \ldots
-\end{equation}
+\end{equation*}
 
 Mit \(\mathbb{E}(Y) = \mu\) und \(\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}\)
 \EndKnitrBlock{definition}
@@ -830,19 +836,19 @@ Meist wird der Parameter als \(\alpha\) bezeichnet, mit der Interpretation (rela
 
 \[\mathrm{Var}(Y) = \mu + \alpha \mu^2\]
 
-\begin{align}
+\begin{align*}
   \alpha &= 0 &&\Longrightarrow \text{ Äquivalent zur Poissonverteilung} \\
   \alpha &> 0 &&\Longrightarrow \text{ Overdispersion}
-\end{align}
+\end{align*}
 
 Je nach Quelle (und unter Anderem in R (z.B. \texttt{MASS::glm.nb})) wird die inverse Variante \(\theta = \frac 1 \alpha\) verwendet, womit gilt:
 
 \[\mathrm{Var}(Y) = \mu + \frac{\mu^2}{\theta}\]
 
-\begin{align}
+\begin{align*}
   \theta &> 0 &&\Longrightarrow \text{ Overdispersion} \\
   \theta &\to \infty &&\Longrightarrow \text{ Äquivalent zur Poissonverteilung}
-\end{align}
+\end{align*}
 
 Siehe dazu auch \citet{hilbeModelingCountData2014} (p.~131).
 \EndKnitrBlock{definition}
@@ -1470,6 +1476,80 @@ P(Y = y) &= (1 - \pi) \cdot \frac{\Gamma(\theta+y)}{\Gamma(\theta) \Gamma(y + 1)
 \end{align*}
 \EndKnitrBlock{definition}
 
+Ein Anwendungsbeispiel der ZIP findet sich auf der Seite der UCLA (\href{https://stats.idre.ucla.edu/sas/dae/zero-inflatedpoisson-regression/}{SAS}, \href{https://stats.idre.ucla.edu/r/dae/zip/}{R}, zusätzlich gibt es einmal \href{https://stats.idre.ucla.edu/sas/output/zero-inflated-poisson-regression/}{annotated Output (SAS)}), wobei der \texttt{fish}-Datensatz verwendet wird.
+
+In diesem Datensatz beobachten wir Nullen mit zwei unterschiedlichen Ursprüngen: Zum Einen haben wir die Nullen der Personen, die geangelt haben, aber keine Fische fingen -- und zum Anderen haben wir die Nullen der Personen, die \emph{nicht angelten}, und daher garantiert auch keine Fische fingen (\enquote{\emph{certain zeros}}) (vgl. auch Abschnitt \ref{zi-modelling}).
+
+Ein ZIP-Modell erlaubt uns hier also beide Komponenten zu berücksichtigen -- sowohl die Personen, die erfolglos angelten, als auch die Personen, die gar nicht angelten.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# ZP basierend auf fish-Daten, Modell aus UCLA-Tutorialseite}
+\NormalTok{m_zip <-}\StringTok{ }\NormalTok{pscl}\OperatorTok{::}\KeywordTok{zeroinfl}\NormalTok{(count }\OperatorTok{~}\StringTok{ }\NormalTok{child }\OperatorTok{+}\StringTok{ }\NormalTok{camper }\OperatorTok{|}\StringTok{ }\NormalTok{persons, }\DataTypeTok{data =}\NormalTok{ fish)}
+
+\KeywordTok{summary}\NormalTok{(m_zip)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+#> 
+#> Call:
+#> pscl::zeroinfl(formula = count ~ child + camper | persons, data = fish)
+#> 
+#> Pearson residuals:
+#>     Min      1Q  Median      3Q     Max 
+#> -1.2369 -0.7540 -0.6080 -0.1921 24.0847 
+#> 
+#> Count model coefficients (poisson with log link):
+#>             Estimate Std. Error z value Pr(>|z|)    
+#> (Intercept)  1.59789    0.08554  18.680   <2e-16 ***
+#> child       -1.04284    0.09999 -10.430   <2e-16 ***
+#> camper1      0.83402    0.09363   8.908   <2e-16 ***
+#> 
+#> Zero-inflation model coefficients (binomial with logit link):
+#>             Estimate Std. Error z value Pr(>|z|)    
+#> (Intercept)   1.2974     0.3739   3.470 0.000520 ***
+#> persons      -0.5643     0.1630  -3.463 0.000534 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+#> 
+#> Number of iterations in BFGS optimization: 12 
+#> Log-likelihood: -1032 on 5 Df
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Exponentierte Koeffizienten}
+\NormalTok{tibble}\OperatorTok{::}\KeywordTok{enframe}\NormalTok{(}\KeywordTok{exp}\NormalTok{(}\KeywordTok{coef}\NormalTok{(m_zip)), }\DataTypeTok{name =} \StringTok{"coefficient"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+#> # A tibble: 5 x 2
+#>   coefficient       value
+#>   <chr>             <dbl>
+#> 1 count_(Intercept) 4.94 
+#> 2 count_child       0.352
+#> 3 count_camper1     2.30 
+#> 4 zero_(Intercept)  3.66 
+#> 5 zero_persons      0.569
+\end{verbatim}
+
+Wir erhalten zwei Sets an Koeffizienten:
+
+\textbf{Count-model}: Das count model (\texttt{count\_}), i.e.~Poisson. Hier modellieren wir die Anzahl der gefangen Fische ohne Berücksichtigung der \emph{excess zeros}. Diese Koeffizienten werden analog einer herkömmlichen Poisson-Regression interpretiert.
+
+\textbf{Inflation-model}: Die binomiale Komponente (\texttt{zeros\_}) für die \emph{excess zeros}, womit wir die Wahrscheinlichkeit von \enquote{certain zeros} modellieren. Diese Koeffizienten werden analog einer logistischen Regression interpretiert.\\
+Aus dem UCLA DAE:
+
+\begin{quote}
+\textbf{persons}: If a group were to increase its persons value by one, the odds that it would be in the \enquote{Certain Zero} group would decrease by a factor of exp(-0.5643) = 0.5687581. In other words, the more people in a group, the less likely the group is a certain zero.
+\end{quote}
+
+\begin{quote}
+\textbf{Intercept}: If all of the predictor variables in the model are evaluated at zero, the odds of being a \enquote{Certain Zero} is exp(1.2974) = 3.659769. This means that the predicted odds of a group with zero persons is 3.659769 (though remember that evaluating persons at zero is out of the range of plausible values--every group must have at least one person).
+\end{quote}
+
 \hypertarget{anwendung}{%
 \section{Anwendung}\label{anwendung}}
 
@@ -1746,33 +1826,14 @@ Der Plot veranschaulicht den eher suboptimalen model fit unter diesen Umständen
 \hypertarget{overdisp-diag}{%
 \subsection{Overdispersion: Erkennung und Handhabung}\label{overdisp-diag}}
 
-Der \emph{Score-Test} wird nicht unbedingt empfohlen, findet sich aber in der Literatur:
+Es gibt mehrere Möglichkeiten Poisson-overdispersion zu erkennen, wobei die Pearson-Dispersionsstatistik in der Regel der erste Schritt ist.\\
+Im Folgenden werden zusätzlich einige formale Tests aufgeführt.
 
-\BeginKnitrBlock{definition}[Score-Test auf Overdispersion]
-\protect\hypertarget{def:unnamed-chunk-3}{}{\label{def:unnamed-chunk-3} \iffalse (Score-Test auf Overdispersion) \fi{} }Nach \citet{hilbeModelingCountData2014} (p.~85f):
-
-Sei \(Y\) die abhängige Variable und \(y_i\) die \(i-te\) Beobachtung, mit \(\hat{\mu}_i\) als gefitteter Wert eines Poisson-Modells, dann wird der z-Score wie folgt berechnet:
-
-\begin{equation}
-  z_i = \frac{(y_i - \hat{\mu})^2 -y}{\hat{\mu} \sqrt{2}}
-\end{equation}
-
-Zur Evaluation von \(z\) wird z.B. ein Intercept-only Regressionsmodell mit \(z\) als abhängiger Variable gefitted, mit der Nullhypothese \enquote{Es liegt keine Overdispersion vor}.
-
-Dabei gelten folgende Annahmen:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Die Stichprobe ist \emph{groß}
-\item
-  \(z\) ist t-verteilt
-\end{enumerate}
-\EndKnitrBlock{definition}
+\hypertarget{lagrange-mulitplier-test}{%
+\subsubsection{Lagrange Mulitplier Test}\label{lagrange-mulitplier-test}}
 
 \BeginKnitrBlock{definition}[Lagrange Multiplier Test]
-\protect\hypertarget{def:unnamed-chunk-4}{}{\label{def:unnamed-chunk-4} \iffalse (Lagrange Multiplier Test) \fi{} }Nach \citet{hilbeModelingCountData2014} (p.~85f):
+\protect\hypertarget{def:unnamed-chunk-3}{}{\label{def:unnamed-chunk-3} \iffalse (Lagrange Multiplier Test) \fi{} }Nach \citet{hilbeModelingCountData2014} (p.~85f):
 
 Eine \(\chi^2\)-Teststatistik mit einem Freiheitsgrad.
 
@@ -2108,9 +2169,8 @@ Zero-inflation hängt eng mit overdispersion zusammen. Sie \emph{kann} Ursache f
 
 \begin{center}\includegraphics{poisson-regression_files/figure-latex/excess_zeros_viz-1} \end{center}
 
-\hypertarget{vergleich-von-zero-inflated-models}{%
-\subsubsection*{Vergleich von Zero-Inflated models}\label{vergleich-von-zero-inflated-models}}
-\addcontentsline{toc}{subsubsection}{Vergleich von Zero-Inflated models}
+\hypertarget{zi-compare}{%
+\subsubsection{Vergleich von Zero-Inflated models}\label{zi-compare}}
 
 Zum Vergleich zwischen Zählmodellen und ihren zero-inflated Gegenstücken (e.g.~Poisson vs.~ZIP oder NB vs.~ZINB) wird in der Literatur häufig der Vuong-Test \citep{vuongLikelihoodRatioTests1989, desmarais2013TestingZero} verwendet. Dieser Test ist explizit für den Vergleich von \textbf{un}geschachtelten Modellen entworfen (im Gegensatz zu z.B. dem Likelihood Ratio test). \citet{wilson2015MisuseVuong} kritisiert dieses Vorgehen mit der Begründung (und Demonstration), dass zero-inflated Modelle \emph{nicht} ungeschachtelt mit ihren ursprünglichen Zähmodellen sind. Auch \citet{perumean-chaneyZeroinflatedOverdispersedWhat2013} und \citet{hilbeModelingCountData2014}, die in diesem Dokument mehrfach zitiert werden, verwenden den Vuong-Test auf diese Weise.
 
@@ -2122,9 +2182,8 @@ The misuse of the test stems from misunderstanding of what is meant by the terms
 --- \citet{wilson2015MisuseVuong}, p.~52
 \end{quote}
 
-\hypertarget{modellierung}{%
-\subsubsection*{Modellierung}\label{modellierung}}
-\addcontentsline{toc}{subsubsection}{Modellierung}
+\hypertarget{zi-modelling}{%
+\subsubsection{Modellierung}\label{zi-modelling}}
 
 Für die Modellierung von zero-inflated Daten stehen primär zwei Möglichkeiten zur Verfügung (vgl. auch \citet{hilbeModelingCountData2014}, p.~19):
 
@@ -2138,7 +2197,8 @@ Für die Modellierung von zero-inflated Daten stehen primär zwei Möglichkeiten
 \end{enumerate}
 
 Ob hurdle model oder zero-inflated model die bessere Wahl ist hängt mitunter davon ab, welche Annahmen über die \emph{Ursache der Nullen} getroffen werden können.\\
-Wenn es eine echte Trennung der Mechanismen (\emph{\enquote{separation of mechanisms}}) gibt, die die Nullen und die positiven counts verursachen, dann wäre ein hurdle model eher angemessen.\\
+Wenn es eine echte Trennung der Mechanismen (\emph{\enquote{separation of mechanisms}}) gibt, die die Nullen und die positiven counts verursachen, dann wäre ein hurdle model eher angemessen. IDas würde allerdings auch annehmen, dass alle Nullen \emph{die gleiche} Ursache haben.
+
 Wenn sich die Nullen überlappen, es also keine getrennten Prozesse zu geben scheint, dann wären zero-inflated models angemessen \citep[p.~209]{hilbeModelingCountData2014}.
 
 Als Veranschaulichung für zwei sich überlappende Mechanismen können wir das \emph{fish}-Beispiel auf \href{https://stats.idre.ucla.edu/sas/output/zero-inflated-poisson-regression/}{dieser UCLA-Tutorialseite verwenden}. Hier ist die Anzahl der gefangenen Fische an einem Wochenende in einem Park die Zählvariable.
@@ -2299,7 +2359,7 @@ Zwei gängige Komponenten für unnested hurdle models:
 In diesem Fall entspricht das Resultat eines hurdle models zwei separat gefitteten Modellen (e.g.~Pois + Logit), die getrennt interpretierbar sind (im Gegensatz zu zero-inflated models!).
 
 \BeginKnitrBlock{definition}[Hurdle Model]
-\protect\hypertarget{def:unnamed-chunk-5}{}{\label{def:unnamed-chunk-5} \iffalse (Hurdle Model) \fi{} }Nach \citet{winkelmannEconometricAnalysisCount2010}, p.~179f:
+\protect\hypertarget{def:unnamed-chunk-4}{}{\label{def:unnamed-chunk-4} \iffalse (Hurdle Model) \fi{} }Nach \citet{winkelmannEconometricAnalysisCount2010}, p.~179f:
 
 Sei \(g_1(0)\) die Wahrscheinlichkeit des Outcomes \(0\) und \(g_1(k), k = 1, 2, 3, \ldots\) die Wahrscheinlichkeitsfunktion für natürliche Zahlen, dann ist die Wahrscheinlichkeitsfunktion eines \emph{hurdle-at-zero} Modells:
 
@@ -2431,7 +2491,7 @@ language & en\_US.UTF-8\\
 collate & en\_US.UTF-8\\
 ctype & en\_US.UTF-8\\
 tz & UTC\\
-date & 2019-09-13\\
+date & 2019-09-18\\
 \bottomrule
 \end{tabular}
 \end{table}
