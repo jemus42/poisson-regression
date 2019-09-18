@@ -142,6 +142,12 @@ Die Datensätze des UCLA IDRE können wie folgt eingelesen werden:
 ```r
 fish <- haven::read_sas("https://stats.idre.ucla.edu/stat/sas/code/fish.sas7bdat")
 
+fish <- within(fish, {
+    nofish <- factor(nofish)
+    livebait <- factor(livebait)
+    camper <- factor(camper)
+})
+
 # Cache locally
 saveRDS(fish, "data/fish.rds")
 
