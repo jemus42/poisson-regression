@@ -19,7 +19,8 @@ Imports:
     purrr,
     sessioninfo,
     VGAM,
-    pscl
+    pscl,
+    forcats
 Remotes: 
     hrbrmstr/firasans
 Encoding: UTF-8
