@@ -318,8 +318,10 @@ poisson-regression
 poisson-regression.Rmd
 _bookdown_files
 
-# Slidy
+# Slides
 _presentation/*.html
+_presentation/*_files
+_presentation/libs
 
 # Misc
 fiddle.R

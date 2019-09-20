@@ -1,8 +1,27 @@
 ---
-title: "Poisson Regression — und ihre Leiden"
-author: "Lukas"
+title: "Poisson Regression"
+subtitle: " — und ihre Leiden"
+author: "Lukas Burk"
 date: "`r format(Sys.time(), '%F %T')`"
-output: slidy_presentation
+output: 
+  revealjs::revealjs_presentation:
+    slide_level: 1
+    incremental: true
+    fig_caption: true
+    transition: "slide"
+    fig_height: 5
+    reveal_options:
+      navigationMode: "linear"
+    self_contained: false
+    lib_dir: "libs"
+  slidy_presentation:
+    incremental: true
+    footer: "Lukas Burk"
+    fig_caption: true
+  ioslides_presentation:
+    incremental: true
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -10,15 +29,113 @@ knitr::opts_chunk$set(
   echo = FALSE, message = FALSE, warning = FALSE
 )
 
-library(DiagrammeR)
+# library(DiagrammeR)
+library(dplyr)
+library(ggplot2)
+library(purrr)
+library(firasans)
+library(broom)
+library(kableExtra)
+
+extrafont::loadfonts(quiet = TRUE)
+library(firasans) # Install via  remotes::install_github("hrbrmstr/firasans")
+
+theme_set(
+   theme_ipsum_fsc()
+)
+
+fish <- readRDS(here::here("data/fish.rds"))
 ```
 
-## Models
+# Intro
 
-# ```{r model-graph}
-# grViz(here::here("graphs/model-graph.dot"))
-# ```
+Hier, in kürze:
+
+1. Das Poisson-Modell im groben
+2. "Aber aber…": Verletzte Annahmen und andere Unannehmlichkeiten
+3. Dispersion: Schade eigentlich
+4. Nullen: ಠ_ಠ 
+
+
+# Zähldaten
+
+Wir haben eine zu erklärende Variable $Y$, was machen wir damit?  
+In einer perfekten Welt:
+
+- $Y \in \mathbb{R}$: Lineares Modell
+- $Y \in [0, 1]$: Logistische Regression
+- $Y \in \mathbb{N}_0$: Poisson Regression
+
+# Poisson Modell
+
+$$\begin{aligned}
+Y \sim \mathrm{Poisson}(\mu): \quad
+\mathrm{P}(Y = y) = \frac{\mu^y \exp(-\mu)}{y!}, \quad y \in \mathbb{N}_0
+\end{aligned}$$
+
+```{r poissondists, fig.cap="Poisson-Verteilungen mit ausgewählten Parametern."}
+map_df(c(0.5, 1, 2, 5, 10, 15), ~{
+  tibble(
+    mu = .x,
+    x = 0:20,
+    poi = dpois(x, mu)
+  )
+}) %>%
+  ggplot(aes(x = x, y = poi, color = factor(mu), fill = factor(mu))) +
+  geom_path(aes(group = mu), linetype = "dotted") +
+  geom_point(shape = 21, color = "black", size = 2.5, stroke = .2) +
+  #geom_segment(aes(x = x, xend = x, y = 0 , yend = poi)) +
+  scale_color_viridis_d(direction = -1, guide = FALSE) +
+  scale_fill_viridis_d(
+    direction = -1, guide = guide_legend(
+      keywidth = .5,
+      nrow = 1,
+      direction = "horizontal"
+      )
+  ) +
+  labs(
+    title = "Poi(\u00b5)",
+    x = "y", y = "Poi(y, \u00b5)", fill = "\u00b5"
+  ) +
+  theme(legend.position = c(.7, 1))
+```
+
+
+# Beispiel: Fischfang
+
+Datensatz `fish`: An einem Wochenendausflug in einen Park wurden 250 Gruppen nach der Anzahl ihrer geangelten Fische befragt
+
+- `count`: Anzahl gefangener Fische
+- `camper` [0, 1]: Haben sie ein Wohnmobil mitgebracht?
+
+<br/>
+
+# Fischfang: Einfaches Poisson-Modell
+
+```{r fish-pois-1, attr.output = "fragment"}
+fish_poisson <- glm(count ~ camper, family = poisson(), data = fish)
+
+tidy(fish_poisson, exponentiate = FALSE) %>%
+  transmute(term, estimate, exp_estimate = exp(estimate)) %>%
+  kable(
+    format = "html", digits = 2,
+    caption = "Poisson-Modell: count ~ camper",
+    col.names = c("Term", "Koeffizient", "Koeffizient (exp)")
+  ) %>%
+  kable_styling()
+```
+
+- `camper1`: Gruppen, die einen Wohnwagen mitbrachten, fingen ~3 mal so viele Fische wie Gruppen ohne Wohnwagen
+- Wenn ein *exposure*-Parameter / `offset` hinzugefügt wird (z.B. `log(days)`), entspräche der Koeffizient einer **rate ratio**
+
+# Modelle
+
 
 ```{r model-graph-png, fig.align="center", out.width="60%"}
 knitr::include_graphics(here::here("graphs/model-graph.dot.png"))
 ```
+
+# Done!
+
+>- In Voll: [poisson.tadaa-data.de](https://poisson.tadaa-data.de)
+>- Source: [git.tadaa-data.de/lukas/poisson-regression](git.tadaa-data.de/lukas/poisson-regression)
