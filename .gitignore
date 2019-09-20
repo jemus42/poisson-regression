@@ -315,7 +315,11 @@ TSWLatexianTemp*
 
 # Bookdown ----
 poisson-regression
+poisson-regression.Rmd
 _bookdown_files
+
+# Slidy
+_presentation/*.html
 
 # Misc
 fiddle.R
