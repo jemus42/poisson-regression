@@ -256,12 +256,8 @@ Bei underdispersion werden die Standardfehler des Modells *über*schätzt, im Ge
 
 Im Allgemeinen wird für diese Situation die [generalized Poisson empfohlen](https://stats.stackexchange.com/a/237177/80056)  [@hilbeModelingCountData2014], da diese Erweiterung der Poisson-Verteilung nicht nur einen zusätzlichen Parameter für die Varianz hat (analog NB, PIG), sondern dieser Parameter auch negativ sein kann.
 
-
-
 Weiterhin taucht im Kontext von hurdle models (siehe \@ref(mod-hurdle)) folgende Bemerkung auf:
 
 > [...] that underdispersion occurs if **zeros are less frequent than the parent distribution would predict**.
 > The higher the expected value of the Poisson distribution, the lower the predicted probability of zero outcome and the lower the scope for underdispersion.
 > -- [@winkelmannEconometricAnalysisCount2010, p. 180 (eigene Hervorhebung)]
-
-Daraus lässt sich auch schließen, dass in Situationen mit binären outcomes und sehr niedrigem Erwartungswert die erwartete Anzahl an Nullen sehr hoch sein wird – weshalb es an dieser Stelle vermutlich eine Überlappung zwischen underdispersion und zero-inflation gibt.

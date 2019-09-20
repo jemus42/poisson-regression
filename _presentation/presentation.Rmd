@@ -31,6 +31,7 @@ knitr::opts_chunk$set(
 
 # library(DiagrammeR)
 library(dplyr)
+library(tidyr)
 library(ggplot2)
 library(purrr)
 library(firasans)
@@ -128,12 +129,169 @@ tidy(fish_poisson, exponentiate = FALSE) %>%
 - `camper1`: Gruppen, die einen Wohnwagen mitbrachten, fingen ~3 mal so viele Fische wie Gruppen ohne Wohnwagen
 - Wenn ein *exposure*-Parameter / `offset` hinzugefügt wird (z.B. `log(days)`), entspräche der Koeffizient einer **rate ratio**
 
-# Modelle
+# Ein Blick auf die Daten
 
+```{r fish-summary}
+fish %>%
+  summarize(
+    Mean = mean(count), Var = var(count), Min = min(count), Max = max(count)
+  ) %>%
+  kable(caption = "Summary: count") %>%
+  kable_styling()
+  
+fish %>%
+  filter(count <= 20) %>%
+  count(camper, count) %>%
+  ggplot(aes(x = count, y = n, fill = camper)) +
+  geom_col(position = position_dodge2(preserve = "single")) +
+  scale_fill_brewer(palette = "Set2", labels = c("Ohne Camper", "Mit Camper")) +
+  labs(
+    title = "fish: Barchart nach camper",
+    subtitle = "x-Achse limitiert auf [0, 20]",
+    x = "Anzahl Fische", y = "Count", fill = ""
+  ) +
+  theme(legend.position = "bottom")
+```
+
+# Problem 1: Overdispersion
+
+Zentrale Eigenschaft der Poisson: **Equidispersion**
+
+$$
+\mu = \mathbb{E}(Y) = \mathbb{V}(Y)
+$$
+
+- Poisson–**Over**dispersion: $\mathbb{E}(Y) < \mathbb{V}(Y)$
+  - -> **Unter**schätzte Standardfehler
+- Poisson–**Under**dispersion: $\mathbb{E}(Y) > \mathbb{V}(Y)$  
+  - -> **Über**schätzte Standardfehler
+  
+<br>
+- Allgemeine Overdispersion: $\mathbb{V}(Y\ |\ X) > \mathbb{V}(Y)$
+
+# Overdispersion (2)
+
+Mögliche Gründe:
+
+- Fehlspezifiziertes Modell (fehlende Prädiktoren, Transformationen...)
+- Korrellierte Daten / verletzte Unabhängigkeitsannahme
+   - -> robuste Varianzschätzer (sandwich)
+- Ausreißer
+- Missing values (MNAR)
+- Zero-Inflation <small>(dazu später mehr)</small>
+- etc. pp.
+
+# Overdispersion (3): Dispersionsstatistik
+
+Für prinzipiell alle Modell anwendbar:
+
+$$
+D = \frac{\chi_{\text{Pearson}}^2}{\mathrm{df}}
+$$
+
+- $D = 1$: Poisson!
+- $D > 1$: Overdispersion
+- $D < 1$: Underdispersion
+- Over/underdispersion jeweils **relativ zum Modell**!
+
+# Problem 2: Zero-Inflation
+
+- Wenn das Modell deutlich weniger Nullen vorhersagt, als tatsächlich vorliegen
+- Erhöht Modellvarianz, verzerrt bedingten Erwartungswert
+- Kontrolle: Beobachtete und erwartete Häufigkeiten des Modells vergleichen
+
+<br/>
+<div class="fragment">
+```{r compare-observed-expected}
+observed_v_expected <- fish %>%
+  count(count, name = "observed") %>%
+  mutate(
+    expected = purrr::map_dbl(count, ~{
+                  dpois(.x, fitted(fish_poisson)) %>%
+                    sum() %>%
+                    round(2)
+                }),
+    difference = observed - expected
+  ) 
+
+observed_v_expected %>%
+  head(3) %>%
+  kable(
+    caption = "fish: Observed + expected counts",
+    col.names = c("Fische", "Beobachtet", "Erwartet (Poisson)", "Differenz"),
+  ) %>%
+  kable_styling()
+```
+</div>
+
+# Modelle
 
 ```{r model-graph-png, fig.align="center", out.width="60%"}
 knitr::include_graphics(here::here("graphs/model-graph.dot.png"))
 ```
+
+# Zero-Inflated Modell
+
+*Mixture distribution*: Count-Modell gemischt mit Null-Modell
+
+- **Zero-Inflated Poisson**: Poisson-Verteilung gemischt mit Nullverteilung
+- Mixture proportion: $\pi \in [0, 1]$
+
+$$
+\begin{aligned}
+P(Y = 0) &= \pi + (1-\pi) \cdot e^{-\mu} \\
+P(Y = y) &= (1 - \pi) \cdot \frac{\mu^y e^{-\mu}}{y!}, \quad y = 1, 2, 3, \ldots
+\end{aligned}
+$$
+## ZI (2): Grundidee
+
+Annahme:  
+- Es gibt 0-counts aus zwei unterschiedlichen Prozessen
+- Beispiel `fish`: 
+  - Nicht alle Gruppen haben am Wochenende geangelt!
+  - *Alle* wurde nach der Anzahl der Fische befragt
+  
+```{r zi-principle-plot}
+nsim <- 10^4
+meansim <- 2
+
+tibble::tibble(
+  counts = rpois(n = nsim, lambda = meansim),
+) %>%
+  count(counts, name = "Poisson") %>%
+  mutate(
+    Zeros = floor(Poisson/2),
+    Zeros = ifelse(counts > 0, 0, Zeros)
+  ) %>%
+  gather(source, freq, Poisson, Zeros) %>%
+  mutate(source = forcats::fct_rev(source),
+         freq = freq/nsim) %>%
+  ggplot(aes(x = counts, y = freq, fill = source)) +
+  geom_col(alpha = .75) +
+  scale_x_continuous(breaks = seq(0, 12)) +
+  scale_fill_brewer(palette = "Set1", labels = c(Zeros = "Certain Zeros", Poisson = "Poisson-Modell")) +
+  labs(
+    title = "Schaubild: Zero-Inflated Poisson",
+    subtitle = "Nullen in den Daten: Certain zeros + count zeros",
+    x = "Count", y = "Anteil an Gesamtsichtprobe", fill = "",
+    caption = "Simulierte Daten"
+  ) +
+  theme(legend.position = "bottom")
+```
+
+
+
+# Extrembeispiel
+
+- Mittelwert = 0.00088
+- Varianz = 0.00088
+- Dispersion = 0.76
+- Expected counts (Poisson) ≈ Observed counts (± 0.01%)
+
+```{r extrembeispiel-barchart}
+knitr::include_graphics("img/extrembeispiel-barchart.png")
+```
+
 
 # Done!
 
