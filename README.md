@@ -6,10 +6,10 @@ Ein [bookdown](https://bookdown.org/yihui/bookdown/)-Projekt zur Übersicht der 
 
 **Code**:
 
-- [Gitea (Self-hosted)](https://git.tadaa-data.de/lukas/poisson-regression)
-- [GitHub: jemus42/poisson-regression](https://github.com/jemus42/poisson-regression)
+- Gitea (Self-hosted): <https://git.tadaa-data.de/lukas/poisson-regression>
+- GitHub: <https://github.com/jemus42/poisson-regression>
 
 **HTML / PDF**:
 
-- [Travis-CI](https://travis-ci.org) build output: [GitHub Pages](https://jemus42.github.io/poisson-regression/)
-- Manual build output: https://lukas.tadaa-data.de/poisson/
+- GitHub Pages: <https://jemus42.github.io/poisson-regression>
+- Self-Hosted: <https://poisson.tadaa-data.de>

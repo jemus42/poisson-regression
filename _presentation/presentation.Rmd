@@ -50,13 +50,11 @@ fish <- readRDS(here::here("data/fish.rds"))
 
 # Intro
 
-Hier, in kürze:
-
 1. Das Poisson-Modell im groben
-2. "Aber aber…": Verletzte Annahmen und andere Unannehmlichkeiten
-3. Dispersion: Schade eigentlich
-4. Nullen: ಠ_ಠ 
-
+2. Verletzte Annahmen und andere Unannehmlichkeiten
+3. Dispersion: Zu viel oder zu wenig
+4. Zeros
+5. Alternative Modelle
 
 # Zähldaten
 
@@ -127,7 +125,7 @@ tidy(fish_poisson, exponentiate = FALSE) %>%
 ```
 
 - `camper1`: Gruppen, die einen Wohnwagen mitbrachten, fingen ~3 mal so viele Fische wie Gruppen ohne Wohnwagen
-- Wenn ein *exposure*-Parameter / `offset` hinzugefügt wird (z.B. `log(days)`), entspräche der Koeffizient einer **rate ratio**
+- Ein *exposure*-Parameter / `offset` (z.B. `log(days)`) normiert auf Untersuchungszeiträume (in diesem Fall nicht notwendig)
 
 # Ein Blick auf die Daten
 
@@ -162,12 +160,10 @@ $$
 $$
 
 - Poisson–**Over**dispersion: $\mathbb{E}(Y) < \mathbb{V}(Y)$
-  - -> **Unter**schätzte Standardfehler
+  - → **Unter**schätzte Standardfehler
 - Poisson–**Under**dispersion: $\mathbb{E}(Y) > \mathbb{V}(Y)$  
-  - -> **Über**schätzte Standardfehler
-  
-<br>
-- Allgemeine Overdispersion: $\mathbb{V}(Y\ |\ X) > \mathbb{V}(Y)$
+  - → **Über**schätzte Standardfehler
+- Allgemein "Overdispersion": $\mathbb{V}(Y\ |\ X) > \mathbb{V}(Y)$
 
 # Overdispersion (2)
 
@@ -175,15 +171,13 @@ Mögliche Gründe:
 
 - Fehlspezifiziertes Modell (fehlende Prädiktoren, Transformationen...)
 - Korrellierte Daten / verletzte Unabhängigkeitsannahme
-   - -> robuste Varianzschätzer (sandwich)
+   - → robuste Varianzschätzer (sandwich)
 - Ausreißer
 - Missing values (MNAR)
 - Zero-Inflation <small>(dazu später mehr)</small>
 - etc. pp.
 
 # Overdispersion (3): Dispersionsstatistik
-
-Für prinzipiell alle Modell anwendbar:
 
 $$
 D = \frac{\chi_{\text{Pearson}}^2}{\mathrm{df}}
@@ -192,6 +186,7 @@ $$
 - $D = 1$: Poisson!
 - $D > 1$: Overdispersion
 - $D < 1$: Underdispersion
+- Auch für andere Modelle (z.B. NB) anwendbar
 - Over/underdispersion jeweils **relativ zum Modell**!
 
 # Problem 2: Zero-Inflation
@@ -230,27 +225,96 @@ observed_v_expected %>%
 knitr::include_graphics(here::here("graphs/model-graph.dot.png"))
 ```
 
-# Zero-Inflated Modell
+# Negativ-Binomial (NB2)
 
-*Mixture distribution*: Count-Modell gemischt mit Null-Modell
+- Mixture aus Poisson + Gamma-verteilter Varianz
+- $\mathbb{E}(Y) = \mu$ und $\mathrm{Var}(Y) = \mu + \alpha \mu^2$ und $\alpha \ge 0$
+- $\alpha$ ist der Dispersionsparameter: $\alpha = 0$ entspräche Poisson
 
+- → Varianz kann größer/gleich Erwartungswert sein 
+- → **Overdispersion** modellierbar
+- **Cavetat 1**: $\alpha < 0$ ist *nicht* möglich, also **keine Underdispersion**
+- **Caveat 2**: Insb. in R verwendet: $\theta = \frac{1}{\alpha}$!
+- **Caveat 3**: Parameter wird außerhalb des GLM geschätzt
+
+# NB-Varianten
+
+- Es gibt zwei Parametrisierungen der NB: NB1, NB2
+- $\mathrm{Var}(Y) = \mu + \alpha \mu^{\boldsymbol{\rho}}$
+   - $\rho = 1 \to \mathrm{NB1}$
+   - $\rho = 2 \to \mathrm{NB2}$ (eigentlich der Default)
+- Mögliche Entscheidungshilfe (oder Alternative): 
+- **NB-P**-Modell: Schätzt $\rho$ als Parameter
+
+# Poisson Inverse Gaussian (PIG <small>(sic!)</small>)
+
+- NB = Poisson + Gamma-verteilte Varianz
+- PIG = Poisson + Inverse Gaussian-verteilte Varianz
+- Ähnliche Nachteile wie NB (nur Overdispersion)
+- Alternative zur NB für "*highly overdispersed data*"
+- Softwareimplementation: Spärlich?
+
+# Generalized Poisson (GP)
+
+- Verallgemeinerung der Poisson mit zusätzlichem Parameter $\delta$
+- Unterschied zu NB: Kann **Over**- _und_ **under**dispersion
+- Theoretisch ist die GP das flexibelste Werkzeug...
+- In der Praxis: Softwareimplementation "geht so"
+- In SAS z.B. via `NLMIXED`, `FMM` (nicht getestet)
+- in R: `gamlss` oder `VGAM`: Unterschiedliche Parametrisierungen, semi-nachvollziehbare Dokumentation, numerische Instabilität für kleine Erwartungswerte
+
+# Conway-Maxwell Poisson (COMP)
+
+$$
+\begin{align}
+P(X = x) &= \frac{\lambda^x}{(x!)^\nu} \frac{1}{Z(\lambda, \nu)}, \quad x = 0, 1, 2, \ldots \\
+Z(\lambda, \nu) &= \sum_{j = 0}^\infty \frac{\lambda^j}{(j!)^\nu} \\
+\\
+\lambda > 0&, \nu \ge 0
+\end{align}
+$$
+
+
+# COMP (2)
+
+- Andere Verallgemeinerung als die GP
+- Parameter $\lambda$, $\nu \ge 0$
+- Eierlegende Wollmilchsau?
+- Grenzfälle (link: $\log \lambda$): 
+  - Poisson ($\nu = 1$)
+  - Bernoulli ($\nu \to \infty$), $P(X = 1) = \frac{\lambda}{1 + \lambda}$
+  - Geometrisch ($\nu = 0$)
+- $\mathrm{Var}(Y) \approx \frac{1}{\nu} \mathbb{E}(Y)$
+
+# Zero-Inflated Modelle
+
+*Mixture distribution*: Mischung zweier PMFs $g_1, g_2$ entsprechend Proportion $p$ 
+
+$$P(Y = y) = p \cdot g_1(y) + (1-p) \cdot g_2(y)$$
+
+- ZI-Verteilung: Count-Verteilung gemischt mit Null-Verteilung
 - **Zero-Inflated Poisson**: Poisson-Verteilung gemischt mit Nullverteilung
 - Mixture proportion: $\pi \in [0, 1]$
 
+<div class="fragment">
 $$
 \begin{aligned}
 P(Y = 0) &= \pi + (1-\pi) \cdot e^{-\mu} \\
 P(Y = y) &= (1 - \pi) \cdot \frac{\mu^y e^{-\mu}}{y!}, \quad y = 1, 2, 3, \ldots
 \end{aligned}
 $$
-## ZI (2): Grundidee
+</div>
+
+# ZI (2): Grundidee
 
 Annahme:  
+
 - Es gibt 0-counts aus zwei unterschiedlichen Prozessen
 - Beispiel `fish`: 
-  - Nicht alle Gruppen haben am Wochenende geangelt!
-  - *Alle* wurde nach der Anzahl der Fische befragt
-  
+- Nicht alle Gruppen haben am Wochenende geangelt!
+- *Alle* wurde nach der Anzahl der Fische befragt
+
+<div class="fragment">
 ```{r zi-principle-plot}
 nsim <- 10^4
 meansim <- 2
@@ -260,7 +324,7 @@ tibble::tibble(
 ) %>%
   count(counts, name = "Poisson") %>%
   mutate(
-    Zeros = floor(Poisson/2),
+    Zeros = floor(Poisson/1.25),
     Zeros = ifelse(counts > 0, 0, Zeros)
   ) %>%
   gather(source, freq, Poisson, Zeros) %>%
@@ -278,8 +342,38 @@ tibble::tibble(
   ) +
   theme(legend.position = "bottom")
 ```
+</div>
 
+# ZI: Schätzung
 
+- Modell-Output enthält zwei **zusammenhängende** Komponenten:
+- Count-Modell: Reguläre Interpretation, analog Poisson
+- Logit-Modell für $\pi$: Wahrscheinlichkeit, eine "Certain Zero" zu sein
+
+<div class="fragment">
+```{r zi-fish-model}
+m_zip <- pscl::zeroinfl(count ~ camper, data = fish)
+
+exp(m_zip$coefficients$count) %>% 
+  tibble::enframe(name = "Term", "Coef (exp)") %>%
+  kable(caption = "Count Modell")
+
+exp(m_zip$coefficients$zero) %>% 
+  tibble::enframe(name = "Term", "Coef (exp)") %>%
+  kable(caption = "Zero Modell")
+```
+</div>
+
+# Modellvergleich
+
+- Im Allgemeinen: AIC, BIC (ggf. adjustierte Abdwandlungen)
+- Vergleich der Prognosegüte
+- Likelihood Ratio Test für **geschachtelte** Modelle
+- Geschachtelt z.B.: Poisson $\subseteq$ NB ($\alpha = 0$)
+- Nicht geschachtelt: PIG & NB
+- **Kontroverse**: ZI-Modelle
+- Poisson $\subseteq$ ZIP (laut Wilson (2015)), aber ältere Literatur sieht das anders
+- Für **ungeschachtelte Modelle**: Vuong-Test
 
 # Extrembeispiel
 
@@ -288,10 +382,17 @@ tibble::tibble(
 - Dispersion = 0.76
 - Expected counts (Poisson) ≈ Observed counts (± 0.01%)
 
+<div class="fragment">
 ```{r extrembeispiel-barchart}
 knitr::include_graphics("img/extrembeispiel-barchart.png")
 ```
+</div>
 
+# TL;DR: What do?
+
+```{r decision-graph-png, fig.align="center", out.width="60%"}
+knitr::include_graphics(here::here("graphs/decision-guide.dot.png"))
+```
 
 # Done!
 
