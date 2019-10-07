@@ -140,7 +140,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{Stand: 20. September 2019 14:00 Uhr (CEST)}
+    \date{Stand: 07. October 2019 17:04 Uhr (CEST)}
 
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -196,8 +196,8 @@
 \setcounter{tocdepth}{2}
 \tableofcontents
 }
-\hypertarget{einfuhrung}{%
-\section{Einführung}\label{einfuhrung}}
+\hypertarget{einfuxfchrung}{%
+\section{Einführung}\label{einfuxfchrung}}
 
 Dieses Dokument soll einen Überblick zum Umgang mit Zähldaten (\emph{count data}) liefern.\\
 Zähldaten können im Allgemeinen mittels Poissonverteilung im Rahmen des GLM modelliert werden, allerdings sind in der Praxis einige Komplikationen zu erwarten:
@@ -408,7 +408,7 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die pr
 \toprule
 N & Missing & Mittelwert & Varianz & Range\\
 \midrule
-100 & 10 & 5.08 & 4.43 & [1, 10]\\
+100 & 10 & 5.38 & 5.07 & [1, 13]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -756,8 +756,6 @@ Weiterhin taucht im Kontext von hurdle models (siehe \ref{mod-hurdle}) folgende 
 The higher the expected value of the Poisson distribution, the lower the predicted probability of zero outcome and the lower the scope for underdispersion.
 -- \citep[p.~180 (eigene Hervorhebung)]{winkelmannEconometricAnalysisCount2010}
 \end{quote}
-
-Daraus lässt sich auch schließen, dass in Situationen mit binären outcomes und sehr niedrigem Erwartungswert die erwartete Anzahl an Nullen sehr hoch sein wird -- weshalb es an dieser Stelle vermutlich eine Überlappung zwischen underdispersion und zero-inflation gibt.
 
 \hypertarget{multiparam}{%
 \section{Mehrparametrische Modelle}\label{multiparam}}
@@ -2299,8 +2297,8 @@ Eine allgemeinere Darstellung zur Veranschaulichung der sich ergebenden Möglich
 \appendix \addcontentsline{toc}{section}{\appendixname}}
 
 
-\hypertarget{verfugbarkeit}{%
-\section{Verfügbarkeit}\label{verfugbarkeit}}
+\hypertarget{verfuxfcgbarkeit}{%
+\section{Verfügbarkeit}\label{verfuxfcgbarkeit}}
 
 Sowohl der Quelltext als auch das Output (sprich, dieses Dokument in mehreren Formaten) sind öffentlich an mehreren Orten zu finden:
 
@@ -2325,8 +2323,8 @@ Sowohl der Quelltext als auch das Output (sprich, dieses Dokument in mehreren Fo
 
 Wobei automatische builds von \href{https://travis-ci.org/jemus42/poisson-regression}{Travis CI} übernommen werden, und das Resultat an die entsprechenden Zielorte gepusht wird. Die \enquote{manuelle} Version auf \texttt{https://lukas.tadaa-data.de/poisson/} existiert primär zum schnellen Testen -- die finalen Zielorte sollen GitHub Pages und (vermutlich) \texttt{https://poisson.tadaa-data.de} sein.
 
-\hypertarget{erganzungen}{%
-\section{Ergänzungen}\label{erganzungen}}
+\hypertarget{erguxe4nzungen}{%
+\section{Ergänzungen}\label{erguxe4nzungen}}
 
 Hier finden sich Erläuterungen zu Themen, die nur tangentiell in Verbindung mit dem eigentlichen Thema stehen, aber unter Umständen dennoch von Interesse sein könnten.
 
@@ -2532,7 +2530,7 @@ language & en\_US.UTF-8\\
 collate & en\_US.UTF-8\\
 ctype & en\_US.UTF-8\\
 tz & UTC\\
-date & 2019-09-20\\
+date & 2019-10-07\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2547,9 +2545,9 @@ broom & 0.5.2 & CRAN (R 3.6.1)\\
 DiagrammeR & 1.0.1 & CRAN (R 3.6.1)\\
 dplyr & 0.8.3 & CRAN (R 3.6.1)\\
 firasans & 0.1.0 & Github (hrbrmstr/firasans@52f83c8)\\
-gamlss & 5.1-4 & CRAN (R 3.6.1)\\
+gamlss & 5.1-5 & CRAN (R 3.6.1)\\
 gamlss.data & 5.1-4 & CRAN (R 3.6.1)\\
-gamlss.dist & 5.1-4 & CRAN (R 3.6.1)\\
+gamlss.dist & 5.1-5 & CRAN (R 3.6.1)\\
 ggplot2 & 3.2.1 & CRAN (R 3.6.1)\\
 hrbrthemes & 0.6.0 & CRAN (R 3.6.1)\\
 kableExtra & 1.1.0 & CRAN (R 3.6.1)\\
