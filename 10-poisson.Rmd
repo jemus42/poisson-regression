@@ -103,7 +103,7 @@ Ein offset kann z.B. in `R` via `+ offset(log(variable))` in der model `formula`
 5. Erwartungswert und Varianz sind identisch (*equidispersion*), i.e. ein größerer Erwartungswert impliziert auch eine größere Varianz (siehe \@ref(dispersion)).
 6. Die $\chi^2$-Statistik hat einen Wert nahe 1, i.e. beobachtete und erwartete Varianzen der response sind gleich (Dispersionsindex).
 
-(Nach Tabelle in [@hilbeModelingCountData2014], braucht noch Deduplizierung)
+(Nach Tabelle in [@hilbeModelingCountData2014])
 
 Alternative Formulierung nach @winkelmannEconometricAnalysisCount2010 (p. 64):
 
