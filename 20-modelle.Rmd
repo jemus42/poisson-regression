@@ -149,7 +149,7 @@ summary(mod_nb2)
 So wie die *NB* als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz betrachtet werden kann, ist die *Poisson Inverse Gaussian* (*PIG*) eine mixture aus Poisson-Verteilung mit [invers-normalverteilter](https://en.wikipedia.org/wiki/Inverse_Gaussian_distribution) Varianz.  
 Die Verteilung hat Erwartungswert und Varianz mit gleicher Form wie die NB2, unterscheidet sich aber in ihrer Form – sie ist linkssteiler und hat längere tails.
 
-Die *PIG* kann also alternativ zur *NB* verwendet werden, insbesondere für den Fall sehr linkssteifer Daten.
+Die *PIG* kann also alternativ zur *NB* verwendet werden, insbesondere für den Fall sehr linkssteiler Daten.
 
 > "Simply put, PIG models can better deal with highly overdispersed data that can negative binomial regression, particularly data clumped heavily at 1 and 2"
 > 
