@@ -20,7 +20,8 @@ Imports:
     sessioninfo,
     VGAM,
     pscl,
-    forcats
+    forcats,
+    tinytex
 Remotes: 
     hrbrmstr/firasans
 Encoding: UTF-8
