@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Literatur | Poisson-Regression und ihre Leiden</title>
   <meta name="description" content="Because count data is hard" />
-  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Literatur | Poisson-Regression und ihre Leiden" />
   <meta property="og:type" content="book" />
@@ -277,21 +277,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </div>
-<div class="footnotes">
-<hr />
-<ol>
-<li id="fn1"><p>Der Poisson-Parameter wird von unterschiedlichen Autoren als <span class="math inline">\(\lambda\)</span> oder <span class="math inline">\(\mu\)</span> bezeichnet, und ich habe mich noch nicht für eine Variante entschieden).<a href="poisson-modell.html#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>Diese Annahme (Unabhängigkeit der Ereignisse) der Poissonverteilung ist auch der Grund, warum sich die Poissonverteilung prinzipiell <strong>nicht</strong> eignet um Epidemien wie Ebola zu modellieren. Freundliche Grüße an Frau Pigeot, “Statistische Modellierung I”, WiSe 18/19.<a href="dispersion.html#fnref2" class="footnote-back">↩︎</a></p></li>
-<li id="fn3"><p>Das ist auch der Grund, warum in R nicht <code>glm()</code> verwendet werden kann, sondern eine separate Implementation mit expliziter Schätzung von <span class="math inline">\(\theta\)</span> benötigt wird (<code>MASS::glm.nb</code>)<a href="mod-nb.html#fnref3" class="footnote-back">↩︎</a></p></li>
-<li id="fn4"><p>Daher können Standardfehler nicht wie für canonical models üblich via OIM (<em>observed information matrix</em>) geschätzt werden, sondern via EIM (<em>expected information matrix</em>). Die EIM-Methode liefert weniger genaue Resultate für kleine Stichproben (n &lt; 30). So jedenfalls <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span>.<a href="mod-nb.html#fnref4" class="footnote-back">↩︎</a></p></li>
-</ol>
-</div>
-<h3>Literatur</h3>
-<div id="refs" class="references">
-<div id="ref-hilbeModelingCountData2014">
-<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065">https://doi.org/10.1017/CBO9781139236065</a>.</p>
-</div>
-</div>
+
+
+
+
+
+
+
+
+
             </section>
 
           </div>
@@ -317,12 +311,11 @@ gitbook.start({
 "github": false,
 "facebook": false,
 "twitter": false,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -334,6 +327,10 @@ gitbook.start({
 "text": null
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>2.2 Dispersion | Poisson-Regression und ihre Leiden</title>
   <meta name="description" content="Because count data is hard" />
-  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
   <meta property="og:title" content="2.2 Dispersion | Poisson-Regression und ihre Leiden" />
   <meta property="og:type" content="book" />
@@ -294,7 +294,7 @@ D = \frac{\chi_{\text{Pearson}}^2}{\mathrm{df}}
 <li>Positive Korrelation zwischen responses</li>
 <li>Große Variation zwischen response-probabilities und counts</li>
 <li>Verletzungen der Verteilungsannahme (i.e. Poissonverteilung)</li>
-<li>“Proneness”: Frühere Ereignisse beeinflussen das Auftreten späterer Ereignisse<a href="literatur.html#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></li>
+<li>“Proneness”: Frühere Ereignisse beeinflussen das Auftreten späterer Ereignisse<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></li>
 </ul>
 <p>Ursachen für <em>scheinbare</em> (<em>apparent</em>), und damit (bedingt) korrigierbare Overdispersion nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span> (p. 41, 82):</p>
 <ol style="list-style-type: decimal">
@@ -361,6 +361,12 @@ The higher the expected value of the Poisson distribution, the lower the predict
 <p>Winkelmann, Rainer. 2010. <em>Econometric Analysis of Count Data</em>. 5th ed. Berlin: Springer Berlin.</p>
 </div>
 </div>
+<div class="footnotes">
+<hr />
+<ol start="2">
+<li id="fn2"><p>Diese Annahme (Unabhängigkeit der Ereignisse) der Poissonverteilung ist auch der Grund, warum sich die Poissonverteilung prinzipiell <strong>nicht</strong> eignet um Epidemien wie Ebola zu modellieren. Freundliche Grüße an Frau Pigeot, “Statistische Modellierung I”, WiSe 18/19.<a href="dispersion.html#fnref2" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
             </section>
 
           </div>
@@ -386,12 +392,11 @@ gitbook.start({
 "github": false,
 "facebook": false,
 "twitter": false,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -403,6 +408,10 @@ gitbook.start({
 "text": null
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },

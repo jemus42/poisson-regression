@@ -1,49 +1,58 @@
-\documentclass[ngerman,a4paper,]{scrartcl}
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
+\documentclass[
+  ngerman,
+  a4paper,
+]{scrartcl}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-\else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
-    \setmainfont[]{TeX Gyre Pagella}
-    \setsansfont[]{TeX Gyre Heros}
-    \setmonofont[Mapping=tex-ansi,Mapping=tex-ansi,Scale=0.8]{Fira Mono}
-    \setmathfont(Digits,Latin,Greek)[]{Asana Math}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+  \setmainfont[]{TeX Gyre Pagella}
+  \setsansfont[]{TeX Gyre Heros}
+  \setmonofont[Mapping=tex-ansi,Scale=0.8]{Fira Mono}
+  \setmathfont[]{Asana Math}
 \fi
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage{hyperref}
-\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
-\hypersetup{unicode=true,
-            pdftitle={Poisson-Regression und ihre Leiden},
-            pdfauthor={Lukas Burk},
-            colorlinks=true,
-            linkcolor=Maroon,
-            citecolor=Blue,
-            urlcolor=Blue,
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[shorthands=off,main=ngerman]{babel}
-\else
-  \usepackage{polyglossia}
-  \setmainlanguage[]{german}
-\fi
-\usepackage{natbib}
-\bibliographystyle{apalike}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Poisson-Regression und ihre Leiden},
+  pdfauthor={Lukas Burk},
+  pdflang={de-DE},
+  colorlinks=true,
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=Blue,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -85,6 +94,14 @@
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{longtable,booktabs}
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -94,54 +111,16 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
 % Make links footnotes instead of hotlinks:
-\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\DeclareRobustCommand{\href}[2]{#2\footnote{\url{#1}}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
-
-%%% Use protect on footnotes to avoid problems with footnotes in titles
-\let\rmarkdownfootnote\footnote%
-\def\footnote{\protect\rmarkdownfootnote}
-
-%%% Change title format to be more compact
-\usepackage{titling}
-
-% Create subtitle command for use in maketitle
-\providecommand{\subtitle}[1]{
-  \posttitle{
-    \begin{center}\large#1\end{center}
-    }
-}
-
-\setlength{\droptitle}{-2em}
-
-  \title{Poisson-Regression und ihre Leiden}
-    \pretitle{\vspace{\droptitle}\centering\huge}
-  \posttitle{\par}
-    \author{Lukas Burk}
-    \preauthor{\centering\large\emph}
-  \postauthor{\par}
-      \predate{\centering\large\emph}
-  \postdate{\par}
-    \date{Stand: 20. October 2019 22:35 Uhr (CEST)}
-
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{float}
@@ -157,6 +136,22 @@
 %\usepackage[bold-style=ISO]{unicode-math}
 
 %\urlstyle{tt}
+% https://github.com/rstudio/rmarkdown/issues/337
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+% https://github.com/rstudio/rmarkdown/pull/252
+\usepackage{titling}
+\setlength{\droptitle}{-2em}
+
+\pretitle{\vspace{\droptitle}\centering\huge}
+\posttitle{\par}
+
+\preauthor{\centering\large\emph}
+\postauthor{\par}
+
+\predate{\centering\large\emph}
+\postdate{\par}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
@@ -171,6 +166,19 @@
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{german}
+\else
+  \usepackage[shorthands=off,main=ngerman]{babel}
+\fi
+\usepackage[]{natbib}
+\bibliographystyle{apalike}
+
+\title{Poisson-Regression und ihre Leiden}
+\author{Lukas Burk}
+\date{Stand: 04. December 2019 17:05 Uhr (CET)}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[section]
@@ -192,7 +200,7 @@
 \maketitle
 
 {
-\hypersetup{linkcolor=black}
+\hypersetup{linkcolor=}
 \setcounter{tocdepth}{2}
 \tableofcontents
 }
@@ -408,7 +416,7 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die pr
 \toprule
 N & Missing & Mittelwert & Varianz & Range\\
 \midrule
-100 & 10 & 5.31 & 4.78 & [1, 12]\\
+100 & 10 & 4.9 & 5.39 & [0, 12]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -976,7 +984,7 @@ Zur Anwendung in R gibt es zwei Möglichkeiten: \texttt{MASS::glm.nb} oder \text
 So wie die \emph{NB} als mixture aus Poisson-Verteilung mit Gamma-verteilter Varianz betrachtet werden kann, ist die \emph{Poisson Inverse Gaussian} (\emph{PIG}) eine mixture aus Poisson-Verteilung mit \href{https://en.wikipedia.org/wiki/Inverse_Gaussian_distribution}{invers-normalverteilter} Varianz.\\
 Die Verteilung hat Erwartungswert und Varianz mit gleicher Form wie die NB2, unterscheidet sich aber in ihrer Form -- sie ist linkssteiler und hat längere tails.
 
-Die \emph{PIG} kann also alternativ zur \emph{NB} verwendet werden, insbesondere für den Fall sehr linkssteifer Daten.
+Die \emph{PIG} kann also alternativ zur \emph{NB} verwendet werden, insbesondere für den Fall sehr linkssteiler Daten.
 
 \begin{quote}
 \enquote{Simply put, PIG models can better deal with highly overdispersed data that can negative binomial regression, particularly data clumped heavily at 1 and 2}
@@ -2530,7 +2538,7 @@ language & en\_US.UTF-8\\
 collate & en\_US.UTF-8\\
 ctype & en\_US.UTF-8\\
 tz & UTC\\
-date & 2019-10-20\\
+date & 2019-12-04\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2556,7 +2564,7 @@ nlme & 3.1-140 & CRAN (R 3.6.1)\\
 pander & 0.6.3 & CRAN (R 3.6.1)\\
 purrr & 0.3.3 & CRAN (R 3.6.1)\\
 tidyr & 1.0.0 & CRAN (R 3.6.1)\\
-VGAM & 1.1-1 & CRAN (R 3.6.1)\\
+VGAM & 1.1-2 & CRAN (R 3.6.1)\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2959,7 +2967,6 @@ In diesem Fall haben wir es mit underdispersion zu tun, also versuchen wir es ma
 
 Beispiel aus Hilbe 2014. Eigentlich sollte \(\delta \approx -0.1195\) und \(\theta = \frac{1}{(1 - \delta)^2} \approx 0.799\)
 
-\bibliography{Poisson.bib,references.bib}
-
+  \bibliography{Poisson.bib,references.bib}
 
 \end{document}

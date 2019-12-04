@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3.1 Negativ Binomial (NB) | Poisson-Regression und ihre Leiden</title>
   <meta name="description" content="Because count data is hard" />
-  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3.1 Negativ Binomial (NB) | Poisson-Regression und ihre Leiden" />
   <meta property="og:type" content="book" />
@@ -268,7 +268,7 @@ Meist wird der Parameter als <span class="math inline">\(\alpha\)</span> bezeich
 <p>Siehe dazu auch <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span> (p. 131).</p>
 </div>
 
-<p>Das GLM sieht keinen weiteren zu schätzenden Parameter vor, weshalb <span class="math inline">\(\theta\)</span> bzw. <span class="math inline">\(\alpha\)</span> in der Praxis separat geschätzt wird.<a href="literatur.html#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
+<p>Das GLM sieht keinen weiteren zu schätzenden Parameter vor, weshalb <span class="math inline">\(\theta\)</span> bzw. <span class="math inline">\(\alpha\)</span> in der Praxis separat geschätzt wird.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
 <p>Der wohl wichtigste Aspekt des Dispersionsparameters, unabhängig davon ob <span class="math inline">\(\alpha\)</span> oder <span class="math inline">\(\theta\)</span> verwendet wird, ist sein Vorzeichen: Er ist <em>immer</em> positiv, das heißt die Varianz der NB ist entweder <em>größer oder gleich</em> der Poisson, oder mit anderen Worten:</p>
 <blockquote>
 <p>“The negative binomial model adjusts for Poisson overdispersion; it <strong>cannot be used to model underdispersed</strong> Poisson data”</p>
@@ -290,7 +290,7 @@ Meist wird der Parameter als <span class="math inline">\(\alpha\)</span> bezeich
 </div>
 
 <p>Beide Varianten können mittels MLE geschätzt werden, wobei NB2 zusätzlich im Kontext des GLM via <a href="https://en.wikipedia.org/wiki/Iteratively_reweighted_least_squares">IRLS</a> geschätzt werden kann.</p>
-<p>Als link wird <span class="math inline">\(\log \mu\)</span> verwendet, wobei der <em>canonical link</em> eigentlich <span class="math inline">\(\log\left(\frac{\alpha\mu}{1 + \alpha\mu}\right)\)</span> ist.<a href="literatur.html#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
+<p>Als link wird <span class="math inline">\(\log \mu\)</span> verwendet, wobei der <em>canonical link</em> eigentlich <span class="math inline">\(\log\left(\frac{\alpha\mu}{1 + \alpha\mu}\right)\)</span> ist.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
 <p>Für ein gut angepasstes NB-Modell gilt analog eines Poisson-Modells, dass die Dispersionsstatistik approximativ 1 ist (siehe <a href="dispersion.html#def:def-pearsondisp">2.5</a>).</p>
 <p>Zur Anwendung in R gibt es zwei Möglichkeiten: <code>MASS::glm.nb</code> oder <code>msme::nbinomial</code>, wobei letztere mehrere Optionen zur Parametrisierung hat und zusätzlich die Dispersionsstatistik ausgibt:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="mod-nb.html#cb12-1"></a>mod_nb &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">glm.nb</span>(docvis <span class="op">~</span><span class="st"> </span>outwork <span class="op">+</span><span class="st"> </span>age,</span>
@@ -368,6 +368,13 @@ Meist wird der Parameter als <span class="math inline">\(\alpha\)</span> bezeich
 <p>Perumean-Chaney, Suzanne E., Charity Morgan, David McDowall, und Inmaculada Aban. 2013. „Zero-Inflated and Overdispersed: What’s One to Do?“ <em>Journal of Statistical Computation and Simulation</em> 83 (9): 1671–83. <a href="https://doi.org/10.1080/00949655.2012.668550">https://doi.org/10.1080/00949655.2012.668550</a>.</p>
 </div>
 </div>
+<div class="footnotes">
+<hr />
+<ol start="3">
+<li id="fn3"><p>Das ist auch der Grund, warum in R nicht <code>glm()</code> verwendet werden kann, sondern eine separate Implementation mit expliziter Schätzung von <span class="math inline">\(\theta\)</span> benötigt wird (<code>MASS::glm.nb</code>)<a href="mod-nb.html#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>Daher können Standardfehler nicht wie für canonical models üblich via OIM (<em>observed information matrix</em>) geschätzt werden, sondern via EIM (<em>expected information matrix</em>). Die EIM-Methode liefert weniger genaue Resultate für kleine Stichproben (n &lt; 30). So jedenfalls <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span>.<a href="mod-nb.html#fnref4" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
             </section>
 
           </div>
@@ -393,12 +400,11 @@ gitbook.start({
 "github": false,
 "facebook": false,
 "twitter": false,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -410,6 +416,10 @@ gitbook.start({
 "text": null
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden</title>
   <meta name="description" content="Because count data is hard" />
-  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden" />
   <meta property="og:type" content="book" />
@@ -235,7 +235,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 
 <div class="definition">
-<p><span id="def:unnamed-chunk-1" class="definition"><strong>Definition 2.1  (Poisson-Verteilung)  </strong></span>Eine Poisson-verteilte Zufallsvariable <span class="math inline">\(Y \sim \mathrm{Poi}(\mu)\)</span><a href="literatur.html#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> hat die Dichte</p>
+<p><span id="def:unnamed-chunk-1" class="definition"><strong>Definition 2.1  (Poisson-Verteilung)  </strong></span>Eine Poisson-verteilte Zufallsvariable <span class="math inline">\(Y \sim \mathrm{Poi}(\mu)\)</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> hat die Dichte</p>
 <span class="math display">\[\begin{equation*}
 \mathrm{P}(Y = y) = \frac{\mu^y \exp(-\mu)}{y!} \quad, y \in \mathbb{N}_0
 \end{equation*}\]</span>
@@ -284,6 +284,12 @@ Für als Offset wird in der Regel <span class="math inline">\(\log(t)\)</span> v
 <p>Winkelmann, Rainer. 2010. <em>Econometric Analysis of Count Data</em>. 5th ed. Berlin: Springer Berlin.</p>
 </div>
 </div>
+<div class="footnotes">
+<hr />
+<ol start="1">
+<li id="fn1"><p>Der Poisson-Parameter wird von unterschiedlichen Autoren als <span class="math inline">\(\lambda\)</span> oder <span class="math inline">\(\mu\)</span> bezeichnet, und ich habe mich noch nicht für eine Variante entschieden).<a href="poisson-modell.html#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
             </section>
 
           </div>
@@ -309,12 +315,11 @@ gitbook.start({
 "github": false,
 "facebook": false,
 "twitter": false,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -326,6 +331,10 @@ gitbook.start({
 "text": null
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },
