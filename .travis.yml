@@ -20,6 +20,7 @@ before_install:
   # 1. Install TinyTex manually if not already in cache
   # Travis creates $HOME/.TinyTex if nonexistent, so we check bin subdir
   if [ ! -d $HOME/.TinyTex/bin ]; then
+    Rscript -e "install.packages('tinytex')"
     Rscript -e "tinytex::install_tinytex()"
   fi
 
