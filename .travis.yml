@@ -21,6 +21,9 @@ apt_packages:
   - fonts-oflb-asana-math
 
 before_install:
+  - Rscript -e "renv::restore()"
+
+install:
   - |
     # 1. Install TinyTex manually if not already in cache
     # Travis creates $HOME/.TinyTex if nonexistent, so we check bin subdir
@@ -37,11 +40,6 @@ before_install:
      unzip $HOME/.fonts/gyre.zip -d $HOME/.fonts/
     fi
 
-    if [ ! -e $HOME/.fonts/gyreheros.zip ]; then
-     wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/heros/qhv2.004otf.zip -O $HOME/.fonts/gyreheros.zip
-     unzip $HOME/.fonts/gyreheros.zip -d $HOME/.fonts/
-    fi
-
     if [ ! -e $HOME/.fonts/fira.zip ]; then
       wget https://github.com/bBoxType/FiraSans/archive/master.zip -O $HOME/.fonts/fira.zip
       unzip ~/.fonts/fira.zip '*.ttf' -d $HOME/.fonts/
@@ -53,9 +51,6 @@ before_install:
     # 4. Update font cache for previously installed fonts (+ list fonts for debugging)
     fc-cache -fv
     fc-list
-
-install:
-  - Rscript -e "renv::restore()"
 
 before_script:
   - '[ -x "$HOME/bin/phantomjs" ] || Rscript -e "webshot::install_phantomjs()"'
