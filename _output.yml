@@ -21,6 +21,8 @@ bookdown::gitbook:
     in_header:
       - includes/html/mathjax.js
       - includes/html/roboto.html
+    in_footer:
+      - includes/html/matomo.html
 bookdown::pdf_book:
   includes:
     in_header: includes/latex/preamble.tex
