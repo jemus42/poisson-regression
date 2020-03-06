@@ -14,9 +14,9 @@ link-citations: yes
 colorlinks: true
 description: "Because count data is hard"
 papersize: a4
-mainfont: "TeX Gyre Pagella"
-sansfont: "Fira Sans"
-monofont: "Fira Mono"
+mainfont: "Source Serif Pro" # "TeX Gyre Pagella"
+sansfont: "Source Sans Pro" # "Fira Sans"
+monofont: "Source Code Pro" # "Fira Mono"
 monofontoptions:
   - Mapping=tex-ansi
   - Scale=0.8

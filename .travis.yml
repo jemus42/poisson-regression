@@ -7,7 +7,7 @@ cache:
   packages: true
   directories:
   - "$HOME/bin"
-  - "$HOME/.fonts"
+  - "$HOME/.local/share/fonts"
   - "$HOME/.TinyTex"
   - "$TRAVIS_BUILD_DIR/_bookdown_files"
   - "$HOME/.local/share/renv"
@@ -27,21 +27,10 @@ before_install:
     # 1. Install TinyTex manually if not already in cache
     # Travis creates $HOME/.TinyTex if nonexistent, so we check bin subdir
     if [ ! -d $HOME/.TinyTex/bin ]; then
-      Rscript -e "install.packages('tinytex')"
       Rscript -e "tinytex::install_tinytex()"
     fi
-  - mkdir -p $HOME/.fonts
-  - |
-    # 2. Check if fonts are present in cached .fonts dir, if not, download + install
-    if [ ! -e $HOME/.fonts/gyre.zip ]; then
-     wget http://www.gust.org.pl/projects/e-foundry/tex-gyre/pagella/qpl2_501otf.zip -O $HOME/.fonts/gyre.zip
-     unzip $HOME/.fonts/gyre.zip -d $HOME/.fonts/
-    fi
-
-    if [ ! -e $HOME/.fonts/fira.zip ]; then
-      wget https://github.com/bBoxType/FiraSans/archive/master.zip -O $HOME/.fonts/fira.zip
-      unzip ~/.fonts/fira.zip '*.ttf' -d $HOME/.fonts/
-    fi
+  - mkdir -p $HOME/.local/share/fonts
+  - "./get_adobe_fonts.sh"
   - |
     # 3. Copy fontconfig for possibly maybe xelatex font issue with spaces in font names
     cp $HOME/.TinyTeX/texmf-var/fonts/conf/texlive-fontconfig.conf ~/.fonts.conf
