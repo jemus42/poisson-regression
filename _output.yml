@@ -12,7 +12,7 @@ bookdown::gitbook:
       after: |
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Built with bookdown</a></li>
         <li><a href="https://git.tadaa-data.de/lukas/poisson-regression" target="blank">Source on Gitea</a></li>
-    download: ["pdf", "tex", "epub"]
+    download: ["pdf", "tex"]
     sharing:
       facebook: no
       twitter: no
