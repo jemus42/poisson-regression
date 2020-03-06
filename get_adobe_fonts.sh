@@ -19,7 +19,7 @@ for VARIANT in $VARIANTS; do
   (git clone \
    --branch release \
    --depth 1 \
-   'https://github.com/adobe-fonts/source-$VARIANT-pro.git' \
+   "https://github.com/adobe-fonts/source-$VARIANT-pro.git" \
    "$FONT_HOME/adobe-fonts/source-$VARIANT-pro")
 
    # Refresh font cache to make fonts available
