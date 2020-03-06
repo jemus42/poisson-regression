@@ -1,6 +1,6 @@
 Type: Book
 Package: poisson-regression
-Title: Placeholder file for travis
+Title: Placeholder file for travis. Project dependencies managed via renv
 Version: 0.0.1
 License: MIT + file LICENSE
 Imports: 
