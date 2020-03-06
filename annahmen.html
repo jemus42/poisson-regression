@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="de-DE" xml:lang="de-DE">
+<html lang="de-DE" xml:lang="de-DE">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>2.1 Annahmen | Poisson-Regression und ihre Leiden</title>
   <meta name="description" content="Because count data is hard" />
-  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
   <meta property="og:title" content="2.1 Annahmen | Poisson-Regression und ihre Leiden" />
   <meta property="og:type" content="book" />
@@ -51,9 +51,9 @@
 
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
-<script src="libs/viz-0.3/viz.js"></script>
+<script src="libs/viz-1.8.2/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
+<script src="libs/grViz-binding-1.0.5/grViz.js"></script>
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     "HTML-CSS": { fonts: ["Asana-Math"] },
@@ -65,9 +65,9 @@
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -76,16 +76,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -94,9 +94,9 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  {  }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -236,8 +236,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Erwartungswert und Varianz sind identisch (<em>equidispersion</em>), i.e. ein größerer Erwartungswert impliziert auch eine größere Varianz (siehe <a href="dispersion.html#dispersion">2.2</a>).</li>
 <li>Die <span class="math inline">\(\chi^2\)</span>-Statistik hat einen Wert nahe 1, i.e. beobachtete und erwartete Varianzen der response sind gleich (Dispersionsindex).</li>
 </ol>
-<p>(Nach Tabelle in <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span>)</p>
-<p>Alternative Formulierung nach <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010" role="doc-biblioref">2010</a>)</span> (p. 64):</p>
+<p>(Nach Tabelle in <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>)</span>)</p>
+<p>Alternative Formulierung nach <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>)</span> (p. 64):</p>
 <ol style="list-style-type: decimal">
 <li><span class="math inline">\(f(y\ |\ \mu) = \frac{e^{-\mu} \mu^y}{y!} \quad \mu &gt; 0, y = 0, 1, 2, \ldots\)</span>.</li>
 <li><span class="math inline">\(\mu = \exp(\mathbf{x}&#39; \boldsymbol{\beta})\)</span>.</li>
@@ -247,7 +247,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3>Literatur</h3>
 <div id="refs" class="references">
 <div id="ref-hilbeModelingCountData2014">
-<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065">https://doi.org/10.1017/CBO9781139236065</a>.</p>
+<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065" class="uri">https://doi.org/10.1017/CBO9781139236065</a>.</p>
 </div>
 <div id="ref-winkelmannEconometricAnalysisCount2010">
 <p>Winkelmann, Rainer. 2010. <em>Econometric Analysis of Count Data</em>. 5th ed. Berlin: Springer Berlin.</p>

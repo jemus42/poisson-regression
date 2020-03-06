@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="de-DE" xml:lang="de-DE">
+<html lang="de-DE" xml:lang="de-DE">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden</title>
   <meta name="description" content="Because count data is hard" />
-  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Kapitel 2 Das Poisson-Modell | Poisson-Regression und ihre Leiden" />
   <meta property="og:type" content="book" />
@@ -51,9 +51,9 @@
 
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
-<script src="libs/viz-0.3/viz.js"></script>
+<script src="libs/viz-1.8.2/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
+<script src="libs/grViz-binding-1.0.5/grViz.js"></script>
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     "HTML-CSS": { fonts: ["Asana-Math"] },
@@ -65,9 +65,9 @@
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -76,16 +76,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -94,9 +94,9 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  {  }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -226,7 +226,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="poisson-modell" class="section level1">
 <h1><span class="header-section-number">Kapitel 2</span> Das Poisson-Modell</h1>
 <p>Das Poisson-Modell ist die allgemeine Grundlage für die Modellierung von Zählvorgängen / Counts, und auch wenn es in seiner “reinen” Form in der Praxis meist nicht ausreicht, bauen alle weiteren Methoden auf die eine oder andere Art darauf auf. Auch die häufig verwendete Negative Binomialverteilung ist letztlich eine Poisson-Verteilung mit Gamma-verteilter Varianz, also eine Erweiterung der Poisson um einen zusätzlichen Parameter. Das gleiche Prinzip findet sich in allen hier besprochenen Verteilungen.</p>
-<p>Für eine ausführliche Diskussion der Eigenschaften, siehe <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010" role="doc-biblioref">2010</a>)</span> (p. 7-20).</p>
+<p>Für eine ausführliche Diskussion der Eigenschaften, siehe <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>)</span> (p. 7-20).</p>
 <p>Grundlage zur Modellierung ist das GLM mit den dazugehörigen Voraussetzungen:</p>
 <ul>
 <li>Die abhängige Variable <span class="math inline">\(Y\)</span> kommt aus der Exponentialfamilie (Normal-, Poisson-, Gamma-, Binomialverteilung)</li>
@@ -251,29 +251,16 @@ Abbildung 2.1: Poisson-Verteilungen mit ausgewählten Parametern.
 <div class="definition">
 <p><span id="def:poisson-modell" class="definition"><strong>Definition 2.2  (Poisson-Modell)  </strong></span>Die Zielvariablen <span class="math inline">\(y_i \in \mathbb{N}_0\)</span> sind (bedingt) unabhängig gegeben der Kovariablen <span class="math inline">\(x_{i1}, x_{i2}, \ldots, x_{ik}\)</span>.</p>
 <p>Die Rate <span class="math inline">\(\mu_i = \mathbb{E}(y_i\ |\ \mathbf{x}_i)\)</span> der Poissonverteilung wird in der Regel log-linear modelliert als</p>
-<p><span class="math display">\[\begin{align*}
-  \log(\mu_i) &amp;= \eta_i 
-    = \mathbf{x}_i^\prime \boldsymbol{\beta} 
-    = \beta_0 + \beta_1 x_1 + \ldots + \beta_k x_{ik} \\
-  \mu_i &amp;= \exp(\eta_i) 
-    = \exp(\beta_0) \cdot \exp(\beta_1 x_1) \cdot \ldots \cdot \exp(\beta_k x_k)
-\end{align*}\]</span></p>
 </div>
 
-<p>Vgl. <span class="citation">Fahrmeir, Kneib, und Lang (<a href="#ref-fahrmeirRegressionModelleMethoden2009" role="doc-biblioref">2009</a>)</span></p>
+<p>Vgl. <span class="citation">Fahrmeir, Kneib, und Lang (<a href="#ref-fahrmeirRegressionModelleMethoden2009">2009</a>)</span></p>
 <p>Für das log-lineare Poisson-Modell entsprechen die resultierenden Koeffizienten der Veränderung der log-counts – durch Exponentiation lassen diese sich als <em>incidence rate ratios</em> (<em>IRR</em>) interpretieren.</p>
 <p>Um auf ungleiche Expositionsdauern oder -gebiete zu adjustieren wird ein <strong>offset</strong> (oder auch <em>exposure</em>) benötigt. Dazu dient der Koeffizient <span class="math inline">\(t\)</span>, der die Länge der Zeit unter Exposition angibt:</p>
-<p><span class="math display">\[\begin{equation}
-f(y, \mu) = \frac{\exp(\mu) (t \mu)^y}{y!}
-\end{equation}\]</span></p>
+
 <p>Damit entspricht <span class="math inline">\(t \mu\)</span> der Inzidenzrate des Outcomes adjustiert auf e.g. die geographische Lage oder Expositionsdauer. Ohne Offset entspräche <span class="math inline">\(t = 1\)</span>.
 Für als Offset wird in der Regel <span class="math inline">\(\log(t)\)</span> verwendet, womit gelten:</p>
-<p><span class="math display">\[\begin{align*}
-\hat{\mu} &amp;= \exp{x \boldsymbol{\beta} + \log(t)} \\
-\Leftrightarrow \exp(x \boldsymbol{\beta}) &amp;= \frac{\hat{\mu}}{t} \\
-\Leftrightarrow \hat{\mu} &amp;= t \exp(x \boldsymbol{\beta})
-\end{align*}\]</span></p>
-<p>Ein offset kann z.B. in <code>R</code> via <code>+ offset(log(variable))</code> in der model <code>formula</code> oder über das Argument <code>offset = log(variable)</code> in <code>glm</code> und verwandten Funktionen angegeben werden.</p> 
+
+<p>Ein offset kann z.B. in <code>R</code> via <code>+ offset(log(variable))</code> in der model <code>formula</code> oder über das Argument <code>offset = log(variable)</code> in <code>glm</code> und verwandten Funktionen angegeben werden.</p>
 </div>
 <h3>Literatur</h3>
 <div id="refs" class="references">
@@ -287,7 +274,7 @@ Für als Offset wird in der Regel <span class="math inline">\(\log(t)\)</span> v
 <div class="footnotes">
 <hr />
 <ol start="1">
-<li id="fn1"><p>Der Poisson-Parameter wird von unterschiedlichen Autoren als <span class="math inline">\(\lambda\)</span> oder <span class="math inline">\(\mu\)</span> bezeichnet, und ich habe mich noch nicht für eine Variante entschieden).<a href="poisson-modell.html#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p>Der Poisson-Parameter wird von unterschiedlichen Autoren als <span class="math inline">\(\lambda\)</span> oder <span class="math inline">\(\mu\)</span> bezeichnet, und ich habe mich noch nicht für eine Variante entschieden).<a href="poisson-modell.html#fnref1" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>

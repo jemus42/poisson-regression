@@ -1,58 +1,48 @@
-% Options for packages loaded elsewhere
-\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 %
-\documentclass[
-  ngerman,
-  a4paper,
-]{scrartcl}
+\documentclass[ngerman,a4paper,]{scrartcl}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provide euro and other symbols
-\else % if luatex or xetex
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
   \usepackage{unicode-math}
-  \defaultfontfeatures{Scale=MatchLowercase}
-  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-  \setmainfont[]{TeX Gyre Pagella}
-  \setsansfont[]{TeX Gyre Heros}
-  \setmonofont[Mapping=tex-ansi,Scale=0.8]{Fira Mono}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+    \setmainfont[]{TeX Gyre Pagella}
+    \setsansfont[]{TeX Gyre Heros}
+    \setmonofont[Mapping=tex-ansi,Mapping=tex-ansi,Scale=0.8]{Fira Mono}
   \setmathfont[]{Asana Math}
 \fi
-% Use upquote if available, for straight quotes in verbatim environments
+% use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-\IfFileExists{microtype.sty}{% use microtype if available
-  \usepackage[]{microtype}
-  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\makeatletter
-\@ifundefined{KOMAClassName}{% if non-KOMA class
-  \IfFileExists{parskip.sty}{%
-    \usepackage{parskip}
-  }{% else
-    \setlength{\parindent}{0pt}
-    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
-}{% if KOMA class
-  \KOMAoptions{parskip=half}}
-\makeatother
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
 \usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{hyperref}
 \hypersetup{
-  pdftitle={Poisson-Regression und ihre Leiden},
-  pdfauthor={Lukas Burk},
-  pdflang={de-DE},
-  colorlinks=true,
-  linkcolor=Maroon,
-  filecolor=Maroon,
-  citecolor=Blue,
-  urlcolor=Blue,
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
+            pdftitle={Poisson-Regression und ihre Leiden},
+            pdfauthor={Lukas Burk},
+            colorlinks=true,
+            linkcolor=Maroon,
+            citecolor=Blue,
+            urlcolor=Blue,
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -94,14 +84,8 @@
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{longtable,booktabs}
-% Correct order of tables after \paragraph or \subparagraph
-\usepackage{etoolbox}
-\makeatletter
-\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
-\makeatother
-% Allow footnotes in longtable head/foot
-\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
-\makesavenoteenv{longtable}
+% Fix footnotes in tables (requires footnote package)
+\IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{longtable}}{}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -111,16 +95,27 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-% Set default figure placement to htbp
-\makeatletter
-\def\fps@figure{htbp}
-\makeatother
 % Make links footnotes instead of hotlinks:
 \DeclareRobustCommand{\href}[2]{#2\footnote{\url{#1}}}
-\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{float}
@@ -136,22 +131,6 @@
 %\usepackage[bold-style=ISO]{unicode-math}
 
 %\urlstyle{tt}
-% https://github.com/rstudio/rmarkdown/issues/337
-\let\rmarkdownfootnote\footnote%
-\def\footnote{\protect\rmarkdownfootnote}
-
-% https://github.com/rstudio/rmarkdown/pull/252
-\usepackage{titling}
-\setlength{\droptitle}{-2em}
-
-\pretitle{\vspace{\droptitle}\centering\huge}
-\posttitle{\par}
-
-\preauthor{\centering\large\emph}
-\postauthor{\par}
-
-\predate{\centering\large\emph}
-\postdate{\par}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
@@ -166,19 +145,19 @@
 \usepackage[normalem]{ulem}
 \usepackage{makecell}
 \usepackage{xcolor}
-\ifxetex
-  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[shorthands=off,main=ngerman]{babel}
+\else
+  % load polyglossia as late as possible as it *could* call bidi if RTL lang (e.g. Hebrew or Arabic)
   \usepackage{polyglossia}
   \setmainlanguage[]{german}
-\else
-  \usepackage[shorthands=off,main=ngerman]{babel}
 \fi
 \usepackage[]{natbib}
 \bibliographystyle{apalike}
 
 \title{Poisson-Regression und ihre Leiden}
 \author{Lukas Burk}
-\date{Stand: 04. December 2019 17:05 Uhr (CET)}
+\date{Stand: 06. March 2020 15:47 Uhr (CET)}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[section]
@@ -416,7 +395,7 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die pr
 \toprule
 N & Missing & Mittelwert & Varianz & Range\\
 \midrule
-100 & 10 & 4.9 & 5.39 & [0, 12]\\
+100 & 10 & 5.4 & 6.58 & [1, 12]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -663,7 +642,7 @@ In \texttt{R} kann die Pearson-Dispersion wie folgt berechnet werden:
 \end{Highlighting}
 \end{Shaded}
 
-\ldots wofür wir in Abschnitt \ref{helperfuns} eine Hilfsfunktion \texttt{dispersion()} definiert haben.
+\ldots{}wofür wir in Abschnitt \ref{helperfuns} eine Hilfsfunktion \texttt{dispersion()} definiert haben.
 
 \hypertarget{overdispersion}{%
 \subsubsection{Overdispersion}\label{overdispersion}}
@@ -760,7 +739,7 @@ Im Allgemeinen wird für diese Situation die \href{https://stats.stackexchange.c
 Weiterhin taucht im Kontext von hurdle models (siehe \ref{mod-hurdle}) folgende Bemerkung auf:
 
 \begin{quote}
-{[}\ldots{]} that underdispersion occurs if \textbf{zeros are less frequent than the parent distribution would predict}.
+{[}\ldots{}{]} that underdispersion occurs if \textbf{zeros are less frequent than the parent distribution would predict}.
 The higher the expected value of the Poisson distribution, the lower the predicted probability of zero outcome and the lower the scope for underdispersion.
 -- \citep[p.~180 (eigene Hervorhebung)]{winkelmannEconometricAnalysisCount2010}
 \end{quote}
@@ -882,7 +861,7 @@ Die \textbf{NB1}, oder auch \emph{lineare} Negative Binomialverteilung hat die V
 \mathrm{Var}(Y) = \mu + \alpha \mu
 \end{equation*}
 
-\ldots und die gängigere \textbf{NB2}, oder auch \emph{quadratische} Negative Binomialverteilung hat (wie oben beschrieben) die Varianz
+\ldots{}und die gängigere \textbf{NB2}, oder auch \emph{quadratische} Negative Binomialverteilung hat (wie oben beschrieben) die Varianz
 
 \begin{equation*}
 \mathrm{Var}(Y) = \mu + \alpha \mu^2
@@ -1248,7 +1227,7 @@ Although the logistic regression is a limiting case \((\nu \to \infty)\), in pra
 \begin{itemize}
 \tightlist
 \item
-  \enquote{Low cost}, i.e.~\enquote{nur} ein zusätzlicher Parameter
+  \enquote{Low cost}, i.e. \enquote{nur} ein zusätzlicher Parameter
 \item
   Einfach zu handhaben (wenn in GLM mit MLE statt MCMC estimation)
 \item
@@ -1436,7 +1415,7 @@ Siehe auch \citet{hilbeModelingCountData2014} (p.~155) -- wo der Autor zwar den 
 \hypertarget{mod-zi}{%
 \subsection{\texorpdfstring{Zero-Inflated Models (\emph{mixture models})}{Zero-Inflated Models (mixture models)}}\label{mod-zi}}
 
-Zero-inflated Modelle sind \emph{mixtures}, das heißt, sie entstehen durch Mischung zweier Wahrscheinlichkeitsfunktionen. In der Regel wird eine Nullverteilung mit einer regulären Zählverteilung (Poisson, NB, PIG, \ldots) \enquote{gemischt}, abhängig von einem \emph{mixture parameter} \(\pi \in [0,1]\), der z.B. logistisch modelliert wird. Die Nullen im Modell werden dementsprechend durch beide Verteilungen (Nullverteilung, Zählverteilung) beschrieben -- im Gegensatz zu \emph{hurdle models} (vgl. \ref{mod-hurdle}), die Nullen logistisch und die positiven counts über eine \emph{truncated} distribution modellieren würden.
+Zero-inflated Modelle sind \emph{mixtures}, das heißt, sie entstehen durch Mischung zweier Wahrscheinlichkeitsfunktionen. In der Regel wird eine Nullverteilung mit einer regulären Zählverteilung (Poisson, NB, PIG, \ldots{}) \enquote{gemischt}, abhängig von einem \emph{mixture parameter} \(\pi \in [0,1]\), der z.B. logistisch modelliert wird. Die Nullen im Modell werden dementsprechend durch beide Verteilungen (Nullverteilung, Zählverteilung) beschrieben -- im Gegensatz zu \emph{hurdle models} (vgl. \ref{mod-hurdle}), die Nullen logistisch und die positiven counts über eine \emph{truncated} distribution modellieren würden.
 
 Zero-inflated distributions wie ZIP und ZINB wurden hergeleitet als zweiteilige mixture distributions. Die allgemeine Form für mixture distributions ist
 
@@ -1632,7 +1611,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 z value\strut
 \end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering
-Pr(\textgreater\textbar z\textbar)\strut
+Pr(\textgreater{}\textbar{}z\textbar{})\strut
 \end{minipage}\tabularnewline
 \midrule
 \endhead
@@ -2050,7 +2029,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 z value\strut
 \end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering
-Pr(\textgreater\textbar z\textbar)\strut
+Pr(\textgreater{}\textbar{}z\textbar{})\strut
 \end{minipage}\tabularnewline
 \midrule
 \endfirsthead
@@ -2064,7 +2043,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 z value\strut
 \end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering
-Pr(\textgreater\textbar z\textbar)\strut
+Pr(\textgreater{}\textbar{}z\textbar{})\strut
 \end{minipage}\tabularnewline
 \midrule
 \endhead
@@ -2122,7 +2101,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 t value\strut
 \end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\centering
-Pr(\textgreater\textbar t\textbar)\strut
+Pr(\textgreater{}\textbar{}t\textbar{})\strut
 \end{minipage}\tabularnewline
 \midrule
 \endfirsthead
@@ -2136,7 +2115,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 t value\strut
 \end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\centering
-Pr(\textgreater\textbar t\textbar)\strut
+Pr(\textgreater{}\textbar{}t\textbar{})\strut
 \end{minipage}\tabularnewline
 \midrule
 \endhead
@@ -2191,7 +2170,7 @@ In diesem Fall \enquote{lohnt} sich dieser Ansatz zwar eher nicht, da wir neben 
 
 Sandwich estimators sind in erster Linie für nicht unabhängige bzw. korrellierte Daten gedacht, zum Beispiel für Daten, die innerhalb mehrere Haushalte, Krankenhäuser, Städte etc. gesammelt wurden.
 
-Robuste Varianzschätzer können (und je nach Quelle: \emph{sollten}) standardmäßig für Count-response Daten verwendet werden, da die resultierenden Schätzer im Falle tatsächlich unkorrellierter Daten äquivalent zu den Standardfehlern des ursprünglichen Modells sind (i.e.~\enquote{schadet nicht}).
+Robuste Varianzschätzer können (und je nach Quelle: \emph{sollten}) standardmäßig für Count-response Daten verwendet werden, da die resultierenden Schätzer im Falle tatsächlich unkorrellierter Daten äquivalent zu den Standardfehlern des ursprünglichen Modells sind (i.e. \enquote{schadet nicht}).
 
 Bootstrapped SEs wiederum erfordern mehr Aufwand, ähneln aber den robusten SEs sowieso sehr stark, weshalb sich der Aufwand ggf. nicht wirklich lohnt.
 
@@ -2208,7 +2187,7 @@ Siehe \citet{hilbeModelingCountData2014} (p.~99f) für eine ausführlichere Besc
 
 Problem: \enquote{Excess zeros}, i.e.~das Modell sagt für \(P(y_i = 0\ |\ x_i)\) eine deutlich kleinere Wahrscheinlichkeit vor, als in gegebenen Daten tatsächlich vorliegen.
 
-Zero-inflation hängt eng mit overdispersion zusammen. Sie \emph{kann} Ursache für overdispersion sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechend auf \emph{ZI}-fokussiertes Modell (ZIP, ZINB\ldots) verwendet werden \emph{muss} -- ggf. lässt sich die overdispersion bereits durch ein anderes geeignetes Modell \enquote{auffangen}. Zum Beispiel zeigt \citet{winkelmannEconometricAnalysisCount2010}, dass die \emph{NB} allgemein eine größere Anzahl an Nullen erwartet als die Poisson.
+Zero-inflation hängt eng mit overdispersion zusammen. Sie \emph{kann} Ursache für overdispersion sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechend auf \emph{ZI}-fokussiertes Modell (ZIP, ZINB\ldots{}) verwendet werden \emph{muss} -- ggf. lässt sich die overdispersion bereits durch ein anderes geeignetes Modell \enquote{auffangen}. Zum Beispiel zeigt \citet{winkelmannEconometricAnalysisCount2010}, dass die \emph{NB} allgemein eine größere Anzahl an Nullen erwartet als die Poisson.
 
 \begin{center}\includegraphics{poisson-regression_files/figure-latex/excess_zeros_viz-1} \end{center}
 
@@ -2284,7 +2263,7 @@ N & Missing & Mittelwert & Varianz & Range\\
 
 Die Anzahl der Nullen ist hier auffallend groß -- allerdings beobachten wir hier auch zwei unterschiedliche Mechanismen, die sich überlappen: Eine Gruppe kann das ganze Wochenende geangelt haben, während eine andere Gruppe gar nicht geangelt hat -- beide Gruppen werden jedoch am Ende nach der Anzahl ihrer gefangenen Fische befragt, weshalb wir in den Daten Nullen mit unterschiedlichem \enquote{Ursprung} erhalten
 
-Da es hier nicht angemessen wäre, die Nullen und die positiven counts getrennt zu Modellieren, würden wir hier ein \emph{zero-inflated} Modell (z.B ZIP, ZINB, \ldots) verwenden.
+Da es hier nicht angemessen wäre, die Nullen und die positiven counts getrennt zu Modellieren, würden wir hier ein \emph{zero-inflated} Modell (z.B ZIP, ZINB, \ldots{}) verwenden.
 
 \hypertarget{entscheidungshilfen}{%
 \section{Entscheidungshilfen}\label{entscheidungshilfen}}
@@ -2530,7 +2509,7 @@ Letztlich stellt das Package \href{https://broom.tidyverse.org/}{\texttt{broom}}
 \toprule
 Umgebungsvariable & Wert\\
 \midrule
-version & R version 3.6.1 (2017-01-27)\\
+version & R version 3.6.2 (2017-01-27)\\
 os & Ubuntu 16.04.6 LTS\\
 system & x86\_64, linux-gnu\\
 ui & X11\\
@@ -2538,7 +2517,7 @@ language & en\_US.UTF-8\\
 collate & en\_US.UTF-8\\
 ctype & en\_US.UTF-8\\
 tz & UTC\\
-date & 2019-12-04\\
+date & 2020-03-06\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2549,22 +2528,22 @@ date & 2019-12-04\\
 \toprule
 Package & Version & Quelle\\
 \midrule
-broom & 0.5.2 & CRAN (R 3.6.1)\\
-DiagrammeR & 1.0.1 & CRAN (R 3.6.1)\\
-dplyr & 0.8.3 & CRAN (R 3.6.1)\\
+broom & 0.5.5 & CRAN (R 3.6.2)\\
+DiagrammeR & 1.0.5 & CRAN (R 3.6.2)\\
+dplyr & 0.8.4 & CRAN (R 3.6.2)\\
 firasans & 0.1.0 & Github (hrbrmstr/firasans@52f83c8)\\
-gamlss & 5.1-5 & CRAN (R 3.6.1)\\
-gamlss.data & 5.1-4 & CRAN (R 3.6.1)\\
-gamlss.dist & 5.1-5 & CRAN (R 3.6.1)\\
-ggplot2 & 3.2.1 & CRAN (R 3.6.1)\\
-hrbrthemes & 0.6.0 & CRAN (R 3.6.1)\\
-kableExtra & 1.1.0 & CRAN (R 3.6.1)\\
-MASS & 7.3-51.4 & CRAN (R 3.6.1)\\
-nlme & 3.1-140 & CRAN (R 3.6.1)\\
-pander & 0.6.3 & CRAN (R 3.6.1)\\
-purrr & 0.3.3 & CRAN (R 3.6.1)\\
-tidyr & 1.0.0 & CRAN (R 3.6.1)\\
-VGAM & 1.1-2 & CRAN (R 3.6.1)\\
+gamlss & 5.1-6 & CRAN (R 3.6.2)\\
+gamlss.data & 5.1-4 & CRAN (R 3.6.2)\\
+gamlss.dist & 5.1-6 & CRAN (R 3.6.2)\\
+ggplot2 & 3.3.0 & CRAN (R 3.6.2)\\
+hrbrthemes & 0.6.0 & CRAN (R 3.6.2)\\
+kableExtra & 1.1.0 & CRAN (R 3.6.2)\\
+MASS & 7.3-51.4 & CRAN (R 3.6.2)\\
+nlme & 3.1-142 & CRAN (R 3.6.2)\\
+pander & 0.6.3 & CRAN (R 3.6.2)\\
+purrr & 0.3.3 & CRAN (R 3.6.2)\\
+tidyr & 1.0.2 & CRAN (R 3.6.2)\\
+VGAM & 1.1-2 & CRAN (R 3.6.2)\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2589,8 +2568,8 @@ Hier liegen temporär Opfer der Umstrukturierung, bis sie ein passendes zu Hause
   Die erwartete Anzahl an Nullen (unter Poisson) ist \(\exp(-\bar{x}) \cdot n\)
 \end{itemize}
 
-\hypertarget{beispiel-nach-hilbe-2014-p.-211ff}{%
-\subsection{Beispiel nach Hilbe (2014 p.~211ff)}\label{beispiel-nach-hilbe-2014-p.-211ff}}
+\hypertarget{beispiel-nach-hilbe-2014-p.211ff}{%
+\subsection{Beispiel nach Hilbe (2014 p.~211ff)}\label{beispiel-nach-hilbe-2014-p.211ff}}
 
 (Eigentlich kompliziertes Beispiel, weil 0 counts nicht möglich sind, müsste man truncated drangehen)
 
@@ -2655,7 +2634,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 z value\strut
 \end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\centering
-Pr(\textgreater\textbar z\textbar)\strut
+Pr(\textgreater{}\textbar{}z\textbar{})\strut
 \end{minipage}\tabularnewline
 \midrule
 \endfirsthead
@@ -2669,7 +2648,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 z value\strut
 \end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\centering
-Pr(\textgreater\textbar z\textbar)\strut
+Pr(\textgreater{}\textbar{}z\textbar{})\strut
 \end{minipage}\tabularnewline
 \midrule
 \endhead
@@ -2790,7 +2769,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 z value\strut
 \end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering
-Pr(\textgreater\textbar z\textbar)\strut
+Pr(\textgreater{}\textbar{}z\textbar{})\strut
 \end{minipage}\tabularnewline
 \midrule
 \endfirsthead
@@ -2804,7 +2783,7 @@ Std. Error\strut
 \end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
 z value\strut
 \end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering
-Pr(\textgreater\textbar z\textbar)\strut
+Pr(\textgreater{}\textbar{}z\textbar{})\strut
 \end{minipage}\tabularnewline
 \midrule
 \endhead
@@ -2967,6 +2946,6 @@ In diesem Fall haben wir es mit underdispersion zu tun, also versuchen wir es ma
 
 Beispiel aus Hilbe 2014. Eigentlich sollte \(\delta \approx -0.1195\) und \(\theta = \frac{1}{(1 - \delta)^2} \approx 0.799\)
 
-  \bibliography{Poisson.bib,references.bib}
+\bibliography{Poisson.bib,references.bib}
 
 \end{document}

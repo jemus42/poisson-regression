@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="de-DE" xml:lang="de-DE">
+<html lang="de-DE" xml:lang="de-DE">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Kapitel 5 Entscheidungshilfen | Poisson-Regression und ihre Leiden</title>
   <meta name="description" content="Because count data is hard" />
-  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Kapitel 5 Entscheidungshilfen | Poisson-Regression und ihre Leiden" />
   <meta property="og:type" content="book" />
@@ -51,9 +51,9 @@
 
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
-<script src="libs/viz-0.3/viz.js"></script>
+<script src="libs/viz-1.8.2/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
+<script src="libs/grViz-binding-1.0.5/grViz.js"></script>
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     "HTML-CSS": { fonts: ["Asana-Math"] },
@@ -65,9 +65,9 @@
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -76,16 +76,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -94,9 +94,9 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  {  }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -225,7 +225,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="entscheidungshilfen" class="section level1">
 <h1><span class="header-section-number">Kapitel 5</span> Entscheidungshilfen</h1>
-<p><span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013" role="doc-biblioref">2013</a>)</span> schlagen folgendes Vorgehen vor um Overdispersion und Zero-Inflation zu erkennen:</p>
+<p><span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">2013</a>)</span> schlagen folgendes Vorgehen vor um Overdispersion und Zero-Inflation zu erkennen:</p>
 <div id="htmlwidget-f000dc53229bcb346b9d" style="width:768px;height:474.660074165637px;" class="grViz html-widget"></div>
 <script type="application/json" data-for="htmlwidget-f000dc53229bcb346b9d">{"x":{"diagram":"digraph PerumeanChaney {\n\ngraph [layout = dot]\n\n################################\n#### Global node attributes ####\n################################\nnode [shape = plaintext,\n      color = black,\n      fontname = \"Roboto\"]\nedge [fontname = \"Roboto\"]\n\nnode [fillcolor = white]\nstart [label = \"Test for Overdispersion\\n(Poisson vs. NB)\"]\ntest_zi_poi [label = \"Test for Zero-Inflation\\n(Poisson vs. ZIP)\"]\ntest_zi_nb [label = \"Test for Zero-Inflation\\n(NB vs. ZINB)\"]\nPoisson\nZIP\nNB\nZINB\n\nedge []\nstart -> test_zi_poi [label = \"N.S.\"]\nstart -> test_zi_nb  [label = \"S\"]\ntest_zi_poi -> Poisson [label = \"N.S.\"]\ntest_zi_poi -> ZIP [label = \"S\"]\ntest_zi_nb -> NB [label = \"N.S.\"]\ntest_zi_nb -> ZINB [label = \"S\"]\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p>Wobei im ersten Schritt sowohl Poisson als auch NB-Modelle gefittet werden, und dann nach Goodness-of-Fit (via LRT) (NB &gt; Poisson?) entschieden wird.<br />
@@ -242,7 +242,7 @@ Im zweiten Schritt werden die jeweiligen Modelle (entweder Poisson oder NB) mit 
 <h3>Literatur</h3>
 <div id="refs" class="references">
 <div id="ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">
-<p>Perumean-Chaney, Suzanne E., Charity Morgan, David McDowall, und Inmaculada Aban. 2013. „Zero-Inflated and Overdispersed: What’s One to Do?“ <em>Journal of Statistical Computation and Simulation</em> 83 (9): 1671–83. <a href="https://doi.org/10.1080/00949655.2012.668550">https://doi.org/10.1080/00949655.2012.668550</a>.</p>
+<p>Perumean-Chaney, Suzanne E., Charity Morgan, David McDowall, und Inmaculada Aban. 2013. „Zero-Inflated and Overdispersed: What’s One to Do?“ <em>Journal of Statistical Computation and Simulation</em> 83 (9): 1671–83. <a href="https://doi.org/10.1080/00949655.2012.668550" class="uri">https://doi.org/10.1080/00949655.2012.668550</a>.</p>
 </div>
 </div>
             </section>

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="de-DE" xml:lang="de-DE">
+<html lang="de-DE" xml:lang="de-DE">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>2.2 Dispersion | Poisson-Regression und ihre Leiden</title>
   <meta name="description" content="Because count data is hard" />
-  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
   <meta property="og:title" content="2.2 Dispersion | Poisson-Regression und ihre Leiden" />
   <meta property="og:type" content="book" />
@@ -51,9 +51,9 @@
 
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
-<script src="libs/viz-0.3/viz.js"></script>
+<script src="libs/viz-1.8.2/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
+<script src="libs/grViz-binding-1.0.5/grViz.js"></script>
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     "HTML-CSS": { fonts: ["Asana-Math"] },
@@ -65,9 +65,9 @@
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -76,16 +76,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -94,9 +94,9 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  {  }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -228,75 +228,45 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div class="definition">
 <p><span id="def:def-dispersions" class="definition"><strong>Definition 2.3  (Equi-, Extra-, Over-, Underdispersion)  </strong></span>Für Zählvariablen <span class="math inline">\(y_i \in \mathbb{N}_0\)</span> und erklärenden Variablen <span class="math inline">\(\mathbf{x}_i\)</span> gilt innerhalb eines Modells:</p>
-<p><span class="math display">\[\begin{align*}
-\text{Equdispersion:}  \quad &amp; \mathrm{Var}(y_i) = \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \\
-\text{Extradispersion:}\quad &amp; \mathrm{Var}(y_i) \neq \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \\
-\text{Overdispersion:} \quad &amp; \mathrm{Var}(y_i) &gt; \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \\
-\text{Underdispersion:}\quad &amp; \mathrm{Var}(y_i) &lt; \mathrm{Var}(y_i\ |\ \mathbf{x}_i)
-\end{align*}\]</span></p>
 </div>
 
 
 <div class="definition">
 <p><span id="def:def-pois-overdispersion" class="definition"><strong>Definition 2.4  (Poisson-Overdispersion)  </strong></span>Innerhalb eines Poisson-Modells (vgl. Abschnitt <a href="poisson-modell.html#poisson-modell">2</a>) mit der Annahme</p>
-<p><span class="math display">\[\begin{align*}
-y_i\ |\ \mathbf{x}_i &amp;\sim \mathrm{Poi}(\mu_i) \\[1.5em]
-\mu &amp;= \mathbb{E}(y_i\ |\ \mathbf{x}_i) = \mathrm{Var}(y_i\ |\ \mathbf{x}_i) \quad \text{(Equidispersion)}
-\end{align*}\]</span></p>
 <p>spricht man von <strong>Poisson-Overdispersion</strong> wenn die Varianz der Beobachtungen die erwartete Varianz des Poisson-Modells übersteigt:</p>
-<p><span class="math display">\[\begin{equation*}
-  \mathrm{Var}(y_i\ |\ \mathbf{x}_i) &gt; \mathbb{E}(y_i\ |\ \mathbf{x}_i)
-\end{equation*}\]</span></p>
 <p>in einem Modell mit overdispersion gilt die Annahme:</p>
-<p><span class="math display">\[\begin{equation*}
-  \mathrm{Var}(y_i\ |\ \mathbf{x}_i) = \theta \cdot \mu_i
-\end{equation*}\]</span></p>
-<p>Mit <em>Dispersionsparameter</em> <span class="math inline">\(\theta\)</span> <span class="citation">(vgl. Fahrmeir, Kneib, und Lang <a href="#ref-fahrmeirRegressionModelleMethoden2009" role="doc-biblioref">2009</a>, p. 210)</span></p>
+<p>Mit <em>Dispersionsparameter</em> <span class="math inline">\(\theta\)</span> <span class="citation">(vgl. Fahrmeir, Kneib, und Lang <a href="#ref-fahrmeirRegressionModelleMethoden2009">2009</a>, p. 210)</span></p>
 </div>
 
-<p>Als Dispersionsstatistik können <em>deviance dispersion</em> oder <em>Pearson dispersion</em> berechnet werden. Laut <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span> ist die <em>Pearson dispersion</em> zu bevorzugen, da sie für echte Poisson-Modelle gleich 1 ist, wohingegen die <em>deviance dispersion</em> nach oben verzerrt ist.</p>
+<p>Als Dispersionsstatistik können <em>deviance dispersion</em> oder <em>Pearson dispersion</em> berechnet werden. Laut <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> ist die <em>Pearson dispersion</em> zu bevorzugen, da sie für echte Poisson-Modelle gleich 1 ist, wohingegen die <em>deviance dispersion</em> nach oben verzerrt ist.</p>
 
 <div class="definition">
-<p><span id="def:def-pearsondisp" class="definition"><strong>Definition 2.5  (Pearson-Dispersion)  </strong></span>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span> (p. 77ff):</p>
+<p><span id="def:def-pearsondisp" class="definition"><strong>Definition 2.5  (Pearson-Dispersion)  </strong></span>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 77ff):</p>
 <p>Die Pearson <span class="math inline">\(\chi^2\)</span>-Statistik ist die Summe der quadrierten (Pearson-)Residuen gewichtet mit der Modellvarianz:</p>
-<p><span class="math display">\[\begin{equation*}
-\chi_{\text{Pearson}}^2 = \sum_{i=1}^n \frac{(y_i - \hat{\mu}_i)^2}{\mathrm{Var}(\hat{\mu}_i)}
-\end{equation*}\]</span></p>
 <p>und die <strong>Pearson-Dispersionsstatistik</strong>:</p>
-<p><span class="math display">\[\begin{equation*}
-D = \frac{\chi_{\text{Pearson}}^2}{\mathrm{df}}
-\end{equation*}\]</span></p>
 <p>Mit der Interpretation</p>
-<p><span class="math display">\[\begin{equation*}
-\mathrm{D} =
-  \begin{cases}
-    &lt; 1 &amp; \Longrightarrow \text{Underdispersion} \\
-      1 &amp; \Longrightarrow \text{Equidispersion (Poisson)} \\
-    &gt; 1 &amp; \Longrightarrow \text{Overdispersion}
-  \end{cases}
-\end{equation*}\]</span></p>
-<p>Für Modelle moderater Größe kann man ab Werten über 1.25 von overdispersion sprechen, wobei für große Stichproben auch schon ab 1.05 overdispersion vorliegen kann – zumindest nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span> (p. 82), der aber leider keine konkreten Angaben für seine Definition von “moderaten” oder “großen” Stichproben macht.</p>
+<p>Für Modelle moderater Größe kann man ab Werten über 1.25 von overdispersion sprechen, wobei für große Stichproben auch schon ab 1.05 overdispersion vorliegen kann – zumindest nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 82), der aber leider keine konkreten Angaben für seine Definition von “moderaten” oder “großen” Stichproben macht.</p>
 </div>
 
 <p>In <code>R</code> kann die Pearson-Dispersion wie folgt berechnet werden:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="dispersion.html#cb7-1"></a><span class="co"># Model fit</span></span>
-<span id="cb7-2"><a href="dispersion.html#cb7-2"></a>mod &lt;-<span class="st"> </span><span class="kw">glm</span>(y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span>x3, <span class="dt">data =</span> sim, <span class="dt">family =</span> <span class="kw">poisson</span>(<span class="dt">link =</span> <span class="st">&quot;log&quot;</span>))</span>
-<span id="cb7-3"><a href="dispersion.html#cb7-3"></a></span>
-<span id="cb7-4"><a href="dispersion.html#cb7-4"></a><span class="co"># Pearson dispersion</span></span>
-<span id="cb7-5"><a href="dispersion.html#cb7-5"></a><span class="kw">sum</span>(<span class="kw">resid</span>(mod, <span class="dt">type =</span> <span class="st">&quot;pearson&quot;</span>)<span class="op">^</span><span class="dv">2</span>) <span class="op">/</span><span class="st"> </span>mod<span class="op">$</span>df.residual</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># Model fit</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">mod &lt;-<span class="st"> </span><span class="kw">glm</span>(y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span>x3, <span class="dt">data =</span> sim, <span class="dt">family =</span> <span class="kw">poisson</span>(<span class="dt">link =</span> <span class="st">&quot;log&quot;</span>))</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co"># Pearson dispersion</span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="kw">sum</span>(<span class="kw">resid</span>(mod, <span class="dt">type =</span> <span class="st">&quot;pearson&quot;</span>)<span class="op">^</span><span class="dv">2</span>) <span class="op">/</span><span class="st"> </span>mod<span class="op">$</span>df.residual</a></code></pre></div>
 <p>…wofür wir in Abschnitt <a href="software-funs.html#helperfuns">1.2.2</a> eine Hilfsfunktion <code>dispersion()</code> definiert haben.</p>
 <div id="overdispersion" class="section level3">
 <h3><span class="header-section-number">2.2.1</span> Overdispersion</h3>
 <p>Der vermutlich häufigste Fall für Count-Daten: Die Varianz der abhängigen Variable ist größer als ihr Erwartungswert, bzw. größer als ihre erwartete Varianz innerhalb eines Modells.
-<span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span> unterscheidet zwischen echter und scheinbarer (<em>apparent</em>) Overdispersion, wobei letztere oft durch geeignete Korrekturen kompensiert werden kann, wobei <em>echte</em> Overdisperion sowohl Parameterschätzung als auch Modellanpassung im Allgemeinen beeinträchtigt.</p>
-<p>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span> (p. 82) entsteht <em>echte</em> Overdispersion durch:</p>
+<span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> unterscheidet zwischen echter und scheinbarer (<em>apparent</em>) Overdispersion, wobei letztere oft durch geeignete Korrekturen kompensiert werden kann, wobei <em>echte</em> Overdisperion sowohl Parameterschätzung als auch Modellanpassung im Allgemeinen beeinträchtigt.</p>
+<p>Nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 82) entsteht <em>echte</em> Overdispersion durch:</p>
 <ul>
 <li>Positive Korrelation zwischen responses</li>
 <li>Große Variation zwischen response-probabilities und counts</li>
 <li>Verletzungen der Verteilungsannahme (i.e. Poissonverteilung)</li>
 <li>“Proneness”: Frühere Ereignisse beeinflussen das Auftreten späterer Ereignisse<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></li>
 </ul>
-<p>Ursachen für <em>scheinbare</em> (<em>apparent</em>), und damit (bedingt) korrigierbare Overdispersion nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span> (p. 41, 82):</p>
+<p>Ursachen für <em>scheinbare</em> (<em>apparent</em>), und damit (bedingt) korrigierbare Overdispersion nach <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span> (p. 41, 82):</p>
 <ol style="list-style-type: decimal">
 <li>Fehlende explanatorische Prädiktoren</li>
 <li>Ausreißer</li>
@@ -306,44 +276,44 @@ D = \frac{\chi_{\text{Pearson}}^2}{\mathrm{df}}
 <li>Fehlende Werte, die nicht zufällig sind (missing not at random, <em>MNAR</em> – siehe auch Anhang <a href="appendix-missingness.html#appendix-missingness">B.1</a></li>
 </ol>
 <p>Ein einfaches simuliertes Beispiel zur Auswirkung von fehlenden Prädiktoren:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="dispersion.html#cb8-1"></a><span class="co"># Generate binary variable in [0, 1] with a given proportion of 1&#39;s</span></span>
-<span id="cb8-2"><a href="dispersion.html#cb8-2"></a>rbinary &lt;-<span class="st"> </span><span class="cf">function</span>(n, <span class="dt">prob =</span> <span class="fl">0.5</span>) {</span>
-<span id="cb8-3"><a href="dispersion.html#cb8-3"></a>  <span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dt">size =</span> n, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> <span class="kw">c</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>prob, prob))</span>
-<span id="cb8-4"><a href="dispersion.html#cb8-4"></a>}</span>
-<span id="cb8-5"><a href="dispersion.html#cb8-5"></a></span>
-<span id="cb8-6"><a href="dispersion.html#cb8-6"></a><span class="kw">set.seed</span>(<span class="dv">436</span>)</span>
-<span id="cb8-7"><a href="dispersion.html#cb8-7"></a>n &lt;-<span class="st"> </span><span class="dv">1000</span></span>
-<span id="cb8-8"><a href="dispersion.html#cb8-8"></a></span>
-<span id="cb8-9"><a href="dispersion.html#cb8-9"></a>sim &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
-<span id="cb8-10"><a href="dispersion.html#cb8-10"></a>  <span class="dt">x1 =</span> <span class="kw">rbinary</span>(n, <span class="fl">.1</span>),</span>
-<span id="cb8-11"><a href="dispersion.html#cb8-11"></a>  <span class="dt">x2 =</span> <span class="kw">rbinary</span>(n, <span class="fl">.2</span>),</span>
-<span id="cb8-12"><a href="dispersion.html#cb8-12"></a>  <span class="dt">x3 =</span> <span class="kw">rbinary</span>(n, <span class="fl">.3</span>),</span>
-<span id="cb8-13"><a href="dispersion.html#cb8-13"></a>  <span class="dt">eta =</span> <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span> <span class="op">*</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>x3,</span>
-<span id="cb8-14"><a href="dispersion.html#cb8-14"></a>  <span class="dt">mu =</span> <span class="kw">exp</span>(eta),</span>
-<span id="cb8-15"><a href="dispersion.html#cb8-15"></a>  <span class="dt">py =</span> <span class="kw">rpois</span>(n, mu)</span>
-<span id="cb8-16"><a href="dispersion.html#cb8-16"></a>)</span>
-<span id="cb8-17"><a href="dispersion.html#cb8-17"></a></span>
-<span id="cb8-18"><a href="dispersion.html#cb8-18"></a><span class="co"># Korrektes modell:</span></span>
-<span id="cb8-19"><a href="dispersion.html#cb8-19"></a>mod &lt;-<span class="st"> </span><span class="kw">glm</span>(py <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span>x3, <span class="dt">data =</span> sim, <span class="dt">family =</span> <span class="kw">poisson</span>(<span class="dt">link =</span> <span class="st">&quot;log&quot;</span>))</span>
-<span id="cb8-20"><a href="dispersion.html#cb8-20"></a><span class="kw">dispersion</span>(mod)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co"># Generate binary variable in [0, 1] with a given proportion of 1&#39;s</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">rbinary &lt;-<span class="st"> </span><span class="cf">function</span>(n, <span class="dt">prob =</span> <span class="fl">0.5</span>) {</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">  <span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dt">size =</span> n, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> <span class="kw">c</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>prob, prob))</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">}</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="kw">set.seed</span>(<span class="dv">436</span>)</a>
+<a class="sourceLine" id="cb8-7" data-line-number="7">n &lt;-<span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb8-9" data-line-number="9">sim &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb8-10" data-line-number="10">  <span class="dt">x1 =</span> <span class="kw">rbinary</span>(n, <span class="fl">.1</span>),</a>
+<a class="sourceLine" id="cb8-11" data-line-number="11">  <span class="dt">x2 =</span> <span class="kw">rbinary</span>(n, <span class="fl">.2</span>),</a>
+<a class="sourceLine" id="cb8-12" data-line-number="12">  <span class="dt">x3 =</span> <span class="kw">rbinary</span>(n, <span class="fl">.3</span>),</a>
+<a class="sourceLine" id="cb8-13" data-line-number="13">  <span class="dt">eta =</span> <span class="fl">0.5</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span> <span class="op">*</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>x3,</a>
+<a class="sourceLine" id="cb8-14" data-line-number="14">  <span class="dt">mu =</span> <span class="kw">exp</span>(eta),</a>
+<a class="sourceLine" id="cb8-15" data-line-number="15">  <span class="dt">py =</span> <span class="kw">rpois</span>(n, mu)</a>
+<a class="sourceLine" id="cb8-16" data-line-number="16">)</a>
+<a class="sourceLine" id="cb8-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb8-18" data-line-number="18"><span class="co"># Korrektes modell:</span></a>
+<a class="sourceLine" id="cb8-19" data-line-number="19">mod &lt;-<span class="st"> </span><span class="kw">glm</span>(py <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span>x3, <span class="dt">data =</span> sim, <span class="dt">family =</span> <span class="kw">poisson</span>(<span class="dt">link =</span> <span class="st">&quot;log&quot;</span>))</a>
+<a class="sourceLine" id="cb8-20" data-line-number="20"><span class="kw">dispersion</span>(mod)</a></code></pre></div>
 <pre><code>#&gt; X-squared(996) = 1029.70
 #&gt; Pearson Dispersion = 1.034</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="dispersion.html#cb10-1"></a><span class="co"># Modell mit fehlendem Prädiktor:</span></span>
-<span id="cb10-2"><a href="dispersion.html#cb10-2"></a>mod2 &lt;-<span class="st"> </span><span class="kw">glm</span>(py <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x3, <span class="dt">data =</span> sim, <span class="dt">family =</span> <span class="kw">poisson</span>(<span class="dt">link =</span> <span class="st">&quot;log&quot;</span>))</span>
-<span id="cb10-3"><a href="dispersion.html#cb10-3"></a><span class="kw">dispersion</span>(mod2)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># Modell mit fehlendem Prädiktor:</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">mod2 &lt;-<span class="st"> </span><span class="kw">glm</span>(py <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x3, <span class="dt">data =</span> sim, <span class="dt">family =</span> <span class="kw">poisson</span>(<span class="dt">link =</span> <span class="st">&quot;log&quot;</span>))</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw">dispersion</span>(mod2)</a></code></pre></div>
 <pre><code>#&gt; X-squared(997) = 7669.65
 #&gt; Pearson Dispersion = 7.693</code></pre>
 </div>
 <div id="underdispersion" class="section level3">
 <h3><span class="header-section-number">2.2.2</span> Underdispersion</h3>
 <p>Underdispersion ist der Fall, wenn vorliegende Daten eine geringere Varianz aufweisen, als auf Basis eines Poisson-Modells erwartet würde, das heißt die Daten sind “enger zusammengeklumpt”.
-Bei underdispersion werden die Standardfehler des Modells <em>über</em>schätzt, im Gegensatz zur overdispersion, bei der Standardfehler <em>unter</em>schätzt werden <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>, p. 210)</span>.</p>
-<p>Im Allgemeinen wird für diese Situation die <a href="https://stats.stackexchange.com/a/237177/80056">generalized Poisson empfohlen</a> <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span>, da diese Erweiterung der Poisson-Verteilung nicht nur einen zusätzlichen Parameter für die Varianz hat (analog NB, PIG), sondern dieser Parameter auch negativ sein kann.</p>
+Bei underdispersion werden die Standardfehler des Modells <em>über</em>schätzt, im Gegensatz zur overdispersion, bei der Standardfehler <em>unter</em>schätzt werden <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>, p. 210)</span>.</p>
+<p>Im Allgemeinen wird für diese Situation die <a href="https://stats.stackexchange.com/a/237177/80056">generalized Poisson empfohlen</a> <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, da diese Erweiterung der Poisson-Verteilung nicht nur einen zusätzlichen Parameter für die Varianz hat (analog NB, PIG), sondern dieser Parameter auch negativ sein kann.</p>
 <p>Weiterhin taucht im Kontext von hurdle models (siehe <a href="mod-hurdle.html#mod-hurdle">B.3</a>) folgende Bemerkung auf:</p>
 <blockquote>
 <p>[…] that underdispersion occurs if <strong>zeros are less frequent than the parent distribution would predict</strong>.
 The higher the expected value of the Poisson distribution, the lower the predicted probability of zero outcome and the lower the scope for underdispersion.
-– <span class="citation">(Winkelmann <a href="#ref-winkelmannEconometricAnalysisCount2010" role="doc-biblioref">2010</a>, p. 180 (eigene Hervorhebung))</span></p>
+– <span class="citation">(Winkelmann <a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>, p. 180 (eigene Hervorhebung))</span></p>
 </blockquote>
 
 </div>
@@ -355,7 +325,7 @@ The higher the expected value of the Poisson distribution, the lower the predict
 <p>Fahrmeir, Ludwig, Thomas Kneib, und Stefan Lang. 2009. <em>Regression: Modelle, Methoden und Anwendungen</em>. 2. Aufl. Statistik und ihre Anwendungen. Berlin: Springer.</p>
 </div>
 <div id="ref-hilbeModelingCountData2014">
-<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065">https://doi.org/10.1017/CBO9781139236065</a>.</p>
+<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065" class="uri">https://doi.org/10.1017/CBO9781139236065</a>.</p>
 </div>
 <div id="ref-winkelmannEconometricAnalysisCount2010">
 <p>Winkelmann, Rainer. 2010. <em>Econometric Analysis of Count Data</em>. 5th ed. Berlin: Springer Berlin.</p>
@@ -364,7 +334,7 @@ The higher the expected value of the Poisson distribution, the lower the predict
 <div class="footnotes">
 <hr />
 <ol start="2">
-<li id="fn2"><p>Diese Annahme (Unabhängigkeit der Ereignisse) der Poissonverteilung ist auch der Grund, warum sich die Poissonverteilung prinzipiell <strong>nicht</strong> eignet um Epidemien wie Ebola zu modellieren. Freundliche Grüße an Frau Pigeot, “Statistische Modellierung I”, WiSe 18/19.<a href="dispersion.html#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>Diese Annahme (Unabhängigkeit der Ereignisse) der Poissonverteilung ist auch der Grund, warum sich die Poissonverteilung prinzipiell <strong>nicht</strong> eignet um Epidemien wie Ebola zu modellieren. Freundliche Grüße an Frau Pigeot, “Statistische Modellierung I”, WiSe 18/19.<a href="dispersion.html#fnref2" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>

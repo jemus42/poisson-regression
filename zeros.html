@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="de-DE" xml:lang="de-DE">
+<html lang="de-DE" xml:lang="de-DE">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4.2 Zero-Inflation (ZI) | Poisson-Regression und ihre Leiden</title>
   <meta name="description" content="Because count data is hard" />
-  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.18 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4.2 Zero-Inflation (ZI) | Poisson-Regression und ihre Leiden" />
   <meta property="og:type" content="book" />
@@ -51,9 +51,9 @@
 
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
-<script src="libs/viz-0.3/viz.js"></script>
+<script src="libs/viz-1.8.2/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
+<script src="libs/grViz-binding-1.0.5/grViz.js"></script>
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     "HTML-CSS": { fonts: ["Asana-Math"] },
@@ -65,9 +65,9 @@
 
 
 <style type="text/css">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -76,16 +76,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -94,9 +94,9 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  {  }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -226,30 +226,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="zeros" class="section level2">
 <h2><span class="header-section-number">4.2</span> Zero-Inflation (ZI)</h2>
 <p>Problem: “Excess zeros”, i.e. das Modell sagt für <span class="math inline">\(P(y_i = 0\ |\ x_i)\)</span> eine deutlich kleinere Wahrscheinlichkeit vor, als in gegebenen Daten tatsächlich vorliegen.</p>
-<p>Zero-inflation hängt eng mit overdispersion zusammen. Sie <em>kann</em> Ursache für overdispersion sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechend auf <em>ZI</em>-fokussiertes Modell (ZIP, ZINB…) verwendet werden <em>muss</em> – ggf. lässt sich die overdispersion bereits durch ein anderes geeignetes Modell “auffangen”. Zum Beispiel zeigt <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010" role="doc-biblioref">2010</a>)</span>, dass die <em>NB</em> allgemein eine größere Anzahl an Nullen erwartet als die Poisson.</p>
+<p>Zero-inflation hängt eng mit overdispersion zusammen. Sie <em>kann</em> Ursache für overdispersion sein, allerdings bedeutet das nicht direkt, dass auch ein entsprechend auf <em>ZI</em>-fokussiertes Modell (ZIP, ZINB…) verwendet werden <em>muss</em> – ggf. lässt sich die overdispersion bereits durch ein anderes geeignetes Modell “auffangen”. Zum Beispiel zeigt <span class="citation">Winkelmann (<a href="#ref-winkelmannEconometricAnalysisCount2010">2010</a>)</span>, dass die <em>NB</em> allgemein eine größere Anzahl an Nullen erwartet als die Poisson.</p>
 <p><img src="poisson-regression_files/figure-html/excess_zeros_viz-1.png" width="768" style="display: block; margin: auto;" /></p>
 <div id="zi-compare" class="section level3">
 <h3><span class="header-section-number">4.2.1</span> Vergleich von Zero-Inflated models</h3>
-<p>Zum Vergleich zwischen Zählmodellen und ihren zero-inflated Gegenstücken (e.g. Poisson vs. ZIP oder NB vs. ZINB) wird in der Literatur häufig der Vuong-Test <span class="citation">(Vuong <a href="#ref-vuongLikelihoodRatioTests1989" role="doc-biblioref">1989</a>; Desmarais und Harden <a href="#ref-desmarais2013TestingZero" role="doc-biblioref">2013</a>)</span> verwendet. Dieser Test ist explizit für den Vergleich von <strong>un</strong>geschachtelten Modellen entworfen (im Gegensatz zu z.B. dem Likelihood Ratio test). <span class="citation">Wilson (<a href="#ref-wilson2015MisuseVuong" role="doc-biblioref">2015</a>)</span> kritisiert dieses Vorgehen mit der Begründung (und Demonstration), dass zero-inflated Modelle <em>nicht</em> ungeschachtelt mit ihren ursprünglichen Zähmodellen sind. Auch <span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013" role="doc-biblioref">2013</a>)</span> und <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span>, die in diesem Dokument mehrfach zitiert werden, verwenden den Vuong-Test auf diese Weise.</p>
-<p>Das Paper (<span class="citation">Wilson (<a href="#ref-wilson2015MisuseVuong" role="doc-biblioref">2015</a>)</span>) ist recht kurz und definitiv einen Blick Wert, insbesondere da ich (Lukas) mir bisher nicht zutraue zu beurteilen, wer in dieser Frage “Recht” hat.</p>
+<p>Zum Vergleich zwischen Zählmodellen und ihren zero-inflated Gegenstücken (e.g. Poisson vs. ZIP oder NB vs. ZINB) wird in der Literatur häufig der Vuong-Test <span class="citation">(Vuong <a href="#ref-vuongLikelihoodRatioTests1989">1989</a>; Desmarais und Harden <a href="#ref-desmarais2013TestingZero">2013</a>)</span> verwendet. Dieser Test ist explizit für den Vergleich von <strong>un</strong>geschachtelten Modellen entworfen (im Gegensatz zu z.B. dem Likelihood Ratio test). <span class="citation">Wilson (<a href="#ref-wilson2015MisuseVuong">2015</a>)</span> kritisiert dieses Vorgehen mit der Begründung (und Demonstration), dass zero-inflated Modelle <em>nicht</em> ungeschachtelt mit ihren ursprünglichen Zähmodellen sind. Auch <span class="citation">Perumean-Chaney u. a. (<a href="#ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">2013</a>)</span> und <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, die in diesem Dokument mehrfach zitiert werden, verwenden den Vuong-Test auf diese Weise.</p>
+<p>Das Paper (<span class="citation">Wilson (<a href="#ref-wilson2015MisuseVuong">2015</a>)</span>) ist recht kurz und definitiv einen Blick Wert, insbesondere da ich (Lukas) mir bisher nicht zutraue zu beurteilen, wer in dieser Frage “Recht” hat.</p>
 <blockquote>
 <p>The misuse of the test stems from misunderstanding of what is meant by the terms “non-nested model” and “nested model”. As is the case with many frequently used terms their meanings are approximately understood by many, but precisely understood by few.</p>
-<p>— <span class="citation">Wilson (<a href="#ref-wilson2015MisuseVuong" role="doc-biblioref">2015</a>)</span>, p. 52</p>
+<p>— <span class="citation">Wilson (<a href="#ref-wilson2015MisuseVuong">2015</a>)</span>, p. 52</p>
 </blockquote>
 </div>
 <div id="zi-modelling" class="section level3">
 <h3><span class="header-section-number">4.2.2</span> Modellierung</h3>
-<p>Für die Modellierung von zero-inflated Daten stehen primär zwei Möglichkeiten zur Verfügung (vgl. auch <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>)</span>, p. 19):</p>
+<p>Für die Modellierung von zero-inflated Daten stehen primär zwei Möglichkeiten zur Verfügung (vgl. auch <span class="citation">Hilbe (<a href="#ref-hilbeModelingCountData2014">2014</a>)</span>, p. 19):</p>
 <ol style="list-style-type: decimal">
 <li><em>Zero-inflated models</em>: Mixture models, die aus zwei Wahrscheinlichkeitsfunktionen eine neue Wahrscheinlichkeitsfunktion generieren, die sowohl Nullen als auch positive counts beschreibt, allerdings nun auch einen <em>zero-inflation</em>-Parameter hat (siehe Abschnitt <a href="mod-zi.html#mod-zi">3.6</a>).</li>
 <li><em>Hurdle models</em>: Getrennte Modellierung von Nullen und positiven counts in zwei separaten Modellen (siehe Abschnitt <a href="mod-hurdle.html#mod-hurdle">B.3</a>).</li>
 </ol>
 <p>Ob hurdle model oder zero-inflated model die bessere Wahl ist hängt mitunter davon ab, welche Annahmen über die <em>Ursache der Nullen</em> getroffen werden können.<br />
 Wenn es eine echte Trennung der Mechanismen (<em>“separation of mechanisms”</em>) gibt, die die Nullen und die positiven counts verursachen, dann wäre ein hurdle model eher angemessen. IDas würde allerdings auch annehmen, dass alle Nullen <em>die gleiche</em> Ursache haben.</p>
-<p>Wenn sich die Nullen überlappen, es also keine getrennten Prozesse zu geben scheint, dann wären zero-inflated models angemessen <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014" role="doc-biblioref">2014</a>, p. 209)</span>.</p>
+<p>Wenn sich die Nullen überlappen, es also keine getrennten Prozesse zu geben scheint, dann wären zero-inflated models angemessen <span class="citation">(Hilbe <a href="#ref-hilbeModelingCountData2014">2014</a>, p. 209)</span>.</p>
 <p>Als Veranschaulichung für zwei sich überlappende Mechanismen können wir das <em>fish</em>-Beispiel auf <a href="https://stats.idre.ucla.edu/sas/output/zero-inflated-poisson-regression/">dieser UCLA-Tutorialseite verwenden</a>. Hier ist die Anzahl der gefangenen Fische an einem Wochenende in einem Park die Zählvariable.</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="zeros.html#cb48-1"></a><span class="co"># Mittelwert &amp; Varianz von &#39;count&#39;</span></span>
-<span id="cb48-2"><a href="zeros.html#cb48-2"></a><span class="kw">describe_counts</span>(fish<span class="op">$</span>count)</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1"><span class="co"># Mittelwert &amp; Varianz von &#39;count&#39;</span></a>
+<a class="sourceLine" id="cb48-2" data-line-number="2"><span class="kw">describe_counts</span>(fish<span class="op">$</span>count)</a></code></pre></div>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -290,17 +290,17 @@ Range
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="zeros.html#cb49-1"></a><span class="co"># Barchart für counts &lt;= 50, Spannweite sehr groß</span></span>
-<span id="cb49-2"><a href="zeros.html#cb49-2"></a>fish <span class="op">%&gt;%</span></span>
-<span id="cb49-3"><a href="zeros.html#cb49-3"></a><span class="st">  </span><span class="kw">filter</span>(count <span class="op">&lt;=</span><span class="st"> </span><span class="dv">50</span>) <span class="op">%&gt;%</span></span>
-<span id="cb49-4"><a href="zeros.html#cb49-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> count)) <span class="op">+</span></span>
-<span id="cb49-5"><a href="zeros.html#cb49-5"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">alpha =</span> <span class="fl">.75</span>) <span class="op">+</span></span>
-<span id="cb49-6"><a href="zeros.html#cb49-6"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>() <span class="op">+</span></span>
-<span id="cb49-7"><a href="zeros.html#cb49-7"></a><span class="st">  </span><span class="kw">labs</span>(</span>
-<span id="cb49-8"><a href="zeros.html#cb49-8"></a>    <span class="dt">title =</span> <span class="st">&quot;&#39;fish&#39;: Anzahl gefangener Fische&quot;</span>,</span>
-<span id="cb49-9"><a href="zeros.html#cb49-9"></a>    <span class="dt">subtitle =</span> <span class="st">&quot;Limitiert auf counts unter 50&quot;</span>,</span>
-<span id="cb49-10"><a href="zeros.html#cb49-10"></a>    <span class="dt">x =</span> <span class="st">&quot;Anzahl gefangener Fischer&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span></span>
-<span id="cb49-11"><a href="zeros.html#cb49-11"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1"><span class="co"># Barchart für counts &lt;= 50, Spannweite sehr groß</span></a>
+<a class="sourceLine" id="cb49-2" data-line-number="2">fish <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb49-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(count <span class="op">&lt;=</span><span class="st"> </span><span class="dv">50</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb49-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> count)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb49-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">alpha =</span> <span class="fl">.75</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb49-6" data-line-number="6"><span class="st">  </span><span class="kw">scale_x_continuous</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb49-7" data-line-number="7"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb49-8" data-line-number="8">    <span class="dt">title =</span> <span class="st">&quot;&#39;fish&#39;: Anzahl gefangener Fische&quot;</span>,</a>
+<a class="sourceLine" id="cb49-9" data-line-number="9">    <span class="dt">subtitle =</span> <span class="st">&quot;Limitiert auf counts unter 50&quot;</span>,</a>
+<a class="sourceLine" id="cb49-10" data-line-number="10">    <span class="dt">x =</span> <span class="st">&quot;Anzahl gefangener Fischer&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Count&quot;</span></a>
+<a class="sourceLine" id="cb49-11" data-line-number="11">  )</a></code></pre></div>
 <p><img src="poisson-regression_files/figure-html/fishing_zeros-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Die Anzahl der Nullen ist hier auffallend groß – allerdings beobachten wir hier auch zwei unterschiedliche Mechanismen, die sich überlappen: Eine Gruppe kann das ganze Wochenende geangelt haben, während eine andere Gruppe gar nicht geangelt hat – beide Gruppen werden jedoch am Ende nach der Anzahl ihrer gefangenen Fische befragt, weshalb wir in den Daten Nullen mit unterschiedlichem “Ursprung” erhalten</p>
 <p>Da es hier nicht angemessen wäre, die Nullen und die positiven counts getrennt zu Modellieren, würden wir hier ein <em>zero-inflated</em> Modell (z.B ZIP, ZINB, …) verwenden.</p>
@@ -311,19 +311,19 @@ Range
 <h3>Literatur</h3>
 <div id="refs" class="references">
 <div id="ref-desmarais2013TestingZero">
-<p>Desmarais, Bruce A., und Jeffrey J. Harden. 2013. „Testing for Zero Inflation in Count Models: Bias Correction for the Vuong Test“. <em>The Stata Journal</em> 13 (4): 810–35. <a href="https://doi.org/10.1177/1536867X1301300408">https://doi.org/10.1177/1536867X1301300408</a>.</p>
+<p>Desmarais, Bruce A., und Jeffrey J. Harden. 2013. „Testing for Zero Inflation in Count Models: Bias Correction for the Vuong Test“. <em>The Stata Journal</em> 13 (4): 810–35. <a href="https://doi.org/10.1177/1536867X1301300408" class="uri">https://doi.org/10.1177/1536867X1301300408</a>.</p>
 </div>
 <div id="ref-hilbeModelingCountData2014">
-<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065">https://doi.org/10.1017/CBO9781139236065</a>.</p>
+<p>Hilbe, Joseph M. 2014. <em>Modeling Count Data</em>. Cambridge: Cambridge University Press. <a href="https://doi.org/10.1017/CBO9781139236065" class="uri">https://doi.org/10.1017/CBO9781139236065</a>.</p>
 </div>
 <div id="ref-perumean-chaneyZeroinflatedOverdispersedWhat2013">
-<p>Perumean-Chaney, Suzanne E., Charity Morgan, David McDowall, und Inmaculada Aban. 2013. „Zero-Inflated and Overdispersed: What’s One to Do?“ <em>Journal of Statistical Computation and Simulation</em> 83 (9): 1671–83. <a href="https://doi.org/10.1080/00949655.2012.668550">https://doi.org/10.1080/00949655.2012.668550</a>.</p>
+<p>Perumean-Chaney, Suzanne E., Charity Morgan, David McDowall, und Inmaculada Aban. 2013. „Zero-Inflated and Overdispersed: What’s One to Do?“ <em>Journal of Statistical Computation and Simulation</em> 83 (9): 1671–83. <a href="https://doi.org/10.1080/00949655.2012.668550" class="uri">https://doi.org/10.1080/00949655.2012.668550</a>.</p>
 </div>
 <div id="ref-vuongLikelihoodRatioTests1989">
-<p>Vuong, Quang H. 1989. „Likelihood Ratio Tests for Model Selection and Non-Nested Hypotheses“. <em>Econometrica</em> 57 (2): 307. <a href="https://doi.org/10.2307/1912557">https://doi.org/10.2307/1912557</a>.</p>
+<p>Vuong, Quang H. 1989. „Likelihood Ratio Tests for Model Selection and Non-Nested Hypotheses“. <em>Econometrica</em> 57 (2): 307. <a href="https://doi.org/10.2307/1912557" class="uri">https://doi.org/10.2307/1912557</a>.</p>
 </div>
 <div id="ref-wilson2015MisuseVuong">
-<p>Wilson, Paul. 2015. „The Misuse of the Vuong Test for Non-Nested Models to Test for Zero-Inflation“. <em>Economics Letters</em> 127 (Februar): 51–53. <a href="https://doi.org/10.1016/j.econlet.2014.12.029">https://doi.org/10.1016/j.econlet.2014.12.029</a>.</p>
+<p>Wilson, Paul. 2015. „The Misuse of the Vuong Test for Non-Nested Models to Test for Zero-Inflation“. <em>Economics Letters</em> 127 (Februar): 51–53. <a href="https://doi.org/10.1016/j.econlet.2014.12.029" class="uri">https://doi.org/10.1016/j.econlet.2014.12.029</a>.</p>
 </div>
 <div id="ref-winkelmannEconometricAnalysisCount2010">
 <p>Winkelmann, Rainer. 2010. <em>Econometric Analysis of Count Data</em>. 5th ed. Berlin: Springer Berlin.</p>
