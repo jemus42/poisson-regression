@@ -45,10 +45,10 @@ if (all(Sys.info()[c("sysname", "login")] == c("Windows", "burk"))) {
   fs::dir_copy("poisson-regression", "G:/EVERYONE/Burk/poisson-regression", overwrite = TRUE)
 }
 
-if (all(Sys.info()[c("sysname", "login")] == c("Darwin", "Lukas"))) {
-  cli_h2("Copying to lukas.tadaa-data.de/poisson/")
-  fs::dir_copy("poisson-regression", "~/Sync/lukas.tadaa-data.de/poisson/", overwrite = TRUE)
-}
+# if (all(Sys.info()[c("sysname", "login")] == c("Darwin", "Lukas"))) {
+#   cli_h2("Copying to lukas.tadaa-data.de/poisson/")
+#   fs::dir_copy("poisson-regression", "~/Sync/lukas.tadaa-data.de/poisson/", overwrite = TRUE)
+# }
 
 t2 <- Sys.time()
 difft <- round(as.numeric(difftime(t2, t1, units = 'secs')), 1)

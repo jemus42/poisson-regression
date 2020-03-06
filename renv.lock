@@ -113,17 +113,17 @@
     },
     "bookdown": {
       "Package": "bookdown",
-      "Version": "0.17",
+      "Version": "0.18",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "727f96578043896024c9d309718fda73"
+      "Hash": "72e9c52caf3f7aacb4e368b75f6ec72a"
     },
     "broom": {
       "Package": "broom",
-      "Version": "0.5.4",
+      "Version": "0.5.5",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "c8cc938d5fd2d51c33c705cda6998328"
+      "Hash": "70ec3aef8a0df13661bf6cc2ff877d61"
     },
     "callr": {
       "Package": "callr",
@@ -265,10 +265,10 @@
     },
     "fs": {
       "Package": "fs",
-      "Version": "1.3.1",
+      "Version": "1.3.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "0e26be4558dbbc713d7cfe4a4c361f38"
+      "Hash": "77cefb9b0bb109ec5ce526e6948c91aa"
     },
     "gamlss": {
       "Package": "gamlss",
@@ -557,10 +557,10 @@
     },
     "plyr": {
       "Package": "plyr",
-      "Version": "1.8.5",
+      "Version": "1.8.6",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "3f1b0dbcc503320e6e7aae6c3ff87eaa"
+      "Hash": "ec0e5ab4e5f851f6ef32cd1d1984957f"
     },
     "praise": {
       "Package": "praise",
