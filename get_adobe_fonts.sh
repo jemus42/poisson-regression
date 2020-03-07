@@ -21,7 +21,7 @@ for VARIANT in serif sans code; do
    "$FONT_HOME/adobe-fonts/source-$VARIANT-pro")
 
    # Refresh font cache to make fonts available
-   fc-cache -f -v "$FONT_HOME/adobe-fonts/source-$VARIANT-pro/OTF"
+   fc-cache -f -v "$FONT_HOME/adobe-fonts/source-$VARIANT-pro/TTF"
 
 done
 
