@@ -1,27 +1,21 @@
 #! /bin/bash
 
 # Do the font dance with Source Pro (all of them)
-# Adapted from: https://gist.github.com/enzinier/8d00d3f37d2e23985dcfa65662d163fa
+# Adapted from: https://gist.github.com/jacksonpradolima/840b4a20c617204a65b15da61e124bf6
 
 FONT_HOME="$HOME/.local/share/fonts"
+mkdir -p $FONT_HOME/adobe
+cd $FONT_HOME/adobe
 
-echo "installing fonts at $PWD to $FONT_HOME"
+echo "installing adobe fonts to $FONT_HOME/adobe"
 
-for VARIANT in serif sans code; do
+wget https://github.com/adobe-fonts/source-code-pro/archive/2.030R-ro/1.050R-it.zip
+unzip 1.050R-it.zip "*.otf"
 
-  echo "Downloading Source >$VARIANT< Pro"
-  # Create directory to hold the fonts
-  mkdir -p "$FONT_HOME/adobe-fonts/source-$VARIANT-pro"
+wget https://github.com/adobe-fonts/source-serif-pro/archive/2.000R.zip
+unzip 2.000R.zip "*.otf"
 
-  # Download the fonts by cloning the repos (they're not *that* big)
-  (git clone \
-   --branch release \
-   --depth 1 \
-   "https://github.com/adobe-fonts/source-$VARIANT-pro.git" \
-   "$FONT_HOME/adobe-fonts/source-$VARIANT-pro")
+wget https://github.com/adobe-fonts/source-sans-pro/archive/2.020R-ro/1.075R-it.zip
+unzip 1.075R-it.zip "*.otf"
 
-   # Refresh font cache to make fonts available
-   fc-cache -f -v "$FONT_HOME/adobe-fonts/source-$VARIANT-pro/TTF"
-
-done
-
+fc-cache -f -v
