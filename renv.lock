@@ -4,7 +4,11 @@
     "Repositories": [
       {
         "Name": "CRAN",
-        "URL": "https://cran.rstudio.com"
+        "URL": "https://cran.uni-muenster.de"
+      },
+      {
+        "Name": "cinc",
+        "URL": "https://cinc.rud.is"
       }
     ]
   },
@@ -352,15 +356,15 @@
     },
     "hrbrthemes": {
       "Package": "hrbrthemes",
-      "Version": "0.7.2",
-      "Source": "GitLab",
-      "RemoteType": "gitlab",
-      "RemoteHost": "gitlab.com",
-      "RemoteRepo": "hrbrthemes",
+      "Version": "0.8.0",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
       "RemoteUsername": "hrbrmstr",
+      "RemoteRepo": "hrbrthemes",
       "RemoteRef": "master",
-      "RemoteSha": "c15379dbeb2008a02c683f9ffdb53a3eab2854a9",
-      "Hash": "eb7bbecc19ece54a6575542431324de4"
+      "RemoteSha": "a599f17a1d6a8ca89ca452d73914c6776e3faab3",
+      "Hash": "95971cce347894facb2c94308cc55776"
     },
     "htmltools": {
       "Package": "htmltools",
@@ -441,10 +445,10 @@
     },
     "lifecycle": {
       "Package": "lifecycle",
-      "Version": "0.1.0",
+      "Version": "0.2.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "dc0e9c03b3635ff433b045ce6bf0612d"
+      "Hash": "361811f31f71f8a617a9a68bf63f1f42"
     },
     "lmtest": {
       "Package": "lmtest",
