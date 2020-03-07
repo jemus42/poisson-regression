@@ -11,14 +11,13 @@ tibble::tribble(
   "Code", "GitHub", "https://github.com/jemus42/poisson-regression",
   "Result", "GitHub Pages", "https://jemus42.github.io/poisson-regression",
   "Result", "Self-Hosted (automated build)", "https://poisson.tadaa-data.de/",
-  "Result", "Self-Hosted (manual build)", "https://lukas.tadaa-data.de/poisson/"
 ) %>%
   kable(booktabs = TRUE) %>%
   kable_styling(position = "center", bootstrap_options = c("hover")) %>%
   collapse_rows(columns = 1)
 ```
 
-Wobei automatische builds von [Travis CI](https://travis-ci.org/jemus42/poisson-regression) übernommen werden, und das Resultat an die entsprechenden Zielorte gepusht wird. Die "manuelle" Version auf `https://lukas.tadaa-data.de/poisson/` existiert primär zum schnellen Testen – die finalen Zielorte sollen GitHub Pages und (vermutlich) `https://poisson.tadaa-data.de` sein.
+Wobei automatische builds von [Travis CI](https://travis-ci.org/jemus42/poisson-regression) übernommen werden, und das Resultat an die entsprechenden Zielorte gepusht wird. Die finalen Zielorte sind GitHub Pages und `https://poisson.tadaa-data.de`.
 
 
 # Ergänzungen
