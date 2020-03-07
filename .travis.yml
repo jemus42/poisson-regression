@@ -32,7 +32,7 @@ before_install:
   - mkdir -p $HOME/.local/share/fonts
   - |
     if [ ! -e $HOME/.local/share/fonts/fira.zip ]; then
-      wget https://github.com/bBoxType/FiraSans/archive/master.zip -O $HOME/.fonts/fira.zip
+      wget https://github.com/bBoxType/FiraSans/archive/master.zip -O $HOME/.local/share/fonts/fira.zip
       unzip $HOME/.local/share/fonts/fira.zip '*.ttf' -d $HOME/.local/share/fonts/fira
     fi
   - |
