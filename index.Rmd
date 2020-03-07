@@ -15,7 +15,7 @@ colorlinks: true
 description: "Because count data is hard"
 papersize: a4
 mainfont: "Roboto" # "TeX Gyre Pagella"
-sansfont: "Roboto Slab" # "Fira Sans"
+sansfont: "Fira Sans" # "Fira Sans"
 monofont: "Fira Mono"
 monofontoptions:
   - Mapping=tex-ansi
