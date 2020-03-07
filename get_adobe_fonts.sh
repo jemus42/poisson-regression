@@ -20,7 +20,8 @@ for VARIANT in serif sans code; do
    "https://github.com/adobe-fonts/source-$VARIANT-pro.git" \
    "$FONT_HOME/adobe-fonts/source-$VARIANT-pro")
 
+   # Refresh font cache to make fonts available
+   fc-cache -f -v "$FONT_HOME/adobe-fonts/source-$VARIANT-pro/OTF"
+
 done
 
-# Refresh font cache to make fonts available
-fc-cache -f -v "$FONT_HOME/adobe-fonts"
