@@ -36,7 +36,7 @@ before_install:
     cp $HOME/.TinyTeX/texmf-var/fonts/conf/texlive-fontconfig.conf ~/.fonts.conf
   - |
     # 4. Update font cache for previously installed fonts (+ list fonts for debugging)
-    fc-cache -fv
+    # fc-cache -fv
     fc-list
 
 before_script:
