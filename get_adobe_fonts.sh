@@ -7,7 +7,7 @@ FONT_HOME="$HOME/.local/share/fonts"
 
 echo "installing fonts at $PWD to $FONT_HOME"
 
-for VARIANT in serif sans source; do
+for VARIANT in serif sans code; do
 
   echo "Downloading Source >$VARIANT< Pro"
   # Create directory to hold the fonts
