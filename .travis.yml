@@ -19,6 +19,7 @@ addons:
 
 apt_packages:
   - fonts-roboto
+  - fonts-robot-slab
   - fonts-oflb-asana-math
 
 before_install:
