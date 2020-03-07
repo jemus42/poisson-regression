@@ -18,7 +18,7 @@ addons:
     secure: lQ09vWJHSXhLpfsYAras50R3TOEjdghX24d7dAmcAavlL9batt0qYSOJ++2oXyAU/z6BjeLpMF2U+MxBwhOaoDDYOXSpYbK8GoKU4msUr9GGzlyVJuX+Z5WggLLRzArwtc8cQRIsZPmnX1IaLD8dtLV3OJFVHj1xt0BDOuONse2AaY30y/koQQQzRfqQjPXyplEPX4NDRlH7+G33fH6RPqwHitSaEqtAuNCWsSK69c1S4JK/yOatn2QUVsQKRTiqZ5Cbi/nm+5MwrG2xRdDfoGOMN+z68IHVSjBTssyWKJ4pQ3aYC9vXRmbnQdqT+FBMhulQWcU/fCbY6nxhXj0LQmo4lbUGOiSUs6EwSQFjylXP+xck+XAUcnGDFbRU1ZIPNc18dlo9vkZd9jnw3dzkMs8AWRMGhKrc+HZRJ6kV7sFXHiRHntWzl79u7Pu7A1GE7IO+WdXSilGCbq6U5eMB/91RImV8KBrXO1CjyfiHaie/uxVYqN6KEix15/9ecmivsaTuvHbd0eiHfSQMXit9K9FD/kAxZtdd7ulAoyCGpKj8R9VoQSjVTxp01PJ6D1JJVazzncVsZ9QsfCm3qwtieEcjH/NBsgcp4I0pYBspWBjw6zKLWwK5iFC2X4d1/siIEO+6Vmnwap9YojZBsrNcDe46horgdWS26Cg9EyEq3BU=
   apt:
     sources:
-    - sourceline: "universe"
+    - sourceline: "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) universe"
     packages:
     - fonts-roboto
     - fonts-roboto-slab
