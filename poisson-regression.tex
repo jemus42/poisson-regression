@@ -14,7 +14,7 @@
 \else % if luatex or xelatex
   \usepackage{unicode-math}
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
-    \setmainfont[]{TeX Gyre Pagella}
+    \setmainfont[]{Roboto}
     \setsansfont[]{Fira Sans}
     \setmonofont[Mapping=tex-ansi,Mapping=tex-ansi,Scale=0.8]{Fira Mono}
   \setmathfont[]{Asana Math}
@@ -157,7 +157,7 @@
 
 \title{Poisson-Regression und ihre Leiden}
 \author{Lukas Burk}
-\date{Stand: 06. March 2020 23:34 Uhr (CET)}
+\date{Stand: 07. March 2020 20:34 Uhr (CET)}
 
 \usepackage{amsthm}
 \newtheorem{theorem}{Theorem}[section]
@@ -395,7 +395,7 @@ Weiterhin werden einige Hilfsfunktionen im Laufe des Dokuments verwendet, die pr
 \toprule
 N & Missing & Mittelwert & Varianz & Range\\
 \midrule
-100 & 10 & 5.21 & 5.43 & [1, 13]\\
+100 & 10 & 4.88 & 4.98 & [1, 13]\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2301,14 +2301,12 @@ Sowohl der Quelltext als auch das Output (sprich, dieses Dokument in mehreren Fo
 \cmidrule{1-3}
  & GitHub Pages & https://jemus42.github.io/poisson-regression\\
 \cmidrule{2-3}
- & Self-Hosted (automated build) & https://poisson.tadaa-data.de/\\
-\cmidrule{2-3}
-\multirow{-3}{*}{\raggedright\arraybackslash Result} & Self-Hosted (manual build) & https://lukas.tadaa-data.de/poisson/\\
+\multirow{-2}{*}{\raggedright\arraybackslash Result} & Self-Hosted (automated build) & https://poisson.tadaa-data.de/\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Wobei automatische builds von \href{https://travis-ci.org/jemus42/poisson-regression}{Travis CI} übernommen werden, und das Resultat an die entsprechenden Zielorte gepusht wird. Die \enquote{manuelle} Version auf \texttt{https://lukas.tadaa-data.de/poisson/} existiert primär zum schnellen Testen -- die finalen Zielorte sollen GitHub Pages und (vermutlich) \texttt{https://poisson.tadaa-data.de} sein.
+Wobei automatische builds von \href{https://travis-ci.org/jemus42/poisson-regression}{Travis CI} übernommen werden, und das Resultat an die entsprechenden Zielorte gepusht wird. Die finalen Zielorte sind GitHub Pages und \texttt{https://poisson.tadaa-data.de}.
 
 \hypertarget{erguxe4nzungen}{%
 \section{Ergänzungen}\label{erguxe4nzungen}}
@@ -2517,7 +2515,7 @@ language & en\_US.UTF-8\\
 collate & en\_US.UTF-8\\
 ctype & en\_US.UTF-8\\
 tz & UTC\\
-date & 2020-03-06\\
+date & 2020-03-07\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -2536,7 +2534,7 @@ gamlss & 5.1-6 & CRAN (R 3.6.2)\\
 gamlss.data & 5.1-4 & CRAN (R 3.6.2)\\
 gamlss.dist & 5.1-6 & CRAN (R 3.6.2)\\
 ggplot2 & 3.3.0 & CRAN (R 3.6.2)\\
-hrbrthemes & 0.8.0 & gitlab (hrbrmstr/hrbrthemes@a599f17)\\
+hrbrthemes & 0.8.0 & Github (hrbrmstr/hrbrthemes@a599f17)\\
 kableExtra & 1.1.0 & CRAN (R 3.6.2)\\
 MASS & 7.3-51.5 & CRAN (R 3.6.2)\\
 nlme & 3.1-145 & CRAN (R 3.6.2)\\
