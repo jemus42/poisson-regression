@@ -7,9 +7,7 @@ FONT_HOME="$HOME/.local/share/fonts"
 
 echo "installing fonts at $PWD to $FONT_HOME"
 
-VARIANTS=(serif sans source)
-
-for VARIANT in $VARIANTS; do
+for VARIANT in serif sans source; do
 
   echo "Downloading Source >$VARIANT< Pro"
   # Create directory to hold the fonts
@@ -22,7 +20,7 @@ for VARIANT in $VARIANTS; do
    "https://github.com/adobe-fonts/source-$VARIANT-pro.git" \
    "$FONT_HOME/adobe-fonts/source-$VARIANT-pro")
 
-   # Refresh font cache to make fonts available
-   fc-cache -f -v "$FONT_HOME/adobe-fonts/source-$VARIANT-pro"
-
 done
+
+# Refresh font cache to make fonts available
+fc-cache -f -v "$FONT_HOME/adobe-fonts"
