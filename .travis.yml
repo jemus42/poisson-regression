@@ -30,14 +30,14 @@ before_install:
     if [ ! -d $HOME/.TinyTex/bin ]; then
       Rscript -e "tinytex::install_tinytex()"
     fi
-  - mkdir -p $HOME/.local/share/fonts
-  - "./get_fira_fonts.sh"
+  - # mkdir -p $HOME/.local/share/fonts
   - |
     # 3. Copy fontconfig for possibly maybe xelatex font issue with spaces in font names
     cp $HOME/.TinyTeX/texmf-var/fonts/conf/texlive-fontconfig.conf ~/.fonts.conf
   - |
     # 4. Update font cache for previously installed fonts (+ list fonts for debugging)
-    fc-cache -fv
+    # fc-cache -fv
+    fc-cache -f -v "$TRAVIS_BUILD_DIR/includes/fonts"
     fc-list
 
 before_script:
